@@ -7,8 +7,6 @@
     <title>Battle Ink</title>
     <link rel="icon" type="image/png" href="img/ico/favicon.ico">
 
-    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
-
     <style>
       body { margin: 0; overflow:hidden; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
@@ -23,10 +21,10 @@
 
       #loaderbar { position:fixed; left:0px; top:0px; height:3px; width:100%; }
       #loaderbar-inner { height:3px; background-color: aqua; }
-#tracks { }
-.track { cursor:pointer; color:whitesmoke; font-size:10px; margin-bottom:10px; }
+
+.track { cursor:pointer; list-style:none; color:#333; width:100%; height:35px; position: relative; border-radius:17px;  padding:10px; margin-bottom:10px;}
 .track.playing { color:hotpink; }
-.trackname { width:100%; transition: all 0.3 ease;  }
+.trackname { transition: all 0.3 ease;  }
 .trackname:hover { color:pink; }
 .fading-in { animation: pulse 3s linear infinite; }
 .fading-out { animation: pulse 3s linear infinite; }
@@ -58,31 +56,6 @@
 	100% { opacity:1; }
     }
 
-#chat-window { visibility: hidden; }
-
-#mixer { position:absolute; width:100%; height:100%; background:black; }
-.mixer-track { position:relative; width:200px; height:100%; margin:1px 1px 1px 0px; background:gray; float:left; transition:all 0.6s ease-in-out; overflow:hidden !important; }
-
-.track-bank{ position:absolute; width:100%; height:100%; float:left; background:pink; transform: translateX(-100%); transition:all 0.6s ease-in-out;  }
-.track-bank.open { transform: translateX(0%); }
-
-.slot-track-bank { width:100%; height:0px; transition:all 0.6s ease-in-out; background:#222; color:whitesmoke; overflow: hidden; }
-.slot-track-bank.open { width:100%; height:300px; }
-
-
-.track-head { width:100%; position:absolute; height:100%; transition:all 0.6s ease-in-out;}
-.track-head.open { transform: translateX(100%); }
-
-select { width:90%; margin-left:5%; }
-.selector { cursor: pointer; transition: all .3s ease; }
-
-.rotate90 { transform: rotate(90deg); }
-box-icon { transition: all 0.3s ease; }
-.checker { cursor: pointer; }
-.checkbox-text { float:left; width:66%; }
-
-.infinitiser { color:rgb(132,45,67); }
-
     </style>
   </head>
   <body>
@@ -91,59 +64,14 @@ box-icon { transition: all 0.3s ease; }
       <div id="loaderbar-inner"></div>
     </div>
 
-<div id="mixer">
-
-
-  <div class="mixer-track" track="1">
-    <div class="selector" track="1"><box-icon name='selection'></box-icon></div>
-    <div class="track-bank" track="1"></div>
-    <div class="track-head" track="1">
-      </div>
-  </div>
-
-
-  <div class="mixer-track" track="2">
-    <div class="selector" track="2"><box-icon name='selection'></box-icon></div>
-    <div class="track-bank" track="2"></div>
-    <div class="track-head" track="2">
-      </div>
-  </div>
-
-
-  <div class="mixer-track" track="3">
-    <div class="track-row">
-        <div class="selector" track="3">
-            <box-icon type='solid' name='right-arrow'></box-icon>
-        </div>
-        <div class="slot-track-bank" track="3">
-          <div class="track-list">
-            <div id="tracks"></div>
-          </div>
-        </div>
-      </div>
-    <div class="track-row"><box-icon class="checker" name='checkbox' color="pink"></box-icon></div>
-    <div class="track-row"><box-icon class="infinitiser" name='infinite' color="pink"></box-icon></div>
-    <div class="track-head" track="3">
-      </div>
-  </div>
-
-</div>
-
 <div id="tracks"></div>
-
-    <div id="chat-window">
 
     <ul id="messages"></ul>
     <form id="form" action="">
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
-    </div>
-
-
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://unpkg.com/boxicons@latest/dist/boxicons.js"></script>
-
 
 
     <script>
@@ -258,7 +186,7 @@ $target.attr("preload","auto");
 
     if ( $target.hasClass("diegetic") ) { $genre = "diegetic" };
 
-    $element = '<div class="track" target="'+$id+'" column="'+$column+'" position="'+$position+'"><div class="trackname">'+$name+'</div></div>';
+    $element = '<li class="draggable track '+$genre+'" target="'+$id+'" column="'+$column+'" position="'+$position+'"><div class="looper"></div><div class="syncer"></div><div class="volume-down">-</div><div class="volume-up">+</div><div class="trackname">'+$name+'</div><div class="deleter"></div></li>';
     
     $("#tracks").append($element); 
 
@@ -407,24 +335,6 @@ $(document).on("click", ".looper", function(){
     else { socket.emit("turn-loop-off", $target); }
 });
 
-
-
-
-$(document).on("click", ".selector", function(){
-  $tracktarget = $(this).attr("track");
-  $(this).find("box-icon").toggleClass("rotate90");
-
-  $(".slot-track-bank[track="+$tracktarget+"]").toggleClass("open");
-
-
-
-});
-
-$(".checker").click(function(){
-  $(this).toggleClass("checked");
-  if ( $(this).hasClass("checked") ) { $(this).attr("name", "checkbox-square"); }
-  else  { $(this).attr("name", "checkbox"); }
-});
 
     </script>
   </body>
