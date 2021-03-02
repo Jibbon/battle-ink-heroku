@@ -67,7 +67,7 @@
 .track-bank{ position:absolute; width:100%; height:100%; float:left; background:pink; transform: translateX(-100%);  }
 .track-bank.open { transform: translateX(0%); }
 
-.slot-track-bank { width:100%; height:0px;  background:#222; color:whitesmoke; overflow: hidden; }
+.slot-track-bank { width:100%; height:0px;  background:#222; color:whitesmoke; overflow: hidden; transition: all 0.3s ease-in-out; }
 .slot-track-bank.open { width:100%; height:300px; }
 
 
@@ -89,6 +89,7 @@ box-icon {  }
 .track-volume { width:100%; height:300px; position:relative; }
 .volume-outer { position:absolute; height:100%; width:26px; left:50%; transform:translateX(-50%); background-color:pink; }
 .track-head { position:absolute; bottom:0px; cursor:pointer; width:100%; height:26px; }
+.master-play-button { cursor: pointer;}
 
     </style>
   </head>
@@ -102,24 +103,70 @@ box-icon {  }
 
 
   <div class="mixer-track" track="1">
-    <div class="selector" track="1"><box-icon name='selection'></box-icon></div>
-    <div class="track-bank" track="1"></div>
-    <div class="track-head" track="1">
+    <div class="track-row">
+      <div class="master-play-button" track-number="1" currenttrack="">
+        <box-icon type='solid' name='right-arrow'></box-icon>
       </div>
+    </div>
+    <div class="track-row">
+        <div class="selector" track="1">
+            <box-icon class="selector-button" name='list-ul'></box-icon>
+            <div class="track-name" track-number="1">Blank Track</div>
+        </div>
+        <div class="slot-track-bank" track="1">
+          <div class="track-list">
+            <div class="tracks" track-number="1"></div>
+          </div>
+        </div>
+      </div>
+    <div class="track-row"><box-icon class="checker" name='checkbox' color="pink"></box-icon></div>
+    <div class="track-row"><box-icon class="infinitiser" name='infinite' color="pink"></box-icon></div>
+    <div class="track-volume">
+      <div class="volume-outer">
+        <box-icon class="track-head draggable" volume="0" track-number="1" type='solid' name='diamond'></box-icon>
+
+      </div>
+    </div>
   </div>
+
+
+  
 
 
   <div class="mixer-track" track="2">
-    <div class="selector" track="2"><box-icon name='selection'></box-icon></div>
-    <div class="track-bank" track="2"></div>
-    <div class="track-head" track="2">
+    <div class="track-row">
+      <div class="master-play-button" track-number="2" currenttrack="">
+        <box-icon type='solid' name='right-arrow'></box-icon>
       </div>
+    </div>
+    <div class="track-row">
+        <div class="selector" track="2">
+            <box-icon class="selector-button" name='list-ul'></box-icon>
+            <div class="track-name" track-number="2">Blank Track</div>
+        </div>
+        <div class="slot-track-bank" track="2">
+          <div class="track-list">
+            <div class="tracks" track-number="2"></div>
+          </div>
+        </div>
+      </div>
+    <div class="track-row"><box-icon class="checker" name='checkbox' color="pink"></box-icon></div>
+    <div class="track-row"><box-icon class="infinitiser" name='infinite' color="pink"></box-icon></div>
+    <div class="track-volume">
+      <div class="volume-outer">
+        <box-icon class="track-head draggable" volume="0" track-number="2" type='solid' name='diamond'></box-icon>
+
+      </div>
+    </div>
   </div>
+
+
+
 
 
   <div class="mixer-track" track="3">
     <div class="track-row">
-      <div class="master-play-button">
+      <div class="master-play-button" track-number="3" currenttrack="">
         <box-icon type='solid' name='right-arrow'></box-icon>
       </div>
     </div>
@@ -130,7 +177,7 @@ box-icon {  }
         </div>
         <div class="slot-track-bank" track="3">
           <div class="track-list">
-            <div id="tracks" track-number="3"></div>
+            <div class="tracks" track-number="3"></div>
           </div>
         </div>
       </div>
@@ -138,7 +185,7 @@ box-icon {  }
     <div class="track-row"><box-icon class="infinitiser" name='infinite' color="pink"></box-icon></div>
     <div class="track-volume">
       <div class="volume-outer">
-        <box-icon class="track-head draggable" type='solid' name='diamond'></box-icon>
+        <box-icon class="track-head draggable" volume="0" track-number="3" type='solid' name='diamond'></box-icon>
 
       </div>
     </div>
@@ -172,8 +219,6 @@ box-icon {  }
 var $masterlevel = 0.020;
 var $mastervolume = 0.33;
 
-var $trackvolume = 0;
-
 var $trackcount = 0;
 var $track = 0;
 var $loaded = 1;
@@ -191,7 +236,7 @@ var $volumeheight = 274;
         SummonTracks();
 
         $(".draggable").draggable({ 
-          containment: ".volume-outer", 
+          containment: "parent", 
           scroll: false,
           start: function() 
             { 
@@ -207,8 +252,13 @@ var $volumeheight = 274;
             var $currentpercent = ((position * $percent)/10).toFixed(0);
             var $masteradjustment = ($currentpercent * $mastervolume).toFixed(3);
             console.log($masteradjustment / 100 );
-            $trackvolume = $masteradjustment / 100;
-            AdjustVolume();
+            
+            var $trackvolume = $masteradjustment / 100;
+
+            $tracknumber = $(this).attr("track-number");
+            $target = $(".master-play-button[track-number="+$tracknumber+"]").attr("currenttrack");
+             
+            AdjustVolume($target, $trackvolume);
             }
          });
       });
@@ -305,7 +355,7 @@ $target.attr("preload","auto");
 
     $element = '<div class="track" target="'+$id+'" column="'+$column+'" position="'+$position+'">'+$name+'</div>';
     
-    $("#tracks").append($element); 
+    $(".tracks").append($element); 
 
 }
 
@@ -349,10 +399,19 @@ else { socket.emit("pause", $target); }
 $(document).on("click", ".track", function(){
 
 $trackname = $(this).html();
+$trackid = $(this).attr("target");
+
 $targettrack = $(this).parent().attr("track-number");
 console.log($targettrack);
-console.log($trackname);
-$(".track-name").html($trackname);
+
+$(".master-play-button[track-number="+$targettrack+"]").attr("currenttrack",$trackid);
+
+$current = $(".master-play-button[track-number="+$targettrack+"]").attr("currenttrack");
+
+console.log($current);
+console.log($targettrack);
+
+$(".track-name[track-number="+$targettrack+"]").html($trackname);
 $(".slot-track-bank").removeClass("open");
 $("box-icon").removeClass("rotate90");
 });
@@ -466,18 +525,19 @@ $(".checker").click(function(){
 
 
 
-function AdjustVolume() {
+function AdjustVolume(song, volume) {
 
-    var song = $("#cathedral");
-    $data = {"track":"cathedral", "volume":$trackvolume };
+    $data = {"track":song, "volume":volume };
     socket.emit("volume", $data);
 }
 
 
 
 $(document).on("click", ".master-play-button", function(){
+$tracknumber = $(this).attr("track-number");
+$currenttrack = $(this).attr("currenttrack");
 $(this).toggleClass("playing");
-$target = "cathedral";
+$target = $currenttrack; 
 if ( $(this).hasClass("playing") ) { socket.emit("play", $target); }
 else { socket.emit("pause", $target); }
 

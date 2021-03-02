@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Battle Ink</title>
+    <link rel="icon" type="image/png" href="img/ico/favicon.ico">
+
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <style>
+      body { margin: 0; overflow:hidden; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+      #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+      #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+      #input:focus { outline: none; }
+      #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages > li { padding: 0.5rem 1rem; }
+      #messages > li:nth-child(odd) { background: #efefef; }
+
+      #loaderbar { position:fixed; left:0px; top:0px; height:3px; width:100%; }
+      #loaderbar-inner { height:3px; background-color: aqua; }
+#tracks { }
+.track { cursor:pointer; color:whitesmoke; font-size:10px; margin-bottom:10px; }
+.track.playing { color:hotpink; }
+.trackname { width:100%;  }
+.trackname:hover { color:pink; }
+.fading-in { animation: pulse 3s linear infinite; }
+.fading-out { animation: pulse 3s linear infinite; }
+.diegetic { font-style: italic; }
+
+.trackname { float:left; cursor: pointer;  }
+
+.looper { float:left; cursor:pointer; opacity:0.3; background-image:url(img/loop.svg); background-size:cover; height:15px; width:15px; }
+.looper:hover { opacity:0.66; }
+.looper.on { opacity:1; }
+.syncer { float:left; margin-left:15px; margin-right:15px; cursor:pointer; opacity:0.3; background-image:url(img/sync.svg); background-size:cover; height:15px; width:15px; }
+.syncer:hover { opacity:0.66; }
+.volume-up { float:left; margin-right:15px; height:15px; width:15px; cursor: pointer;} 
+.volume-down { float:left; margin-right:5px; height:15px; width:15px; cursor: pointer; }
+.deleter { float:right; cursor:pointer; opacity:0; background-image:url(img/delete.svg); background-size:cover; height:15px; width:15px; }
+.deleter:hover { opacity:0.66; }
+
+@keyframes pulse 
+    {
+    0% { opacity:1;  } 
+	50% { opacity:0.3; } 
+	100% { opacity:1; }
+    }
+
+    @keyframes pulse-out
+    {
+    0% { opacity:1;  } 
+	50% { opacity:0.3; } 
+	100% { opacity:1; }
+    }
+
+#chat-window { visibility: hidden; }
+
+#mixer { position:absolute; width:100%; height:100%; background:black; }
+.mixer-track { position:relative; width:200px; height:100%; margin:1px 1px 1px 0px; background:gray; float:left; overflow:hidden !important; }
+
+.track-bank{ position:absolute; width:100%; height:100%; float:left; background:pink; transform: translateX(-100%);  }
+.track-bank.open { transform: translateX(0%); }
+
+.slot-track-bank { width:100%; height:0px;  background:#222; color:whitesmoke; overflow: hidden; transition: all 0.3s ease-in-out; }
+.slot-track-bank.open { width:100%; height:300px; }
+
+
+.track-head { width:100%; position:absolute; height:100%; }
+.track-head.open { transform: translateX(100%); }
+
+select { width:90%; margin-left:5%; }
+.selector { cursor: pointer;  }
+.selector-button { float:left; width:25px; height:35px; line-height:35px; }
+.track-name { font-size:12px; margin-left:35px; line-height:35px; }
+
+.rotate90 { transform: rotate(90deg); }
+box-icon {  }
+.checker { cursor: pointer; }
+.checkbox-text { float:left; width:66%; }
+
+.infinitiser { color:rgb(132,45,67); }
+
+.track-volume { width:100%; height:300px; position:relative; }
+.volume-outer { position:absolute; height:100%; width:26px; left:50%; transform:translateX(-50%); background-color:pink; }
+.track-head { position:absolute; bottom:0px; cursor:pointer; width:100%; height:26px; }
+.master-play-button { cursor: pointer;}
+
+    </style>
+  </head>
+  <body>
+
+    <div id="loaderbar">
+      <div id="loaderbar-inner"></div>
+    </div>
+
+<div id="mixer">
+
+
+  <div class="mixer-track" track="1">
+    <div class="selector" track="1"><box-icon name='selection'></box-icon></div>
+    <div class="track-bank" track="1"></div>
+    <div class="track-head" track="1">
+      </div>
+  </div>
+
+
+  <div class="mixer-track" track="2">
+    <div class="selector" track="2"><box-icon name='selection'></box-icon></div>
+    <div class="track-bank" track="2"></div>
+    <div class="track-head" track="2">
+      </div>
+  </div>
+
+
+  <div class="mixer-track" track="3">
+    <div class="track-row">
+      <div class="master-play-button">
+        <box-icon type='solid' name='right-arrow'></box-icon>
+      </div>
+    </div>
+    <div class="track-row">
+        <div class="selector" track="3">
+            <box-icon class="selector-button" name='list-ul'></box-icon>
+            <div class="track-name" track-number="3">Blank Track</div>
+        </div>
+        <div class="slot-track-bank" track="3">
+          <div class="track-list">
+            <div id="tracks" track-number="3"></div>
+          </div>
+        </div>
+      </div>
+    <div class="track-row"><box-icon class="checker" name='checkbox' color="pink"></box-icon></div>
+    <div class="track-row"><box-icon class="infinitiser" name='infinite' color="pink"></box-icon></div>
+    <div class="track-volume">
+      <div class="volume-outer">
+        <box-icon class="track-head draggable" type='solid' name='diamond'></box-icon>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="tracks"></div>
+
+    <div id="chat-window">
+
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+    </div>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://unpkg.com/boxicons@latest/dist/boxicons.js"></script>
+
+
+
+    <script>
+      var socket = io();
+
+      var $volumehandle = 0.010;
+
+var $masterlevel = 0.020;
+var $mastervolume = 0.33;
+
+var $trackvolume = 0;
+
+var $trackcount = 0;
+var $track = 0;
+var $loaded = 1;
+var $open = false;
+
+var $volumeheight = 274;
+
+var $track01 = "";
+var $track02 = "";
+var $track03 = "";
+
+      var messages = document.getElementById('messages');
+      var form = document.getElementById('form');
+      var input = document.getElementById('input');
+
+      $(document).ready(function(){
+        SummonTracks();
+
+        $(".draggable").draggable({ 
+          containment: ".volume-outer", 
+          scroll: false,
+          start: function() 
+            { 
+            console.log("starting"); 
+            var position = $(this).position().top;
+            console.log(position);
+            },
+          drag: function() 
+            {
+            var position = ( $(this).position().top - $volumeheight ) * -1;
+            //console.log(position);  
+            var $percent = $volumeheight / 100;
+            var $currentpercent = ((position * $percent)/10).toFixed(0);
+            var $masteradjustment = ($currentpercent * $mastervolume).toFixed(3);
+            console.log($masteradjustment / 100 );
+            $trackvolume = $masteradjustment / 100;
+            AdjustVolume();
+            }
+         });
+      });
+
+    
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit('chat message', input.value);
+          input.value = '';
+        }
+      });
+
+      socket.on('chat message', function(msg) {
+        var item = document.createElement('li');
+        item.textContent = msg;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+
+
+
+
+function SummonTracks(){
+
+var data = "nothing";
+socket.emit("gettracks", data);
+}
+
+socket.on("catchtracks", function(data){
+
+  $tracks = data;
+  console.log($tracks);
+
+$total = $tracks.length;
+
+$.each($tracks, function(index, item){
+    var $element = '<audio id="'+item.id+'" class="'+item.class+'" column="'+item.column+'" position="'+item.position+'" name="'+item.name+'" preload="none"><source src="audio/'+item.file+'" type="audio/mpeg"></audio>';
+    $('body').append($element);
+
+    if ( index == $total - 1) 
+        { 
+        CountTracks();
+        }
+
+});
+
+});
+
+
+function CountTracks(){
+
+  console.log("counting tracks");
+
+$("audio").each(function(){
+    $trackcount++;
+    $(this).attr("number",$trackcount);
+
+});
+
+console.log("Track count = "+$trackcount);
+
+PrintTracks();
+
+
+}   
+
+function PrintTracks(){
+
+console.log("gathering track "+$loaded);
+
+$target = $("audio[number="+$loaded+"]");
+
+$target.on('canplaythrough', function(){ AdjustLoaderBar(); });
+
+$target.on('ended', function()
+    {  
+    $(".track[target="+$loaded+"]").removeClass("playing");    
+    });
+
+    
+$target.attr("preload","auto");
+    
+    $id = $target.attr("id");
+    $name = $target.attr("name");
+    $column = $target.attr("column");
+    $position = $target.attr('position');
+    $genre = "nondiegetic";
+
+    $target.attr("preload","auto");
+
+    if ( $target.hasClass("diegetic") ) { $genre = "diegetic" };
+
+    $element = '<div class="track" target="'+$id+'" column="'+$column+'" position="'+$position+'">'+$name+'</div>';
+    
+    $("#tracks").append($element); 
+
+}
+
+
+
+function AdjustLoaderBar(){
+
+$loaded++;
+$perc = 100 / $trackcount;
+$width = $loaded * $perc;
+$("#loaderbar-inner").css("width",$width+"%");
+
+if ( $loaded > $trackcount) 
+    { 
+    Start();
+    }
+
+else { PrintTracks(); }    
+}
+
+
+function Start(){
+
+  console.log("Ready");
+
+  $("#loaderbar").fadeOut();
+
+}
+
+
+$(document).on("click", ".play-button", function(){
+
+$(this).parent().toggleClass("playing");
+$target= $(this).parent().attr("target");
+if ( $(this).parent().hasClass("playing") ) { socket.emit("play", $target); }
+else { socket.emit("pause", $target); }
+
+});
+
+
+$(document).on("click", ".track", function(){
+
+$trackname = $(this).html();
+$trackid = $(this).attr("target");
+$targettrack = $(this).parent().attr("track-number");
+$track03 = $trackid;
+
+console.log($targettrack);
+console.log($trackname);
+
+$(".track-name").html($trackname);
+$(".slot-track-bank").removeClass("open");
+$("box-icon").removeClass("rotate90");
+});
+
+
+socket.on("fire", function(data){ Play(data); });
+socket.on("freeze", function(data){ Pause(data); });
+
+function Play(target)
+    { 
+    $(".track[target="+target+"]").addClass("fading-in");
+    $(".track[target="+target+"]").addClass("playing");    
+
+    FadeIn(target); 
+    }
+
+function Pause(target)
+    { 
+    FadeOut(target); 
+    }
+
+function FadeOut(audio) {
+var song = $("#"+audio);
+song.animate({volume: 0}, 1000);
+
+
+}
+
+
+
+function FadeIn(audio) {
+var song = $("#"+audio);
+song.get(0).volume = 0;
+song.get(0).play();
+song.animate({volume: $masterlevel}, 1000);
+
+}
+
+
+
+$(document).on("click", ".syncer", function(){
+    $target= $(this).parent().attr("target");
+    var song = $("#"+$target);
+    var currentTime = song.get(0).currentTime;
+    var $data = {"track": $target, "time":currentTime };
+    socket.emit("syncit", $data);
+});
+
+
+$(document).on("click", ".volume-down", function(){
+    $target= $(this).parent().attr("target");
+    var song = $("#"+$target);
+    var $currentvolume = song.get(0).volume;
+    var $newvolume = $currentvolume - $volumehandle;
+    if ( $newvolume < $volumehandle ) { $newvolume = $volumehandle };
+    $data = {"track":$target, "volume":$newvolume };
+    socket.emit("volume", $data);
+});
+
+$(document).on("click", ".volume-up", function(){
+    $target= $(this).parent().attr("target");
+    var song = $("#"+$target);
+    var $currentvolume = song.get(0).volume;
+    var $newvolume = $currentvolume + $volumehandle;
+    if ( $newvolume < $volumehandle ) { $newvolume = $volumehandle };
+
+    $data = {"track":$target, "volume":$newvolume };
+    socket.emit("volume", $data);
+
+});
+
+socket.on("changevolume", function(data){
+    var song = $("#"+data.track);
+    song.get(0).volume = data.volume;
+});
+
+socket.on("sync", function(data){
+    var song = $("#"+data.track);
+    song.get(0).currentTime = data.time;
+});
+
+
+// LOOP BUTTON FUNCTION
+
+$(document).on("click", ".looper", function(){
+    $(this).toggleClass("on");
+    $target= $(this).parent().attr("target");
+
+    if ( $(this).hasClass("on") ) { socket.emit("turn-loop-on", $target); }
+    else { socket.emit("turn-loop-off", $target); }
+});
+
+
+
+
+$(document).on("click", ".selector", function(){
+  $tracktarget = $(this).attr("track");
+  $(this).find("box-icon").toggleClass("rotate90");
+
+  $(".slot-track-bank[track="+$tracktarget+"]").toggleClass("open");
+
+
+
+});
+
+$(".checker").click(function(){
+  $(this).toggleClass("checked");
+  if ( $(this).hasClass("checked") ) { $(this).attr("name", "checkbox-square"); }
+  else  { $(this).attr("name", "checkbox"); }
+});
+
+
+
+function AdjustVolume() {
+
+    var song = $("#"+$track03);
+    $data = {"track":$track03, "volume":$trackvolume };
+    socket.emit("volume", $data);
+}
+
+
+
+$(document).on("click", ".master-play-button", function(){
+$tracknumber = $(this).attr("track-number");
+$(this).toggleClass("playing");
+$target = $track03; 
+if ( $(this).hasClass("playing") ) { socket.emit("play", $target); }
+else { socket.emit("pause", $target); }
+
+});
+
+
+
+    </script>
+  </body>
+</html>

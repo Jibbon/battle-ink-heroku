@@ -13,6 +13,12 @@ var tracks = [
   {'id':'farewell', 'class':'diegetic', 'name':'Farewell to a Friend', 'file':'farewelltoafriend.mp3', 'column':'columnone', 'position':2 },
   {'id':'theglory', 'class':'diegetic', 'name':'The Glory', 'file':'theglory.mp3', 'column':'columnone', 'position':3 },
   {'id':'darkcello', 'class':'diegetic', 'name':'Dark Cello One', 'file':'cellofear01.mp3', 'column':'columnone', 'position':4 },
+  {'id':'hearth', 'class':'diegetic', 'name':'Hearth Ambience', 'file':'hearth01.mp3', 'column':'columnone', 'position':5 },
+  {'id':'rainandthunder', 'class':'diegetic', 'name':'Rain and Thunder Ambience', 'file':'rainandthunder.mp3', 'column':'columnone', 'position':6 },
+  {'id':'swamp', 'class':'diegetic', 'name':'Swamp Ambience', 'file':'swamp.mp3', 'column':'columnone', 'position':7 },
+  {'id':'stream', 'class':'diegetic', 'name':'Stream Ambience', 'file':'stream.mp3', 'column':'columnone', 'position':8 },
+  {'id':'kododrums', 'class':'diegetic', 'name':'Kodo Drums', 'file':'kododrums.mp3', 'column':'columnone', 'position':8 },
+  {'id':'horror', 'class':'diegetic', 'name':'Horror', 'file':'horror01.mp3', 'column':'columnone', 'position':9 }
   ];
 
 
