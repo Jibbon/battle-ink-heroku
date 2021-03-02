@@ -10,8 +10,13 @@
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+    
     <style>
-      body { margin: 0; overflow:hidden; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+      body { font-family: 'Open Sans', sans-serif;
+
+ margin: 0; overflow:hidden; padding-bottom: 3rem; }
 
       #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
       #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
@@ -28,7 +33,7 @@
       #curtain { position:fixed; z-index:90; width:100%; height:100%; background:black; }
 
 .tracks { padding:10px; }
-.track { cursor:pointer; color:whitesmoke; font-size:10px; margin-bottom:10px; }
+.track { cursor:pointer; color:whitesmoke; font-size:11px; margin-bottom:10px; }
 .track.playing { color:hotpink; }
 .trackname { width:100%;  }
 .trackname:hover { color:pink; }
@@ -157,6 +162,8 @@ box-icon { position:absolute; top:50%; left:50%; transform: translateX(-50%) tra
 .thing { float:left; width:35px; height:35px; border:0px solid gray; position:relative; }
 .buttons-row { height:35px; margin-bottom:25px; border-top:1px solid black; border-bottom:1px solid black; }
 
+#enter-button { position:fixed; z-index:98; display:none; cursor:pointer; color:white; top:50%; left:50%; transform: translateX(-50%) translateY(-50%); }
+
     </style>
   </head>
   <body>
@@ -164,6 +171,8 @@ box-icon { position:absolute; top:50%; left:50%; transform: translateX(-50%) tra
     <div id="loaderbar">
       <div id="loaderbar-inner"></div>
     </div>
+
+    <div id="enter-button">ENTER</div>
 
 <div id="curtain"></div>
 
@@ -475,10 +484,16 @@ function Start(){
 
   $("#loaderbar").fadeOut();
 
-  $("#curtain").fadeOut();
+  $("#enter-button").fadeIn();
+  
 
 }
 
+
+$("#enter-button").click(function(){
+  $("#curtain").fadeOut();
+  $(this).fadeOut();
+});
 
 $(document).on("click", ".play-button", function(){
 
