@@ -22,7 +22,7 @@
       #messages > li { padding: 0.5rem 1rem; }
       #messages > li:nth-child(odd) { background: #efefef; }
 
-      #loaderbar { position:fixed; left:0px; top:0px; height:3px; width:100%; }
+      #loaderbar { position:fixed; z-index:99; left:0px; top:0px; height:3px; width:100%; }
       #loaderbar-inner { height:3px; background-color: aqua; }
 #tracks { }
 .track { cursor:pointer; color:whitesmoke; font-size:10px; margin-bottom:10px; }
@@ -283,20 +283,19 @@ var $volumeheight = 274;
 
 
 
-function SummonTracks(){
+function SummonTracks()
+  {
+  var data = "nothing";
+  socket.emit("gettracks", data);
+  }
 
-var data = "nothing";
-socket.emit("gettracks", data);
-}
-
-socket.on("catchtracks", function(data){
-
+socket.on("catchtracks", function(data) 
+  {
   $tracks = data;
   console.log($tracks);
+  $total = $tracks.length;
 
-$total = $tracks.length;
-
-$.each($tracks, function(index, item){
+  $.each($tracks, function(index, item){
     var $element = '<audio id="'+item.id+'" class="'+item.class+'" column="'+item.column+'" position="'+item.position+'" name="'+item.name+'" preload="none"><source src="audio/'+item.file+'" type="audio/mpeg"></audio>';
     $('body').append($element);
 
