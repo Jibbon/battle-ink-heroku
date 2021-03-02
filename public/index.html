@@ -22,8 +22,11 @@
       #messages > li { padding: 0.5rem 1rem; }
       #messages > li:nth-child(odd) { background: #efefef; }
 
-      #loaderbar { position:fixed; z-index:99; left:0px; top:0px; height:3px; width:100%; }
+      #loaderbar { position:fixed; z-index:99; width:66%; top:50%; left:50%; transform:translateX(-50%) translateY(-50%); height:3px; }
       #loaderbar-inner { height:3px; background-color: aqua; }
+
+      #curtain { position:fixed; z-index:90; width:100%; height:100%; background:black; }
+
 .tracks { padding:10px; }
 .track { cursor:pointer; color:whitesmoke; font-size:10px; margin-bottom:10px; }
 .track.playing { color:hotpink; }
@@ -161,6 +164,8 @@ box-icon { position:absolute; top:50%; left:50%; transform: translateX(-50%) tra
     <div id="loaderbar">
       <div id="loaderbar-inner"></div>
     </div>
+
+<div id="curtain"></div>
 
 <div id="mixer">
 
@@ -469,6 +474,8 @@ function Start(){
   console.log("Ready");
 
   $("#loaderbar").fadeOut();
+
+  $("#curtain").fadeOut();
 
 }
 
