@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
   socket.on("gettracks", (data) => { socket.emit("catchtracks", tracks); });
 
   socket.on('play', (data) => { io.emit('fire',data); });
-    socket.on('pause', (data) => { io.emit('freeze',data); });
+  socket.on('pause', (data) => { io.emit('freeze',data); });
   
     socket.on('turn-loop-on', (data) => { io.emit('loop-on',data); });
     socket.on('turn-loop-off', (data) => { io.emit('loop-off',data); });

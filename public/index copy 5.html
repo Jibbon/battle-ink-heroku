@@ -24,7 +24,7 @@
 
       #loaderbar { position:fixed; z-index:99; left:0px; top:0px; height:3px; width:100%; }
       #loaderbar-inner { height:3px; background-color: aqua; }
-.tracks { padding:10px; }
+#tracks { }
 .track { cursor:pointer; color:whitesmoke; font-size:10px; margin-bottom:10px; }
 .track.playing { color:hotpink; }
 .trackname { width:100%;  }
@@ -35,7 +35,9 @@
 
 .trackname { float:left; cursor: pointer;  }
 
-.looper { cursor: pointer; }
+.looper { float:left; cursor:pointer; opacity:0.3; background-image:url(img/loop.svg); background-size:cover; height:15px; width:15px; }
+.looper:hover { opacity:0.66; }
+.looper.on { opacity:1; }
 .syncer { float:left; margin-left:15px; margin-right:15px; cursor:pointer; opacity:0.3; background-image:url(img/sync.svg); background-size:cover; height:15px; width:15px; }
 .syncer:hover { opacity:0.66; }
 .volume-up { float:left; margin-right:15px; height:15px; width:15px; cursor: pointer;} 
@@ -60,12 +62,12 @@
 #chat-window { visibility: hidden; }
 
 #mixer { position:absolute; width:100%; height:100%; background:black; }
-.mixer-track { position:relative; width:200px; height:100%; margin:1px 1px 1px 0px; background:#323232; float:left; overflow:hidden !important; }
+.mixer-track { position:relative; width:200px; height:100%; margin:1px 1px 1px 0px; background:gray; float:left; overflow:hidden !important; }
 
 .track-bank{ position:absolute; width:100%; height:100%; float:left; background:pink; transform: translateX(-100%);  }
 .track-bank.open { transform: translateX(0%); }
 
-.slot-track-bank { width:100%; height:0px; background:#222; color:whitesmoke; overflow: hidden; transition: all 0.3s ease-in-out; }
+.slot-track-bank { width:100%; height:0px;  background:#222; color:whitesmoke; overflow: hidden; transition: all 0.3s ease-in-out; }
 .slot-track-bank.open { width:100%; height:300px; }
 
 
@@ -78,81 +80,16 @@ select { width:90%; margin-left:5%; }
 .track-name { font-size:12px; margin-left:35px; line-height:35px; }
 
 .rotate90 { transform: rotate(90deg); }
-box-icon { position:absolute; top:50%; left:50%; transform: translateX(-50%) translateY(-50%); }
+box-icon {  }
 .checker { cursor: pointer; }
 .checkbox-text { float:left; width:66%; }
 
 .infinitiser { color:rgb(132,45,67); }
 
 .track-volume { width:100%; height:300px; position:relative; }
-.volume-outer { position:absolute; height:100%; width:35px; left:50%; transform:translateX(-50%); }
+.volume-outer { position:absolute; height:100%; width:26px; left:50%; transform:translateX(-50%); background-color:pink; }
 .track-head { position:absolute; bottom:0px; cursor:pointer; width:100%; height:26px; }
 .master-play-button { cursor: pointer;}
-
-.fader-track {
-      position: absolute;
-      z-index: 0;
-      top: 0;
-      bottom: 0;
-      width: .25rem;
-      left: 50%;
-      margin-left: -.125rem;
-      background: rgb(0,0,0);
-      border: none;
-      border-radius: 5px;
-      box-shadow: 
-        0 -1px 0 0 rgba(255,255,255,.25) inset;
-
-    }
-
-
-    .fader-thumb {
-      position: absolute;
-      z-index: 1;
-      border: none;
-      height: 4rem;
-      width: 100%;
-      border-radius: 0px;
-      bottom:0px;
-      cursor: move;
-      user-select: none;
-      
-      background: 
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 5px,
-        rgba(0,0,0,1) 6px
-      ),
-   
-      linear-gradient(0deg, 
-        rgb(70,70,70) 0%, 
-        rgb(90,90,90) 14%, 
-        rgb(20,20,20) 15%, 
-        rgb(20,20,20) 50%,
-        rgb(90,90,90) 84%,
-        rgb(20,20,20) 85%,
-        rgb(30,30,30) 100%
-      );
-      box-shadow: 
-        //0 0 0 2px rgba(0,0,0,.25) inset,
-        0 .25rem .5rem 0 rgba(0,0,0,.5);
-    }
-.fader-thumb:after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 0; right: 0;
-        margin-top: -1px;
-        height: 3px;
-        background: rgba(255,255,255,.75);
-      
-    }
-  
-.fader-thumb.fadeout { transition:all 1s ease; top:100% !important; }  
-
-.thing { float:left; width:35px; height:35px; border:0px solid gray; position:relative; }
-.buttons-row { height:35px; margin-bottom:25px; border-top:1px solid black; border-bottom:1px solid black; }
 
     </style>
   </head>
@@ -167,13 +104,13 @@ box-icon { position:absolute; top:50%; left:50%; transform: translateX(-50%) tra
 
   <div class="mixer-track" track="1">
     <div class="track-row">
-      
+      <div class="master-play-button" track-number="1" currenttrack="">
+        <box-icon type='solid' name='right-arrow'></box-icon>
+      </div>
     </div>
     <div class="track-row">
         <div class="selector" track="1">
-            <div class="thing">
-              <box-icon class="selector-button" name='list-ul'></box-icon>
-            </div>
+            <box-icon class="selector-button" name='list-ul'></box-icon>
             <div class="track-name" track-number="1">Blank Track</div>
         </div>
         <div class="slot-track-bank" track="1">
@@ -182,18 +119,11 @@ box-icon { position:absolute; top:50%; left:50%; transform: translateX(-50%) tra
           </div>
         </div>
       </div>
-    <div class="track-row buttons-row">
-        <div class="master-play-button thing" track-number="1" currenttrack="">
-          <box-icon type='solid' name='right-arrow'></box-icon>
-        </div>
-        <div class="thing">
-          <box-icon class="looper" name='infinite' color="black"></box-icon>
-        </div>
-    </div>
+    <div class="track-row"><box-icon class="checker" name='checkbox' color="pink"></box-icon></div>
+    <div class="track-row"><box-icon class="infinitiser" name='infinite' color="pink"></box-icon></div>
     <div class="track-volume">
       <div class="volume-outer">
-        <div class="fader-track"></div>
-        <div class="fader-thumb draggable" volume="0" track-number="1" type='solid' name='diamond'></div>
+        <box-icon class="track-head draggable" volume="0" track-number="1" type='solid' name='diamond'></box-icon>
 
       </div>
     </div>
@@ -205,13 +135,13 @@ box-icon { position:absolute; top:50%; left:50%; transform: translateX(-50%) tra
 
   <div class="mixer-track" track="2">
     <div class="track-row">
-      
+      <div class="master-play-button" track-number="2" currenttrack="">
+        <box-icon type='solid' name='right-arrow'></box-icon>
+      </div>
     </div>
     <div class="track-row">
         <div class="selector" track="2">
-            <div class="thing">
-              <box-icon class="selector-button" name='list-ul'></box-icon>
-            </div>
+            <box-icon class="selector-button" name='list-ul'></box-icon>
             <div class="track-name" track-number="2">Blank Track</div>
         </div>
         <div class="slot-track-bank" track="2">
@@ -220,18 +150,11 @@ box-icon { position:absolute; top:50%; left:50%; transform: translateX(-50%) tra
           </div>
         </div>
       </div>
-    <div class="track-row buttons-row">
-        <div class="master-play-button thing" track-number="2" currenttrack="">
-          <box-icon type='solid' name='right-arrow'></box-icon>
-        </div>
-        <div class="thing">
-          <box-icon class="looper" name='infinite' color="black"></box-icon>
-        </div>
-    </div>
+    <div class="track-row"><box-icon class="checker" name='checkbox' color="pink"></box-icon></div>
+    <div class="track-row"><box-icon class="infinitiser" name='infinite' color="pink"></box-icon></div>
     <div class="track-volume">
       <div class="volume-outer">
-        <div class="fader-track"></div>
-        <div class="fader-thumb draggable" volume="0" track-number="2" type='solid' name='diamond'></div>
+        <box-icon class="track-head draggable" volume="0" track-number="2" type='solid' name='diamond'></box-icon>
 
       </div>
     </div>
@@ -241,39 +164,32 @@ box-icon { position:absolute; top:50%; left:50%; transform: translateX(-50%) tra
 
 
 
-    <div class="mixer-track" track="3">
-      <div class="track-row">
-        
-      </div>
-      <div class="track-row">
-          <div class="selector" track="3">
-              <div class="thing">
-                <box-icon class="selector-button" name='list-ul'></box-icon>
-              </div>
-              <div class="track-name" track-number="3">Blank Track</div>
-          </div>
-          <div class="slot-track-bank" track="3">
-            <div class="track-list">
-              <div class="tracks" track-number="3"></div>
-            </div>
-          </div>
-        </div>
-      <div class="track-row buttons-row">
-          <div class="master-play-button thing" track-number="3" currenttrack="">
-            <box-icon type='solid' name='right-arrow'></box-icon>
-          </div>
-          <div class="thing">
-            <box-icon class="looper" name='infinite' color="black"></box-icon>
-          </div>
-      </div>
-      <div class="track-volume">
-        <div class="volume-outer">
-          <div class="fader-track"></div>
-          <div class="fader-thumb draggable" volume="0" track-number="3" type='solid' name='diamond'></div>
-  
-        </div>
+  <div class="mixer-track" track="3">
+    <div class="track-row">
+      <div class="master-play-button" track-number="3" currenttrack="">
+        <box-icon type='solid' name='right-arrow'></box-icon>
       </div>
     </div>
+    <div class="track-row">
+        <div class="selector" track="3">
+            <box-icon class="selector-button" name='list-ul'></box-icon>
+            <div class="track-name" track-number="3">Blank Track</div>
+        </div>
+        <div class="slot-track-bank" track="3">
+          <div class="track-list">
+            <div class="tracks" track-number="3"></div>
+          </div>
+        </div>
+      </div>
+    <div class="track-row"><box-icon class="checker" name='checkbox' color="pink"></box-icon></div>
+    <div class="track-row"><box-icon class="infinitiser" name='infinite' color="pink"></box-icon></div>
+    <div class="track-volume">
+      <div class="volume-outer">
+        <box-icon class="track-head draggable" volume="0" track-number="3" type='solid' name='diamond'></box-icon>
+
+      </div>
+    </div>
+  </div>
 
 </div>
 
@@ -291,8 +207,6 @@ box-icon { position:absolute; top:50%; left:50%; transform: translateX(-50%) tra
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <!-- 2. Include touch punch -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
     <script src="https://unpkg.com/boxicons@latest/dist/boxicons.js"></script>
 
 
@@ -302,8 +216,8 @@ box-icon { position:absolute; top:50%; left:50%; transform: translateX(-50%) tra
 
       var $volumehandle = 0.010;
 
-var $masterlevel = 0;
-var $mastervolume = 0.50;
+var $masterlevel = 0.020;
+var $mastervolume = 0.33;
 
 var $trackcount = 0;
 var $track = 0;
@@ -327,13 +241,13 @@ var $volumeheight = 274;
           start: function() 
             { 
             console.log("starting"); 
-            var position = $(this).position().top + 50;
+            var position = $(this).position().top;
             console.log(position);
             },
           drag: function() 
             {
-            var position = ( ($(this).position().top + 54) - $volumeheight ) * -1;
-            console.log(position);  
+            var position = ( $(this).position().top - $volumeheight ) * -1;
+            //console.log(position);  
             var $percent = $volumeheight / 100;
             var $currentpercent = ((position * $percent)/10).toFixed(0);
             var $masteradjustment = ($currentpercent * $mastervolume).toFixed(3);
@@ -343,9 +257,7 @@ var $volumeheight = 274;
 
             $tracknumber = $(this).attr("track-number");
             $target = $(".master-play-button[track-number="+$tracknumber+"]").attr("currenttrack");
-            
-            $(this).attr("volume",$trackvolume);
-
+             
             AdjustVolume($target, $trackvolume);
             }
          });
@@ -500,23 +412,19 @@ console.log($targettrack);
 
 $(".track-name[track-number="+$targettrack+"]").html($trackname);
 $(".slot-track-bank").removeClass("open");
+$("box-icon").removeClass("rotate90");
 });
 
 
 socket.on("fire", function(data){ Play(data); });
 socket.on("freeze", function(data){ Pause(data); });
 
-function Play(data)
+function Play(target)
     { 
-    console.log(data);
-    
-    var target = data.target;
-    var volume = data.volume;
-    
     $(".track[target="+target+"]").addClass("fading-in");
     $(".track[target="+target+"]").addClass("playing");    
 
-    FadeIn(target,volume); 
+    FadeIn(target); 
     }
 
 function Pause(target)
@@ -528,15 +436,16 @@ function FadeOut(audio) {
 var song = $("#"+audio);
 song.animate({volume: 0}, 1000);
 
+
 }
 
 
 
-function FadeIn(audio, $volume) {
+function FadeIn(audio) {
 var song = $("#"+audio);
 song.get(0).volume = 0;
 song.get(0).play();
-song.animate({volume: $volume}, 1000);
+song.animate({volume: $masterlevel}, 1000);
 
 }
 
@@ -590,8 +499,8 @@ $(document).on("click", ".looper", function(){
     $(this).toggleClass("on");
     $target= $(this).parent().attr("target");
 
-    if ( $(this).hasClass("on") ) { socket.emit("turn-loop-on", $target); $(this).attr("color","pink"); }
-    else { socket.emit("turn-loop-off", $target); $(this).attr("color","black"); }
+    if ( $(this).hasClass("on") ) { socket.emit("turn-loop-on", $target); }
+    else { socket.emit("turn-loop-off", $target); }
 });
 
 
@@ -599,6 +508,7 @@ $(document).on("click", ".looper", function(){
 
 $(document).on("click", ".selector", function(){
   $tracktarget = $(this).attr("track");
+  $(this).find("box-icon").toggleClass("rotate90");
 
   $(".slot-track-bank[track="+$tracktarget+"]").toggleClass("open");
 
@@ -627,19 +537,8 @@ $tracknumber = $(this).attr("track-number");
 $currenttrack = $(this).attr("currenttrack");
 $(this).toggleClass("playing");
 $target = $currenttrack; 
-$volume = $(".fader-thumb[track-number="+$tracknumber+"]").attr("volume");
-if ( $(this).hasClass("playing") ) 
-  { 
-    $(this).find("box-icon").attr("color","pink");
-    $data = {"target": $target, "volume":$volume }
-    socket.emit("play", $data ); 
-  }
-  else { 
-      socket.emit("pause", $target); 
-      $(this).find("box-icon").attr("color","black");
-      $(".fader-thumb[track-number="+$tracknumber+"]").animate({top: "220"}, 1000);
-
- }
+if ( $(this).hasClass("playing") ) { socket.emit("play", $target); }
+else { socket.emit("pause", $target); }
 
 });
 
