@@ -157,7 +157,7 @@ box-icon { position:absolute; top:50%; left:50%; transform: translateX(-50%) tra
       
     }
   
-.fader-thumb.fadeout { transition:all 3s ease; top:100% !important; }  
+.fader-thumb.fadeout { transition:all 1s ease; top:100% !important; }  
 
 .thing { float:left; width:35px; height:35px; border:0px solid gray; position:relative; }
 .buttons-row { height:35px; margin-bottom:25px; border-top:1px solid black; border-bottom:1px solid black; }
@@ -548,7 +548,7 @@ function Pause(target)
 
 function FadeOut(audio) {
 var song = $("#"+audio);
-song.animate({volume: 0}, 3000);
+song.animate({volume: 0}, 1000);
 
 }
 
@@ -659,7 +659,7 @@ if ( $(this).hasClass("playing") )
   else { 
       socket.emit("pause", $target); 
       $(this).find("box-icon").attr("color","black");
-      $(".fader-thumb[track-number="+$tracknumber+"]").attr("volume","0").animate({top: "220"}, 3000);
+      $(".fader-thumb[track-number="+$tracknumber+"]").animate({top: "220"}, 1000);
 
  }
 
