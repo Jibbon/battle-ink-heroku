@@ -1,0 +1,95 @@
+
+<html>
+
+<head>
+
+<style>
+
+audio { display: none; }
+
+.track { }
+.track.selected { color:hotpink; }
+
+</style>
+
+</head>
+
+
+<body>
+
+<audio id="track01" controls><source src="audio/kynespeace.mp3" type="audio/mp3"></audio>
+<audio id="track02" controls><source src="audio/stream.mp3" type="audio/mp3"></audio>
+
+    <div target="track01" class="track">Track 01</div>
+    <div target="track02" class="track">Track 02</div>
+
+
+<input type="range" id="volume" min="0" max="2" value="1" step="0.01">
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+<script>
+
+var $target = "track01";
+var gainNode;
+var audioContext;
+
+
+window.onload = init;
+
+function init() {
+
+audioContext = new AudioContext();
+
+// get the audio element
+const audioElement01 = document.querySelector('#track01');
+const audioElement02 = document.querySelector('#track02');
+
+// pass it into the audio context
+window.track01 = audioContext.createMediaElementSource(audioElement01);
+window.track02 = audioContext.createMediaElementSource(audioElement02);
+
+window.track01.connect(audioContext.destination);
+window.track02.connect(audioContext.destination);
+
+// panning
+const pannerOptions = {pan: 0};
+const panner = new StereoPannerNode(audioContext, pannerOptions);
+
+// gain
+
+const gainNode = audioContext.createGain();
+
+
+const volumeControl = document.querySelector('#volume');
+
+volumeControl.addEventListener('input', function() {
+    gainNode.gain.value = this.value;
+}, false);
+
+// PLAY
+audioElement01.play();
+audioElement02.play();
+
+}
+
+
+$(".track").click(function(){
+    $(".track").removeClass("selected");
+    $(this).addClass("selected");
+    $target = $(this).attr("target");
+    console.log($target);
+
+    console.log(window[$target]);
+
+    window[$target].connect(gainNode).connect(audioContext.destination);
+
+
+});
+
+</script>
+
+</body>
+
+</html>

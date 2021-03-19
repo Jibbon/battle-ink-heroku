@@ -42,8 +42,6 @@ box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) tra
 
 <script>
 
-var socket = io();
-
 $(document).ready(function(){
     GenerateSounds();
 });
@@ -83,33 +81,19 @@ function StartVolume(target){
 }
 
 function ChangeGain(target, gain){
-    
-    var $data = {"target": target, "gain":gain };
-    socket.emit("volume", $data);
+    var it = PIXI.sound._sounds[target];
+    //console.log(target);
+    it.volume = gain;
 
 }
-
-socket.on("changevolume", function(data){ 
-
-    var it = PIXI.sound._sounds[data.target];
-    //console.log(target);
-    it.volume = data.gain;
-
-});
-
-
 
 function ChangePan(target, pan){
-    var $data = {"target": target, "pan":pan };
-    socket.emit("pan", $data);
+    var it = PIXI.sound._sounds[target];
+    it.filters = [ new PIXI.sound.filters.StereoFilter(pan) ];
+    //console.log(it);
     
 }
 
-socket.on("changepan", function(data){
-    var it = PIXI.sound._sounds[data.target];
-    it.filters = [ new PIXI.sound.filters.StereoFilter(data.pan) ];
-    //console.log(it);
-});
 
 $(".draggable").draggable({ 
           containment: "parent", 

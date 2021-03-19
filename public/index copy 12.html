@@ -1,0 +1,49 @@
+<html>
+
+<head></head>
+
+<body>
+
+<script src="https://pixijs.download/dev/pixi.min.js"></script>
+<script src="js/pixi-sound.js"></script>
+
+<script>
+
+
+PIXI.sound.add('stream', {
+    url: 'audio/stream.mp3',
+    preload: true,
+    loaded: function() {
+        // duration can only be used once the sound is loaded
+        console.log('Duration: ', PIXI.sound.duration('stream'), 'seconds');
+    }
+});
+
+
+PIXI.sound.add('farewell', {
+    url: 'audio/farewelltoafriend.mp3',
+    preload: true,
+    loaded: function() {
+        // duration can only be used once the sound is loaded
+        console.log('Duration: ', PIXI.sound.duration('farewell'), 'seconds');
+        PIXI.sound.play('farewell');
+
+        ChangeGain('farewell',0.1);
+    }
+});
+
+
+function ChangeGain(target, gain){
+    var target = PIXI.sound._sounds[target];
+    console.log(target);
+    target.volume = 0.1;
+    target.filters = [ new PIXI.sound.filters.StereoFilter(-1) ];
+    const sound = PIXI.sound.Sound.from('audio/farewelltoafriend.mp3');
+    sound.volume = 0.01;
+}
+
+</script>
+
+</body>
+
+</html>

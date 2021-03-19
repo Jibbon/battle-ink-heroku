@@ -3,13 +3,12 @@
 <head>
 
 <style>
-body { margin:0px; padding:0px; overflow: hidden; background:black; }
+body { margin:0px; padding:0px; overflow: hidden ;}
 .frame { position:fixed; left:0px; top:0px; width:100%; height:100%; z-index:99; }
 .dot { position:relative; z-index:99; background:#CCC; width:35px; height:35px; border-radius: 100%; cursor: pointer; top:50%; left:50%; transform: translateX(-50%) translateY(-50%);}
 .tape { position: fixed; top:25px; right:25px; width:25px; height:25px; z-index:999; border:0px; }
 box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) translateY(-50%);}
 #line { position:absolute; left:50%; width:2px; height:100%; margin-left:-1px; z-index:0; background:purple;}
-#poster { position:absolute; z-index:-1; width:100%; height:100%; background-size:cover; opacity:0.66; background-image:url(img/puddle.jpg);}
 
 </style>
 
@@ -17,9 +16,7 @@ box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) tra
 
 <body>
 
-<div id="poster"></div>   
-
-<div id="line"></div>
+    <div id="line"></div>
 
 <div class='frame'>
 
@@ -41,8 +38,6 @@ box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) tra
 <script src="js/pixi-sound.js"></script>
 
 <script>
-
-var socket = io();
 
 $(document).ready(function(){
     GenerateSounds();
@@ -66,8 +61,7 @@ function AddSound(sound, file){
     preload: true,
     loaded: function() {
         // duration can only be used once the sound is loaded
-        //console.log('Duration: ', PIXI.sound.duration(sound), 'seconds');
-        console.log(sound+' is loaded');
+        console.log('Duration: ', PIXI.sound.duration(sound), 'seconds');
         StartVolume(sound);
         PIXI.sound.play(sound);
     }
@@ -83,33 +77,19 @@ function StartVolume(target){
 }
 
 function ChangeGain(target, gain){
-    
-    var $data = {"target": target, "gain":gain };
-    socket.emit("volume", $data);
+    var it = PIXI.sound._sounds[target];
+    //console.log(target);
+    it.volume = gain;
 
 }
-
-socket.on("changevolume", function(data){ 
-
-    var it = PIXI.sound._sounds[data.target];
-    //console.log(target);
-    it.volume = data.gain;
-
-});
-
-
 
 function ChangePan(target, pan){
-    var $data = {"target": target, "pan":pan };
-    socket.emit("pan", $data);
+    var it = PIXI.sound._sounds[target];
+    it.filters = [ new PIXI.sound.filters.StereoFilter(pan) ];
+    console.log(it);
     
 }
 
-socket.on("changepan", function(data){
-    var it = PIXI.sound._sounds[data.target];
-    it.filters = [ new PIXI.sound.filters.StereoFilter(data.pan) ];
-    //console.log(it);
-});
 
 $(".draggable").draggable({ 
           containment: "parent", 

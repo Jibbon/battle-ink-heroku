@@ -3,13 +3,12 @@
 <head>
 
 <style>
-body { margin:0px; padding:0px; overflow: hidden; background:black; }
+body { margin:0px; padding:0px; overflow: hidden ;}
 .frame { position:fixed; left:0px; top:0px; width:100%; height:100%; z-index:99; }
-.dot { position:relative; z-index:99; background:#CCC; width:35px; height:35px; border-radius: 100%; cursor: pointer; top:50%; left:50%; transform: translateX(-50%) translateY(-50%);}
+.dot { position:relative; background:#CCC; width:35px; height:35px; border-radius: 100%; cursor: pointer; top:50%; left:50%; transform: translateX(-50%) translateY(-50%);}
 .tape { position: fixed; top:25px; right:25px; width:25px; height:25px; z-index:999; border:0px; }
 box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) translateY(-50%);}
 #line { position:absolute; left:50%; width:2px; height:100%; margin-left:-1px; z-index:0; background:purple;}
-#poster { position:absolute; z-index:-1; width:100%; height:100%; background-size:cover; opacity:0.66; background-image:url(img/puddle.jpg);}
 
 </style>
 
@@ -17,15 +16,12 @@ box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) tra
 
 <body>
 
-<div id="poster"></div>   
-
-<div id="line"></div>
+    <div id="line"></div>
 
 <div class='frame'>
 
-        <div target='farewell' file='farewelltoafriend.mp3' class='draggable dot'><box-icon name="music"></box-icon></div>
-        <div target='stream' file='stream.mp3' class='draggable dot'><box-icon name="water"></box-icon></div></div>
-        <div target='drums' file='kododrums.mp3' class='draggable dot'><box-icon stype="solid" name="shield"></box-icon></div></div>
+        <div id='dot' target='farewell' class='draggable dot'><box-icon name="music"></box-icon></div>
+        <div id='dot' target='stream' class='draggable dot'><box-icon name="water"></box-icon></div></div>
 
 
     </div>
@@ -42,40 +38,29 @@ box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) tra
 
 <script>
 
-var socket = io();
 
-$(document).ready(function(){
-    GenerateSounds();
-});
-
-function GenerateSounds(){
-    console.log("generating...");
-
-    $('.dot').each(function(index, item){
-        $target = $(this).attr("target");
-        $file = $(this).attr("file");
-        AddSound($target, $file);
-    });
-
-}
-
-function AddSound(sound, file){
-
-    PIXI.sound.add(sound, {
-    url: 'audio/'+file,
+PIXI.sound.add('stream', {
+    url: 'audio/stream.mp3',
     preload: true,
     loaded: function() {
         // duration can only be used once the sound is loaded
-        //console.log('Duration: ', PIXI.sound.duration(sound), 'seconds');
-        console.log(sound+' is loaded');
-        StartVolume(sound);
-        PIXI.sound.play(sound);
+        console.log('Duration: ', PIXI.sound.duration('stream'), 'seconds');
+        StartVolume('stream');
+        PIXI.sound.play('stream');
     }
 });
 
-}
 
-
+PIXI.sound.add('farewell', {
+    url: 'audio/farewelltoafriend.mp3',
+    preload: true,
+    loaded: function() {
+        // duration can only be used once the sound is loaded
+        console.log('Duration: ', PIXI.sound.duration('farewell'), 'seconds');
+        PIXI.sound.play('farewell');
+        StartVolume('farewell');
+    }
+});
 
 function StartVolume(target){
     var it = PIXI.sound._sounds[target];
@@ -83,33 +68,19 @@ function StartVolume(target){
 }
 
 function ChangeGain(target, gain){
-    
-    var $data = {"target": target, "gain":gain };
-    socket.emit("volume", $data);
+    var it = PIXI.sound._sounds[target];
+    //console.log(target);
+    it.volume = gain;
 
 }
-
-socket.on("changevolume", function(data){ 
-
-    var it = PIXI.sound._sounds[data.target];
-    //console.log(target);
-    it.volume = data.gain;
-
-});
-
-
 
 function ChangePan(target, pan){
-    var $data = {"target": target, "pan":pan };
-    socket.emit("pan", $data);
+    var it = PIXI.sound._sounds[target];
+    it.filters = [ new PIXI.sound.filters.StereoFilter(pan) ];
+    console.log(it);
     
 }
 
-socket.on("changepan", function(data){
-    var it = PIXI.sound._sounds[data.target];
-    it.filters = [ new PIXI.sound.filters.StereoFilter(data.pan) ];
-    //console.log(it);
-});
 
 $(".draggable").draggable({ 
           containment: "parent", 

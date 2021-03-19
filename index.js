@@ -38,6 +38,7 @@ io.on('connection', (socket) => {
     socket.on("syncit", (data) => { io.emit("sync", data); });
 
     socket.on("volume", (data) => { io.emit("changevolume", data); });
+    socket.on("pan", (data) => { io.emit("changepan", data); });
 
     socket.on("tick", (data) => { socket.emit("tock", data); });
     
