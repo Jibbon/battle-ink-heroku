@@ -1,4 +1,5 @@
 const express = require("express");
+const siofu = require("socketio-file-upload");
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
@@ -79,7 +80,29 @@ io.on('connection', (socket) => {
       io.emit("feedbackground", url); 
       });
 
+    // UPLOADING STUFF
+    
+    var uploader = new siofu();
+    uploader.dir = "public/audio";
+    uploader.listen(socket);
 
+    uploader.on("saved", function(event)
+      {
+      var filename = event.file.name;
+      var extension = filename.split('.').pop();
+      var name = filename.replace(/\.[^/.]+$/, "");
+      var d = new Date();
+      var n = d.getTime();
+      
+      $newtrack =  {'id':name, 'file':n+'.'+extension, 'gain':0.05, 'icon':'water' };
+      library.push($newtrack);
+
+      fs.rename(event.file.pathName, 'public/audio/'+n+'.'+extension, function(err) 
+        {
+        if ( err ) console.log('ERROR: ' + err);
+        else io.emit("sounduploaded", $newtrack);
+      });
+      });
 
 
 });
