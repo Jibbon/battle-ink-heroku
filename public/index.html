@@ -2,37 +2,56 @@
 
 <head>
 
+
 <style>
 body { margin:0px; padding:0px; overflow: hidden; background:black; }
-.frame { position:fixed; left:0px; top:0px; width:100%; height:100%; z-index:99; }
-.dot { position:relative; z-index:99; background:#CCC; width:35px; height:35px; border-radius: 100%; cursor: pointer; top:50%; left:50%; transform: translateX(-50%) translateY(-50%);}
+.frame { position:relative; left:5%; top:30%; width:90%; height:60%; z-index:99; }
+.dot { position:absolute; z-index:99; background:#CCC; width:35px; height:35px; border-radius: 100%; cursor: pointer; top:50%; left:50%; transform: translateX(-25%) translateY(-25%);}
+.dot.faded { opacity:0.3; }
 .tape { position: fixed; top:25px; right:25px; width:25px; height:25px; z-index:999; border:0px; }
 box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) translateY(-50%);}
-#line { position:absolute; left:50%; width:2px; height:100%; margin-left:-1px; z-index:0; background:purple;}
+#line { position:absolute; opacity:0.33; left:50%; width:2px; height:100%; margin-left:-1px; z-index:0; background:purple;}
 #poster { position:absolute; z-index:-1; width:100%; height:100%; background-size:cover; opacity:0.66; background-image:url(img/puddle.jpg);}
 
+#drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:whitesmoke; z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
+#drawer.open { transform: translateX(0%); }
+#drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; top:25px; right:-50px; background:white;  }
+
+.sound-item { position:absolute; }
+
 </style>
+
+
 
 </head>
 
 <body>
 
+
 <div id="poster"></div>   
 
 <div id="line"></div>
 
-<div class='frame'>
-
-        <div target='farewell' file='farewelltoafriend.mp3' class='draggable dot'><box-icon name="music"></box-icon></div>
-        <div target='stream' file='stream.mp3' class='draggable dot'><box-icon name="water"></box-icon></div></div>
-        <div target='drums' file='kododrums.mp3' class='draggable dot'><box-icon stype="solid" name="shield"></box-icon></div></div>
+<div class='frame' id="arena"></div>
 
 
+<div id="drawer">
+    <div id="drawer-handle">
+        <box-icon type='solid' name='tag-alt'></box-icon>
     </div>
+
+    <div id="soundlist">
+        <div class="sound-item" name="glory" file="theglory.mp3">The Glory</div>
+    </div>
+
+</div>
+
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script src="js/jquery.dragon.js"></script>
+    <script src="js/jquery.dragon-slider.js"></script>
 
     <script src="https://unpkg.com/boxicons@latest/dist/boxicons.js"></script>
 
@@ -40,47 +59,157 @@ box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) tra
 <script src="https://pixijs.download/dev/pixi.min.js"></script>
 <script src="js/pixi-sound.js"></script>
 
+
+
+
 <script>
 
 var socket = io();
 
+var mytracks = 
+    [
+    {'id':'farewell', 'file':'farewelltoafriend.mp3', "icon":"music" }
+    ];
+
 $(document).ready(function(){
-    GenerateSounds();
+    
+    Start();
+    
 });
 
-function GenerateSounds(){
-    console.log("generating...");
+function Start(){
 
-    $('.dot').each(function(index, item){
-        $target = $(this).attr("target");
-        $file = $(this).attr("file");
-        AddSound($target, $file);
-    });
+socket.emit("gettracks");
 
 }
 
-function AddSound(sound, file){
+socket.on("sendtracks", function(data){
+    BuildTracks(data);
+});
 
-    PIXI.sound.add(sound, {
+function BuildTracks(array){
+
+$.each(array, function(index, item){
+    //console.log(item);
+    if ( Existing(item.file)) 
+        {
+        console.log("already exits")    
+        }
+    else 
+        { 
+        console.log("fresh!"); 
+
+        // GENERATE THE TRACK LOCALLY
+        GenerateDot(item.id, item.file);
+        }
+});
+
+}
+
+function Existing(file){
+
+// Find if the array contains an object by comparing the property value
+if(mytracks.some(track => track.file === file))
+    {
+    return true;
+    } 
+    else { return false; }
+}
+
+
+
+
+// GENERATE THE TRACK LOCALLY
+
+function GenerateDot(name, file) {
+    
+    // make array object & push to local array
+    $new = {'id':name, 'file':file, "icon":"music" };
+    mytracks.push($new);
+    
+    // generate html element
+    var $element = "<div target='"+name+"' file='"+file+"' class='draggable dot'><box-icon stype='solid' name='shield'></box-icon></div>";
+    $("#arena").append($element);
+
+    // generate pixi-sound object
+    AddSound(name, file);
+
+}
+
+function AddSound(name, file){
+
+    console.log("making sound: "+name+" using file: "+file);
+
+    // do the pixi.js thing
+    PIXI.sound.add(name, {
     url: 'audio/'+file,
     preload: true,
     loaded: function() {
         // duration can only be used once the sound is loaded
         //console.log('Duration: ', PIXI.sound.duration(sound), 'seconds');
-        console.log(sound+' is loaded');
-        StartVolume(sound);
-        PIXI.sound.play(sound);
-    }
-});
+        console.log(name+' is loaded');
+        StartVolume(name);
+        PIXI.sound.play(name);
+        MakeDraggable();
+        }
+    });
 
 }
-
-
 
 function StartVolume(target){
     var it = PIXI.sound._sounds[target];
-    it.volume = 0.5;
+    it.volume = 0.05;
 }
+
+
+
+function MakeDraggable() {
+
+$('.draggable').dragon({  
+      dragStart: function() 
+        { 
+        var Yposition = $(this).position().top;
+        var Xposition = $(this).position().left;
+
+        //console.log(Yposition+':'+Xposition);
+        },
+      drag: function() 
+        {
+        var Xposition = $(this).position().left - $('#arena').width() / 2;
+        var Xpercent = ($('#arena').width() / 100).toFixed(0);
+        
+        var X = (Xposition / Xpercent).toFixed(0);
+        var Xpan = (X / 100) * 2;
+        //console.log(Xpan);
+
+        var me = $(this).attr("target");
+
+        ChangePan(me, Xpan);
+
+
+        var Yposition = $('#arena').height() - $(this).position().top;
+        var Ypercent = ($('#arena').height() / 100).toFixed(0);
+        
+        var Y = (Yposition / Ypercent).toFixed(0);
+        var Ypan = (Y / 1000)*1;
+        //console.log(Ypan);
+        ChangeGain(me,Ypan);
+        }
+     });
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+    // GAIN FUNCTION
 
 function ChangeGain(target, gain){
     
@@ -92,12 +221,29 @@ function ChangeGain(target, gain){
 socket.on("changevolume", function(data){ 
 
     var it = PIXI.sound._sounds[data.target];
-    //console.log(target);
+    if ( data.gain < 0 ) 
+        { 
+        data.gain = 0;
+        $(".dot[target="+data.target+"]").addClass("faded");
+        }
+    else
+        { 
+        $(".dot[target="+data.target+"]").removeClass("faded");
+        };
+
+    //console.log(data.gain);
+
     it.volume = data.gain;
 
 });
 
 
+
+
+
+
+
+// PAN FUNCTION
 
 function ChangePan(target, pan){
     var $data = {"target": target, "pan":pan };
@@ -111,44 +257,101 @@ socket.on("changepan", function(data){
     //console.log(it);
 });
 
-$(".draggable").draggable({ 
-          containment: "parent", 
-          scroll: false,
-          start: function() 
+
+
+
+
+
+
+
+// SYNC FUNCTION
+
+$(document).on("dblclick", ".dot", function(){
+    var target = $(this).attr("target");
+    Sync(target);
+
+});
+
+
+function Sync(target){
+    var it = PIXI.sound._sounds[target];
+    var currenttime = it.media.context.audioContext.currentTime;
+    var $data = {"target": target, "current":currenttime };
+    socket.emit("syncit", $data);
+}
+
+socket.on("sync", function(data){
+    var it = PIXI.sound._sounds[data.target];
+    PIXI.sound.stop(data.target);
+    PIXI.sound.play(data.target);
+    });
+
+
+
+
+
+
+
+
+// DRAW FUNCTIONS
+
+$(document).on("click", "#drawer-handle", function(){
+    $("#drawer").toggleClass("open");
+});
+
+$('.sound-item').dragon({  
+          dragStart: function() 
             { 
             var Yposition = $(this).position().top;
 			var Xposition = $(this).position().left;
 
-            console.log(Yposition+':'+Xposition);
+            //console.log(Yposition+':'+Xposition);
             },
           drag: function() 
             {
-			var Xposition = $(this).position().left - $(window).width() / 2;
-			var Xpercent = ($(window).width() / 100).toFixed(0);
+			var Xposition = $(this).position().left - $('#arena').width() / 2;
+			var Xpercent = ($('#arena').width() / 100).toFixed(0);
 			
 			var X = (Xposition / Xpercent).toFixed(0);
 			var Xpan = (X / 100) * 2;
-			console.log(Xpan);
+			//console.log(Xpan);
 
             var me = $(this).attr("target");
 
-			ChangePan(me, Xpan);
 
-
-			var Yposition = $(window).height() - $(this).position().top;
-			var Ypercent = ($(window).height() / 100).toFixed(0);
+			var Yposition = $('#arena').height() - $(this).position().top;
+			var Ypercent = ($('#arena').height() / 100).toFixed(0);
 			
 			var Y = (Yposition / Ypercent).toFixed(0);
-			var Ypan = (Y / 100)*1;
-			console.log(Ypan);
-            ChangeGain(me,Ypan);
-
-			
-
+			var Ypan = (Y / 1000)*1;
+			//console.log(Ypan);
+            },
+            dragEnd: function()
+            {
+            var Yposition = $(this).position().top;
+			var Xposition = $(this).position().left;
+            var name = $(this).attr("name");
+            var file = $(this).attr("file");
+            console.log("adding "+name+"with file '"+file+"' to the board"); 
+            $(this).remove();
+            
+            SeedSound(name, file);
             
             }
          });
 
+
+
+
+// SEED NEW SOUND TO SERVER         
+function SeedSound(name, file){
+    $data = {"name":name, "file":file};
+    socket.emit("seedsound", $data);
+}
+
+socket.on("newsound", function(){
+    socket.emit("gettracks");
+});
 
 
 </script>

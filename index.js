@@ -9,16 +9,11 @@ app.use(express.static("public"));
 
 
 var tracks = [
-  {'id':'cathedral', 'class':'diegetic', 'name':'Cathedral Ambience', 'file':'aprophecyfulfilled.mp3', 'column':'columnone', 'position':1 },
-  {'id':'farewell', 'class':'diegetic', 'name':'Farewell to a Friend', 'file':'farewelltoafriend.mp3', 'column':'columnone', 'position':2 },
-  {'id':'theglory', 'class':'diegetic', 'name':'The Glory', 'file':'theglory.mp3', 'column':'columnone', 'position':3 },
-  {'id':'darkcello', 'class':'diegetic', 'name':'Dark Cello One', 'file':'cellofear01.mp3', 'column':'columnone', 'position':4 },
-  {'id':'hearth', 'class':'diegetic', 'name':'Hearth Ambience', 'file':'hearth01.mp3', 'column':'columnone', 'position':5 },
-  {'id':'rainandthunder', 'class':'diegetic', 'name':'Rain and Thunder Ambience', 'file':'rainandthunder.mp3', 'column':'columnone', 'position':6 },
-  {'id':'swamp', 'class':'diegetic', 'name':'Swamp Ambience', 'file':'swamp.mp3', 'column':'columnone', 'position':7 },
-  {'id':'stream', 'class':'diegetic', 'name':'Stream Ambience', 'file':'stream.mp3', 'column':'columnone', 'position':8 },
-  {'id':'kododrums', 'class':'diegetic', 'name':'Kodo Drums', 'file':'kododrums.mp3', 'column':'columnone', 'position':8 },
-  {'id':'horror', 'class':'diegetic', 'name':'Horror', 'file':'horror01.mp3', 'column':'columnone', 'position':9 }
+
+  {'id':'farewell', 'file':'farewelltoafriend.mp3', "icon":"music" },
+  {'id':'swamp', 'file':'swamp.mp3', "icon":"water" },
+  {'id':'drums', 'file':'kododrums.mp3', "icon":"shield" }
+
   ];
 
 
@@ -27,21 +22,17 @@ io.on('connection', (socket) => {
     io.emit('chat message', msg);
   });
 
-  socket.on("gettracks", (data) => { socket.emit("catchtracks", tracks); });
+  socket.on('gettracks', (data) => { io.emit('sendtracks', tracks); });
+  socket.on("volume", (data) => { io.emit("changevolume", data); });
+  socket.on("pan", (data) => { io.emit("changepan", data); });
+  socket.on("syncit", (data) => { io.emit("sync", data); });
+  socket.on("seedsound", (data) => 
+    { 
+    $new = {'id':data.name, 'file':data.file, "icon":"music" };
+    tracks.push($new);
+    io.emit("newsound"); 
+    });
 
-  socket.on('play', (data) => { io.emit('fire',data); });
-  socket.on('pause', (data) => { io.emit('freeze',data); });
-  
-    socket.on('turn-loop-on', (data) => { io.emit('loop-on',data); });
-    socket.on('turn-loop-off', (data) => { io.emit('loop-off',data); });
-
-    socket.on("syncit", (data) => { io.emit("sync", data); });
-
-    socket.on("volume", (data) => { io.emit("changevolume", data); });
-    socket.on("pan", (data) => { io.emit("changepan", data); });
-
-    socket.on("tick", (data) => { socket.emit("tock", data); });
-    
 
 });
 
