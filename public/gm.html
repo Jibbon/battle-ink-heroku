@@ -5,11 +5,14 @@
 
 <style>
 body { margin:0px; padding:0px; overflow: hidden; background:black; }
+
 .frame { position:relative; left:5%; top:30%; width:90%; height:60%; z-index:99; }
-.dot { position:absolute; z-index:99; background:#CCC; width:35px; height:35px; border-radius: 100%; cursor: pointer; top:100%; left:50%; }
+.dot { position:absolute; z-index:99; height:35px; cursor: pointer; top:100%; left:50%; }
 .dot.faded { opacity:0.3; }
+box-icon { float:left; height:35px; }
+.trackname { float:left; margin-left:10px; line-height:35px; }
+
 .tape { position: fixed; top:25px; right:25px; width:25px; height:25px; z-index:999; border:0px; }
-box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) translateY(-50%);}
 #line { position:absolute; opacity:0.33; left:50%; width:2px; height:100%; margin-left:-1px; z-index:0; background:purple;}
 #poster { position:absolute; z-index:-1; width:100%; height:100%; background-size:cover; opacity:0.66; background-image:url(img/background.jpg);}
 
@@ -19,6 +22,8 @@ box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) tra
 
 .sound-item { border-bottom:1px solid #ccc; cursor:pointer; }
 .sound-item.selected { background:#ccc; }
+
+
 
 </style>
 
@@ -124,7 +129,7 @@ $.each(array, function(index, item){
         console.log("fresh!"); 
 
         // GENERATE THE TRACK LOCALLY
-        GenerateDot(item.id, item.file, item.gain);
+        GenerateDot(item.id, item.file, item.gain, item.icon);
         }
 });
 
@@ -155,14 +160,13 @@ if(mylibrary.some(track => track.file === file))
 
 // GENERATE THE TRACK LOCALLY
 
-function GenerateDot(name, file, gain) {
-    
+function GenerateDot(name, file, gain, icon) {
     // make array object & push to local array
-    $new = {'id':name, 'file':file, "gain":gain, "icon":"music" };
+    $new = {'id':name, 'file':file, "gain":gain, "icon":icon };
     mytracks.push($new);
     
     // generate html element
-    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' class='draggable dot'><box-icon stype='solid' name='shield'></box-icon></div>";
+    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' class='draggable dot'><box-icon name='"+icon+"'></box-icon><div class='trackname'>"+name+"</div></div>";
     $("#arena").append($element);
 
     // toggle the sound item in drawer
@@ -276,7 +280,7 @@ socket.on("sendlibrary", function(data){
         console.log("fresh!"); 
 
         // ADD THE ITEM TO THE LOCAL LIBRARY
-        $element = '<div class="sound-item" name="'+item.id+'" file="'+item.file+'">'+item.id+'</div>'; 
+        $element = '<div class="sound-item" name="'+item.id+'" file="'+item.file+'" icon="'+item.icon+'">'+item.id+'</div>'; 
         $("#thesoundlist").append($element);
         }
 });
@@ -381,8 +385,9 @@ $(document).on("click", ".sound-item", function(){
     $(this).toggleClass("selected");
     var name = $(this).attr("name");
     var file = $(this).attr("file");
+    var icon = $(this).attr("icon")
 
-    if ( $(this).hasClass("selected") ) { SeedSound(name, file); }
+    if ( $(this).hasClass("selected") ) { SeedSound(name, file, icon); }
     else { KillSound(name); }
     
 });
@@ -390,8 +395,8 @@ $(document).on("click", ".sound-item", function(){
 
 
 // SEED NEW SOUND TO SERVER         
-function SeedSound(name, file){
-    $data = {"name":name, "file":file};
+function SeedSound(name, file, icon){
+    $data = {"name":name, "file":file, "icon":icon};
     socket.emit("seedsound", $data);
 }
 

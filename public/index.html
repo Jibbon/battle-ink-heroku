@@ -40,7 +40,7 @@ box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) tra
 
 <div id="drawer" class="gm">
     <div id="drawer-handle">
-        <box-icon name='library' ></box-icon>
+        <box-icon name='library'></box-icon>
     </div>
 
     <div id="soundlist">
@@ -164,7 +164,7 @@ function GenerateDot(name, file, gain) {
     mytracks.push($new);
     
     // generate html element
-    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' class='draggable dot'><box-icon stype='solid' name='shield'></box-icon></div>";
+    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' class='draggable dot'><box-icon stype='solid' name='shield'></box-icon><div class='trackname'>"+name+"</div></div>";
     $("#arena").append($element);
 
     // toggle the sound item in drawer
