@@ -55,6 +55,7 @@ box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) tra
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="/siofu/client.js"></script>
 
     <script src="js/jquery.dragon.js"></script>
     <script src="js/jquery.dragon-slider.js"></script>
@@ -86,11 +87,11 @@ $(document).ready(function(){
 
 // UPLOAD OPTIONS
 
-//var uploader = new SocketIOFileUpload(socket);
-//uploader.listenOnInput(document.getElementById("siofu_input"));
-//uploader.addEventListener('start', (event)=> {
-//    event.file.name = "fart.png";
-//});
+var uploader = new SocketIOFileUpload(socket);
+uploader.listenOnInput(document.getElementById("siofu_input"));
+uploader.addEventListener('start', (event)=> {
+    event.file.name = "fart.png";
+});
 
 socket.on("sounduploaded", function(data){
     socket.emit("getlibrary");

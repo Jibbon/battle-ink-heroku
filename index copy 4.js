@@ -1,14 +1,21 @@
 const express = require("express");
+const socket = require("socket.io");
 const siofu = require("socketio-file-upload");
+const fs = require('fs');
+
+// App setup
+const PORT = 3000;
 const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
-const port = process.env.PORT || 3000;
+const server = app.use(siofu.router).listen(PORT, function () {
+  console.log(`Listening on port ${PORT}`);
+  console.log(`http://localhost:${PORT}`);
+});
 
 // Static files
 app.use(express.static("public"));
 
-
+// Socket setup
+const io = socket(server);
 
 
 var tracks = [
@@ -85,6 +92,4 @@ io.on('connection', (socket) => {
 
 });
 
-http.listen(port, () => {
-  console.log(`Socket.IO server running at http://localhost:${port}/`);
-});
+
