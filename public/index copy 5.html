@@ -3,48 +3,24 @@
 <head>
 
 
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Unicase:wght@300&display=swap" rel="stylesheet">
-
 <style>
-body { margin:0px; padding:0px; overflow: hidden; background:black; font-family: 'Cormorant Unicase', serif; }
-
+body { margin:0px; padding:0px; overflow: hidden; background:black; }
 .frame { position:relative; left:5%; top:30%; width:90%; height:60%; z-index:99; }
-.dot { position:absolute; z-index:99; height:35px; cursor: pointer; top:100%; left:50%; }
+.dot { position:absolute; z-index:99; background:#CCC; width:35px; height:35px; border-radius: 100%; cursor: pointer; top:100%; left:50%; }
 .dot.faded { opacity:0.3; }
-box-icon { float:left; height:35px; }
-.trackname { float:left; margin-left:10px; line-height:35px; }
-
 .tape { position: fixed; top:25px; right:25px; width:25px; height:25px; z-index:999; border:0px; }
+box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) translateY(-50%);}
 #line { position:absolute; opacity:0.33; left:50%; width:2px; height:100%; margin-left:-1px; z-index:0; background:purple;}
 #poster { position:absolute; z-index:-1; width:100%; height:100%; background-size:cover; opacity:0.66; background-image:url(img/background.jpg);}
-#veil{ position:absolute; z-index:0; width:100%; height:100%; background-size:cover; opacity:0.5; background:whitesmoke; }
 
-#drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(34, 83, 113,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
+#drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:whitesmoke; z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
 #drawer.open { transform: translateX(0%); }
-#drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; top:25px; right:-75px; cursor: pointer;  }
+#drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; top:0px; right:-50px; cursor: pointer;  }
 
-#art-drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(34, 83, 113,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
-#art-drawer.open { transform: translateX(0%); }
-#art-drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; top:100px; right:-75px; cursor: pointer; transition:all 0.3s ease; }
-#art-drawer-handle.hidden { opacity:0; visibility: hidden; }
-#art-url-frame { position:absolute; z-index:999999; font-size:14px; height:35px; width:auto; line-height:35px; padding-left:10px; padding-right:10px; color:whitesmoke; top:100px; left:0px; background:#222; border-radius:10px; transform: scale(0) translateX(-100%); transition: all 0.6s ease-in-out;  }
-#art-url-frame.open { transform: scale(1) translateX(75px); }
-
-#soundlist { width:90%; margin-left:5%; }
-.sound-item { cursor:pointer; border-radius:10px; height:20px; line-height:20px; padding-left:5px; margin-top:5px; font-size:14px; }
+.sound-item { border-bottom:1px solid #ccc; cursor:pointer; }
 .sound-item.selected { background:#ccc; }
 
-.loading { animation: pulse 3s infinite; };
-
-@keyframes pulse {
-  0% {
-    opacity:0.3;
-  }
-  100% {
-    opacity:0.9;
-  }
-}
+.gm { visibility: hidden; }
 
 </style>
 
@@ -57,16 +33,14 @@ box-icon { float:left; height:35px; }
 
 <div id="poster"></div>   
 
-<div id="veil" class="gm"></div>
+<div id="line" class="gm"></div>
 
-<div id="line"></div>
-
-<div class='frame' id="arena"></div>
+<div class='frame gm' id="arena"></div>
 
 
-<div id="drawer">
+<div id="drawer" class="gm">
     <div id="drawer-handle">
-        <box-icon name='library' ></box-icon>
+        <box-icon name='library'></box-icon>
     </div>
 
     <div id="soundlist">
@@ -76,15 +50,6 @@ box-icon { float:left; height:35px; }
     </div>
 
 </div>
-
-
-<div id="art-drawer">
-    <div id="art-drawer-handle">
-        <box-icon type='solid' name='color-fill'></box-icon>
-    </div>
-</div>
-
-<div id="art-url-frame" contenteditable="true">http://www.art.com.au</div>
 
 
     <script src="/socket.io/socket.io.js"></script>
@@ -161,7 +126,7 @@ $.each(array, function(index, item){
         console.log("fresh!"); 
 
         // GENERATE THE TRACK LOCALLY
-        GenerateDot(item.id, item.file, item.gain, item.icon);
+        GenerateDot(item.id, item.file, item.gain);
         }
 });
 
@@ -192,13 +157,14 @@ if(mylibrary.some(track => track.file === file))
 
 // GENERATE THE TRACK LOCALLY
 
-function GenerateDot(name, file, gain, icon) {
+function GenerateDot(name, file, gain) {
+    
     // make array object & push to local array
-    $new = {'id':name, 'file':file, "gain":gain, "icon":icon };
+    $new = {'id':name, 'file':file, "gain":gain, "icon":"music" };
     mytracks.push($new);
     
     // generate html element
-    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' class='draggable dot loading'><box-icon name='"+icon+"'></box-icon><div class='trackname'>"+name+"</div></div>";
+    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' class='draggable dot'><box-icon stype='solid' name='shield'></box-icon><div class='trackname'>"+name+"</div></div>";
     $("#arena").append($element);
 
     // toggle the sound item in drawer
@@ -224,7 +190,6 @@ function AddSound(name, file, gain){
         StartVolume(name, gain);
         PIXI.sound.play(name);
         MakeDraggable();
-        $(".dot[target="+name+"]").removeClass("loading");
         }
     });
 
@@ -313,7 +278,7 @@ socket.on("sendlibrary", function(data){
         console.log("fresh!"); 
 
         // ADD THE ITEM TO THE LOCAL LIBRARY
-        $element = '<div class="sound-item" name="'+item.id+'" file="'+item.file+'" icon="'+item.icon+'">'+item.id+'</div>'; 
+        $element = '<div class="sound-item" name="'+item.id+'" file="'+item.file+'">'+item.id+'</div>'; 
         $("#thesoundlist").append($element);
         }
 });
@@ -404,34 +369,6 @@ socket.on("sync", function(data){
 
 
 
-// ART DRAW FUNCTIONS
-
-// DRAW FUNCTIONS
-
-$(document).on("click", "#art-drawer-handle", function(){
-    $("#art-url-frame").toggleClass("open");
-});
-
-$("#art-url-frame").on("keyup", function()
-    {
-    
-    });
-
-$("#art-url-frame").keypress(function(e) {
-  if(e.which == 13) {
-    e.preventDefault;
-    $value = $(this).html();
-    UpdateBackground($value);
-    return false;
-  }
-});
-
-function UpdateBackground(url){
-    console.log(url);
-    $("#art-url-frame").toggleClass("open");
-    $("#poster").css("background-image","url("+url+")");
-
-}
 
 
 
@@ -440,16 +377,14 @@ function UpdateBackground(url){
 
 $(document).on("click", "#drawer-handle", function(){
     $("#drawer").toggleClass("open");
-    $("#art-drawer-handle").toggleClass("hidden");
 });
 
 $(document).on("click", ".sound-item", function(){
     $(this).toggleClass("selected");
     var name = $(this).attr("name");
     var file = $(this).attr("file");
-    var icon = $(this).attr("icon")
 
-    if ( $(this).hasClass("selected") ) { SeedSound(name, file, icon); }
+    if ( $(this).hasClass("selected") ) { SeedSound(name, file); }
     else { KillSound(name); }
     
 });
@@ -457,8 +392,8 @@ $(document).on("click", ".sound-item", function(){
 
 
 // SEED NEW SOUND TO SERVER         
-function SeedSound(name, file, icon){
-    $data = {"name":name, "file":file, "icon":icon};
+function SeedSound(name, file){
+    $data = {"name":name, "file":file};
     socket.emit("seedsound", $data);
 }
 
