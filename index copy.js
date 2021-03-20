@@ -1,11 +1,21 @@
 const express = require("express");
+const socket = require("socket.io");
+const siofu = require("socketio-file-upload");
+const fs = require('fs');
+
+// App setup
+const PORT = 3000;
 const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
-const port = process.env.PORT || 3000;
+const server = app.use(siofu.router).listen(PORT, function () {
+  console.log(`Listening on port ${PORT}`);
+  console.log(`http://localhost:${PORT}`);
+});
 
 // Static files
 app.use(express.static("public"));
+
+// Socket setup
+const io = socket(server);
 
 
 var tracks = [
@@ -38,9 +48,31 @@ io.on('connection', (socket) => {
     io.emit("newsound"); 
     });
 
+    // UPLOADING STUFF
+    
+    var uploader = new siofu();
+    uploader.dir = "public/audio";
+    uploader.listen(socket);
+
+    uploader.on("saved", function(event)
+      {
+      var filename = event.file.name;
+      var extension = filename.split('.').pop();
+      var name = filename.replace(/\.[^/.]+$/, "");
+      var d = new Date();
+      var n = d.getTime();
+      
+      $newtrack =  {'id':name, 'file':n+'.'+extension, 'gain':0.05, 'icon':'water' };
+      tracks.push($newtrack);
+
+      fs.rename(event.file.pathName, 'public/audio/'+n+'.'+extension, function(err) 
+        {
+        if ( err ) console.log('ERROR: ' + err);
+        else io.emit("newsound");
+      });
+      });
+
 
 });
 
-http.listen(port, () => {
-  console.log(`Socket.IO server running at http://localhost:${port}/`);
-});
+

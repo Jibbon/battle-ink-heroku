@@ -41,6 +41,9 @@ box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) tra
     </div>
 
     <div id="soundlist">
+        <label class="custom-file-upload">
+            <input id="siofu_input" type="file"/>
+        </label>
         <div class="sound-item" name="glory" file="theglory.mp3">The Glory</div>
     </div>
 
@@ -49,6 +52,7 @@ box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) tra
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="/siofu/client.js"></script>
 
     <script src="js/jquery.dragon.js"></script>
     <script src="js/jquery.dragon-slider.js"></script>
@@ -76,6 +80,14 @@ $(document).ready(function(){
     Start();
     
 });
+
+
+var uploader = new SocketIOFileUpload(socket);
+uploader.listenOnInput(document.getElementById("siofu_input"));
+uploader.addEventListener('start', (event)=> {
+    event.file.name = "fart.png";
+});
+
 
 function Start(){
 
@@ -192,6 +204,8 @@ $('.draggable').dragon({
         
         var Y = (Yposition / Ypercent).toFixed(0);
         var Ypan = (Y / 1000)*1;
+        if (Ypan < 0 ) { Ypan = 0 };
+
         //console.log(Ypan);
         ChangeGain(me,Ypan);
         }
@@ -221,9 +235,8 @@ function ChangeGain(target, gain){
 socket.on("changevolume", function(data){ 
 
     var it = PIXI.sound._sounds[data.name];
-    if ( data.gain < 0 ) 
+    if ( data.gain == 0 ) 
         { 
-        data.gain = 0;
         $(".dot[target="+data.name+"]").addClass("faded");
         }
     else
