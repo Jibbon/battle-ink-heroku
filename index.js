@@ -39,6 +39,8 @@ var tracks = [];
 
     ];
 
+    var background = "https://cdna.artstation.com/p/assets/images/images/024/621/960/large/xh-d-2-2.jpg?1583007045";
+
 
 io.on('connection', (socket) => {
   socket.on('chat message', msg => {
@@ -47,6 +49,7 @@ io.on('connection', (socket) => {
 
   socket.on('gettracks', (data) => { io.emit('sendtracks', tracks); });
   socket.on('getlibrary', (data) => { io.emit('sendlibrary', library); });
+  socket.on('getbackground', (data) => { io.emit('feedbackground', background); });
 
   socket.on("volume", (data) => 
     { 
@@ -70,6 +73,13 @@ io.on('connection', (socket) => {
     tracks.splice($index, 1);
     io.emit("soundscrubbed", name); 
     });
+    // change background
+    socket.on("seedbackground", (url) => 
+      { 
+      background = url;
+      io.emit("feedbackground", url); 
+      });
+
     // UPLOADING STUFF
     
     var uploader = new siofu();

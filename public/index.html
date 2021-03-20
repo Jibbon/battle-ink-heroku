@@ -104,6 +104,7 @@ socket.on("sounduploaded", function(data){
 
 function Start(){
 
+socket.emit("getbackground");
 socket.emit("getlibrary");
 socket.emit("gettracks");
 
@@ -404,7 +405,11 @@ socket.on("newsound", function(){
 
 
 
+// CHANGE BACKGROUND
 
+socket.on("feedbackground",function(url){
+    $("#poster").css("background-image","url("+url+")");
+});
 
 
 

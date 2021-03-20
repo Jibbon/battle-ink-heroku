@@ -18,7 +18,7 @@ box-icon { float:left; height:35px; }
 
 .tape { position: fixed; top:25px; right:25px; width:25px; height:25px; z-index:999; border:0px; }
 #line { position:absolute; opacity:0.33; left:50%; width:2px; height:100%; margin-left:-1px; z-index:0; background:purple;}
-#poster { position:absolute; z-index:-1; width:100%; height:100%; background-size:cover; opacity:0.66; background-image:url();}
+#poster { position:absolute; z-index:-1; width:100%; height:100%; background-size:cover; opacity:0.66; background-image:url(img/background.jpg);}
 #veil{ position:absolute; z-index:0; width:100%; height:100%; background-size:cover; opacity:0.5; background:whitesmoke; }
 
 #drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(34, 83, 113,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
@@ -133,7 +133,6 @@ socket.on("sounduploaded", function(data){
 
 function Start(){
 
-socket.emit("getbackground");
 socket.emit("getlibrary");
 socket.emit("gettracks");
 
@@ -241,13 +240,38 @@ function KillSound(name){
 socket.on("soundscrubbed", function(name){
     PIXI.sound.stop(name);
     $(".dot[target="+name+"]").addClass("hidden");
+    FadeOutSound(name, 10000);
     setTimeout(function(){ $(".dot[target="+name+"]").remove(); }, 1000 );
     var $index = mytracks.findIndex(x => x.id === name);
     mytracks.splice($index, 1);
 });
 
 
+function FadeOutSound(target, time){
+    var it = PIXI.sound._sounds[target];
+    
+// Initial volume of 0.20
+// Make sure it's a multiple of 0.05
+var vol = it.volume;
+console.log(vol);
+var interval = 100; // 200ms interval
 
+var fadeout = setInterval(
+  function() {
+    // Reduce volume by 0.05 as long as it is above 0
+    // This works as long as you start with a multiple of 0.05!
+    if (vol > 0) {
+      vol = (vol - 0.001);
+      it.volume = vol;
+      console.log(it.volume);
+    }
+    else {
+      // Stop the setInterval when 0 is reached
+      clearInterval(fadeout);
+    }
+  }, interval);
+    
+}
 
 
 function MakeDraggable() {
@@ -403,25 +427,33 @@ socket.on("sync", function(data){
 
 // ART DRAW FUNCTIONS
 
+// DRAW FUNCTIONS
 
 $(document).on("click", "#art-drawer-handle", function(){
     $("#art-url-frame").toggleClass("open");
 });
 
+$("#art-url-frame").on("keyup", function()
+    {
+    
+    });
+
 $("#art-url-frame").keypress(function(e) {
   if(e.which == 13) {
     e.preventDefault;
     $value = $(this).html();
-    socket.emit("seedbackground", $value);
-    $("#art-url-frame").toggleClass("open");
+    UpdateBackground($value);
     return false;
   }
 });
 
-
-socket.on("feedbackground",function(url){
+function UpdateBackground(url){
+    console.log(url);
+    $("#art-url-frame").toggleClass("open");
     $("#poster").css("background-image","url("+url+")");
-});
+
+}
+
 
 
 
