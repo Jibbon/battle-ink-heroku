@@ -3,8 +3,11 @@
 <head>
 
 
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Unicase:wght@300&display=swap" rel="stylesheet">
+
 <style>
-body { margin:0px; padding:0px; overflow: hidden; background:black; }
+body { margin:0px; padding:0px; overflow: hidden; background:black; font-family: 'Cormorant Unicase', serif; }
 
 .frame { position:relative; left:5%; top:30%; width:90%; height:60%; z-index:99; }
 .dot { position:absolute; z-index:99; height:35px; cursor: pointer; top:100%; left:50%; }
@@ -16,13 +19,15 @@ box-icon { float:left; height:35px; }
 #line { position:absolute; opacity:0.33; left:50%; width:2px; height:100%; margin-left:-1px; z-index:0; background:purple;}
 #poster { position:absolute; z-index:-1; width:100%; height:100%; background-size:cover; opacity:0.66; background-image:url(img/background.jpg);}
 
-#drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:whitesmoke; z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
+#drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(34, 83, 113,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
 #drawer.open { transform: translateX(0%); }
 #drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; top:0px; right:-50px; cursor: pointer;  }
 
-.sound-item { border-bottom:1px solid #ccc; cursor:pointer; }
+#soundlist { width:90%; margin-left:5%; }
+.sound-item { cursor:pointer; border-radius:10px; height:20px; line-height:20px; padding-left:5px; margin-top:5px; font-size:14px; }
 .sound-item.selected { background:#ccc; }
 
+.loading { opacity:0.1 };
 
 
 </style>
@@ -166,7 +171,7 @@ function GenerateDot(name, file, gain, icon) {
     mytracks.push($new);
     
     // generate html element
-    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' class='draggable dot'><box-icon name='"+icon+"'></box-icon><div class='trackname'>"+name+"</div></div>";
+    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' class='draggable dot loading'><box-icon name='"+icon+"'></box-icon><div class='trackname'>"+name+"</div></div>";
     $("#arena").append($element);
 
     // toggle the sound item in drawer
@@ -192,6 +197,7 @@ function AddSound(name, file, gain){
         StartVolume(name, gain);
         PIXI.sound.play(name);
         MakeDraggable();
+        $(".dot[target="+name+"]").removeClass("loading");
         }
     });
 
