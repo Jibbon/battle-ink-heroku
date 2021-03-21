@@ -23,6 +23,9 @@ box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) tra
 
 .gm { visibility: hidden; }
 
+#on-air { position:fixed; bottom:25px; right:25px; width:10px; height:10px; border-radius: 100%; background:#ccc; opacity:0.5; }
+#on-air.on { background:greenyellow; opacity:0.7; }
+
 </style>
 
 
@@ -31,6 +34,7 @@ box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) tra
 
 <body>
 
+<div id="on-air"></div>
 
 <div id="poster"></div>   
 <div id="overlay"></div>
@@ -76,16 +80,33 @@ var socket = io();
 var mytracks = [];
 var mylibrary = [];    
 
+var $servertime = 0;
+var $localtime = 0;
+
 $(document).ready(function(){
     
     Start();
+    Clock();
     
 });
 
 
 socket.on('time', function(timeString) {
-  console.log(timeString);
-});
+    $servertime = timeString;
+    });
+
+function Clock(){
+    
+    $localtime = new Date().getTime();
+
+    console.log($servertime);
+    console.log($localtime);
+
+    if ( $servertime < ( $localtime - 1000 ) ) { $("#on-air").removeClass("on"); }
+    else {  $("#on-air").addClass("on"); }
+
+    setTimeout(Clock, 1000);
+}
 
 // UPLOAD OPTIONS
 

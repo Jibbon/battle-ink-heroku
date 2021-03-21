@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
     io.emit('chat message', msg);
   });
 
-  setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+  setInterval(() => io.emit('time', new Date().getTime()), 1000);
 
   socket.on('gettracks', (data) => { io.emit('sendtracks', tracks); });
   socket.on('getlibrary', (data) => { io.emit('sendlibrary', library); });
