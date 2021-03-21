@@ -38,7 +38,8 @@ box-icon { float:left; height:35px; }
 
 .loading { opacity:0.3; filter:blur(2px); };
 
-
+#on-air { position:fixed; z-index:99999; bottom:25px; right:25px; width:10px; height:10px; border-radius: 100%; background:#ccc; opacity:0.5; }
+#on-air.on { background:greenyellow; opacity:0.7; }
 
 </style>
 
@@ -48,6 +49,7 @@ box-icon { float:left; height:35px; }
 
 <body>
 
+<div id="on-air"></div>
 
 <div id="poster"></div>   
 
@@ -106,13 +108,27 @@ var mylibrary = [];
 $(document).ready(function(){
     
     Start();
+    Clock();
     
 });
 
 
 socket.on('time', function(timeString) {
-  console.log(timeString);
-});
+    $servertime = timeString;
+    });
+
+function Clock(){
+    
+    $localtime = new Date().getTime();
+
+    console.log($servertime);
+    console.log($localtime);
+
+    if ( $servertime < ( $localtime - 1000 ) ) { $("#on-air").removeClass("on"); }
+    else {  $("#on-air").addClass("on"); }
+
+    setTimeout(Clock, 1000);
+}
 
 // UPLOAD OPTIONS
 
