@@ -83,7 +83,9 @@ $(document).ready(function(){
 });
 
 
-
+socket.on('time', function(timeString) {
+  console.log(timeString);
+});
 
 // UPLOAD OPTIONS
 
