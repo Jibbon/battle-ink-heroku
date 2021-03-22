@@ -1,0 +1,492 @@
+<html>
+
+<head>
+
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Unicase:wght@300&display=swap" rel="stylesheet">
+
+<style>
+body { margin:0px; padding:0px; overflow: hidden; background:whitesmoke; font-family: 'Cormorant Unicase', serif; }
+
+.frame { position:relative; left:5%; top:30%; width:90%; height:60%; z-index:99; }
+.dot { position:absolute; z-index:99; height:35px; cursor: pointer; top:100%; left:50%; opacity:1; transition:opacity 1s ease; }
+.dot.faded { opacity:0.3; }
+.dot.hidden { opacity:0; }
+box-icon { float:left; height:35px; }
+.trackname { float:left; margin-left:10px; line-height:35px; }
+
+.tape { position: fixed; top:25px; right:25px; width:25px; height:25px; z-index:999; border:0px; }
+#line { position:absolute; display:none; opacity:0.33; left:50%; width:2px; height:100%; margin-left:-1px; z-index:0; background:purple;}
+#poster { position:absolute; z-index:-1; width:100%; height:100%; background-size:cover; opacity:0.33; background-image:url(); background-position:50% 50%;}
+#veil{ position:absolute; z-index:0; width:100%; height:100%; background-size:cover; opacity:0.3; filter: invert(100%); background-image:url(img/veil.jpg); background-position:50% 50%;}
+
+#drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(10, 10, 13,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
+#drawer.open { transform: translateX(0%); }
+#drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; top:25px; right:-75px; cursor: pointer;  }
+
+#art-drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(34, 83, 113,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
+#art-drawer.open { transform: translateX(0%); }
+#art-drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; top:100px; right:-75px; cursor: pointer; transition:all 0.3s ease; }
+#art-drawer-handle.hidden { opacity:0; visibility: hidden; }
+#art-url-frame { position:absolute; z-index:999999; font-size:14px; height:35px; width:auto; line-height:35px; padding-left:10px; padding-right:10px; color:whitesmoke; top:100px; left:0px; background:#222; border-radius:10px; transform: scale(0) translateX(-100%); transition: all 0.6s ease-in-out;  }
+#art-url-frame.open { transform: scale(1) translateX(75px); }
+
+#soundlist { width:90%; margin-left:5%; }
+.sound-item { cursor:pointer; color:whitesmoke; border-radius:10px; height:20px; line-height:20px; padding-left:5px; margin-top:5px; font-size:14px; }
+.sound-item.selected { background:black; }
+
+.loading { opacity:0.3; filter:blur(1px); };
+
+#on-air { position:fixed; z-index:99999; top:25px; right:25px; width:10px; height:100px; border-radius: 100%; background:#ccc; opacity:0.5; }
+#on-air.on { background:greenyellow; opacity:0.7; }
+
+</style>
+
+
+
+</head>
+
+<body>
+
+<div id="on-air"></div>
+
+<div id="poster"></div>   
+
+<div id="veil" class="gm"></div>
+
+<div id="line"></div>
+
+
+<div class='frame' id="arena"></div>
+
+
+<div id="drawer">
+    <div id="drawer-handle">
+        <box-icon name='library' ></box-icon>
+    </div>
+
+    <div id="soundlist">
+
+        <div id="thesoundlist"></div>
+
+    </div>
+
+</div>
+
+
+<div id="art-drawer">
+    <div id="art-drawer-handle">
+        <box-icon type='solid' name='color-fill'></box-icon>
+    </div>
+</div>
+
+<div id="art-url-frame" contenteditable="true"></div>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <script src="js/jquery.dragon.js"></script>
+    <script src="js/jquery.dragon-slider.js"></script>
+
+    <script src="https://unpkg.com/boxicons@latest/dist/boxicons.js"></script>
+
+
+<script src="https://pixijs.download/dev/pixi.min.js"></script>
+<script src="js/pixi-sound.js"></script>
+
+
+
+
+<script>
+
+var socket = io();
+
+var mytracks = [];
+var mylibrary = [];    
+
+var $servertime = 0;
+var $localtime = 0;
+
+$(document).ready(function(){
+    
+    Start();
+    Clock();
+    
+});
+
+
+socket.on('time', function(timeString) {
+    $servertime = timeString;
+    });
+
+function Clock(){
+    
+    $localtime = new Date().getTime();
+
+    console.log($servertime);
+    console.log($localtime);
+
+    if ( $servertime < ( $localtime - 1000 ) ) { $("#on-air").removeClass("on"); }
+    else {  $("#on-air").addClass("on"); }
+
+    setTimeout(Clock, 1000);
+}
+
+// UPLOAD OPTIONS
+
+//var uploader = new SocketIOFileUpload(socket);
+//uploader.listenOnInput(document.getElementById("siofu_input"));
+//uploader.addEventListener('start', (event)=> {
+//    event.file.name = "fart.png";
+//});
+
+socket.on("sounduploaded", function(data){
+    socket.emit("getlibrary");
+
+
+});
+
+
+
+
+
+
+function Start(){
+
+socket.emit("getbackground");
+socket.emit("getlibrary");
+socket.emit("gettracks");
+
+}
+
+socket.on("sendtracks", function(data){
+    BuildTracks(data);
+});
+
+function BuildTracks(array){
+
+$.each(array, function(index, item){
+    //console.log(item);
+    if ( Existing(item.file)) 
+        {
+        console.log("already exits")    
+        }
+    else 
+        { 
+        console.log("fresh!"); 
+
+        // GENERATE THE TRACK LOCALLY
+        GenerateDot(item.id, item.file, item.gain, item.icon);
+        }
+});
+
+}
+
+function Existing(file){
+
+// Find if the array contains an object by comparing the property value
+if(mytracks.some(track => track.file === file))
+    {
+    return true;
+    } 
+    else { return false; }
+}
+
+function ExistingInLibrary(file){
+
+// Find if the array contains an object by comparing the property value
+if(mylibrary.some(track => track.file === file))
+    {
+    return true;
+    } 
+    else { return false; }
+}
+
+
+
+
+// GENERATE THE TRACK LOCALLY
+
+function GenerateDot(name, file, gain, icon) {
+    // make array object & push to local array
+    $new = {'id':name, 'file':file, "gain":gain, "icon":icon };
+    mytracks.push($new);
+    
+    // generate html element
+    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' class='draggable dot loading'><box-icon name='"+icon+"'></box-icon><div class='trackname'>"+name+"</div></div>";
+    $("#arena").append($element);
+
+    // toggle the sound item in drawer
+    $(".sound-item[name="+name+"]").addClass("selected");
+
+    // generate pixi-sound object
+    AddSound(name, file, gain);
+
+}
+
+function AddSound(name, file, gain){
+
+    console.log("making sound: "+name+" using file: "+file+" with gain "+gain);
+
+    // do the pixi.js thing
+    PIXI.sound.add(name, {
+    url: 'audio/'+file,
+    preload: true,
+    loaded: function() {
+        // duration can only be used once the sound is loaded
+        //console.log('Duration: ', PIXI.sound.duration(sound), 'seconds');
+        console.log(name+' is loaded');
+        StartVolume(name, gain);
+        PIXI.sound.play(name);
+        MakeDraggable();
+        $(".dot[target="+name+"]").removeClass("loading");
+        }
+    });
+
+}
+
+function StartVolume(target, gain){
+    var it = PIXI.sound._sounds[target];
+    it.volume = gain;
+}
+
+
+
+// KILL SOUND FUNCTION
+
+function KillSound(name){
+    socket.emit("removesound", name);
+}
+
+socket.on("soundscrubbed", function(name){
+    PIXI.sound.stop(name);
+    $(".dot[target="+name+"]").addClass("hidden");
+    setTimeout(function(){ $(".dot[target="+name+"]").remove(); }, 1000 );
+    var $index = mytracks.findIndex(x => x.id === name);
+    mytracks.splice($index, 1);
+});
+
+
+
+
+
+function MakeDraggable() {
+
+$('.draggable').dragon({  
+      dragStart: function() 
+        { 
+        var Yposition = $(this).position().top;
+        var Xposition = $(this).position().left;
+
+        //console.log(Yposition+':'+Xposition);
+        },
+      drag: function() 
+        {
+        var Xposition = $(this).position().left - $('#arena').width() / 2;
+        var Xpercent = ($('#arena').width() / 100).toFixed(0);
+        
+        var X = (Xposition / Xpercent).toFixed(0);
+        var Xpan = (X / 100) * 2;
+        //console.log(Xpan);
+
+        var me = $(this).attr("target");
+
+        ChangePan(me, Xpan);
+
+
+        var Yposition = $('#arena').height() - $(this).position().top;
+        var Ypercent = ($('#arena').height() / 100).toFixed(0);
+        
+        var Y = (Yposition / Ypercent).toFixed(0);
+        var Ypan = (Y / 1000)*1;
+        if (Ypan < 0 ) { Ypan = 0 };
+
+        //console.log(Ypan);
+        ChangeGain(me,Ypan);
+        }
+     });
+
+    }
+
+
+
+
+
+
+// LIBRARY TOOLS
+
+socket.on("sendlibrary", function(data){
+    
+    $("#thesoundlist").html("");
+
+    $.each(data, function(index, item){
+    //console.log(item);
+    if ( ExistingInLibrary(item.file)) 
+        {
+        console.log("already exits in library")    
+        }
+    else 
+        { 
+        console.log("fresh!"); 
+
+        // ADD THE ITEM TO THE LOCAL LIBRARY
+        $element = '<div class="sound-item" name="'+item.id+'" file="'+item.file+'" icon="'+item.icon+'">'+item.id+'</div>'; 
+        $("#thesoundlist").append($element);
+        }
+});
+
+
+});
+
+
+
+
+
+    // GAIN FUNCTION
+
+function ChangeGain(target, gain){
+    
+    var $data = {"name": target, "gain":gain };
+    socket.emit("volume", $data);
+
+}
+
+socket.on("changevolume", function(data){ 
+
+    var it = PIXI.sound._sounds[data.name];
+    if ( data.gain == 0 ) 
+        { 
+        $(".dot[target="+data.name+"]").addClass("faded");
+        }
+    else
+        { 
+        $(".dot[target="+data.name+"]").removeClass("faded");
+        };
+
+    //console.log(data.gain);
+
+    it.volume = data.gain;
+
+});
+
+
+
+
+
+
+
+// PAN FUNCTION
+
+function ChangePan(target, pan){
+    var $data = {"target": target, "pan":pan };
+    socket.emit("pan", $data);
+    
+}
+
+socket.on("changepan", function(data){
+    var it = PIXI.sound._sounds[data.target];
+    it.filters = [ new PIXI.sound.filters.StereoFilter(data.pan) ];
+    //console.log(it);
+});
+
+
+
+
+
+
+
+
+// SYNC FUNCTION
+
+$(document).on("dblclick", ".dot", function(){
+    var target = $(this).attr("target");
+    Sync(target);
+
+});
+
+
+function Sync(target){
+    var it = PIXI.sound._sounds[target];
+    var currenttime = it.media.context.audioContext.currentTime;
+    var $data = {"target": target, "current":currenttime };
+    socket.emit("syncit", $data);
+}
+
+socket.on("sync", function(data){
+    var it = PIXI.sound._sounds[data.target];
+    PIXI.sound.stop(data.target);
+    PIXI.sound.play(data.target);
+    });
+
+
+
+
+// ART DRAW FUNCTIONS
+
+
+$(document).on("click", "#art-drawer-handle", function(){
+    $("#art-url-frame").toggleClass("open");
+});
+
+$("#art-url-frame").keypress(function(e) {
+  if(e.which == 13) {
+    e.preventDefault;
+    $value = $(this).html();
+    socket.emit("seedbackground", $value);
+    $("#art-url-frame").toggleClass("open");
+    return false;
+  }
+});
+
+
+socket.on("feedbackground",function(url){
+    $("#poster").css("background-image","url("+url+")");
+    $("#art-url-frame").html(url);
+});
+
+
+
+// DRAW FUNCTIONS
+
+$(document).on("click", "#drawer-handle", function(){
+    $("#drawer").toggleClass("open");
+    $("#art-drawer-handle").toggleClass("hidden");
+});
+
+$(document).on("click", ".sound-item", function(){
+    $(this).toggleClass("selected");
+    var name = $(this).attr("name");
+    var file = $(this).attr("file");
+    var icon = $(this).attr("icon")
+
+    if ( $(this).hasClass("selected") ) { SeedSound(name, file, icon); }
+    else { KillSound(name); }
+    
+});
+
+
+
+// SEED NEW SOUND TO SERVER         
+function SeedSound(name, file, icon){
+    $data = {"name":name, "file":file, "icon":icon};
+    socket.emit("seedsound", $data);
+}
+
+socket.on("newsound", function(){
+    socket.emit("gettracks");
+});
+
+
+
+
+
+
+
+
+</script>
+
+</body>
+
+</html>

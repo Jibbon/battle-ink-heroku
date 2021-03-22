@@ -16,6 +16,10 @@ var tracks = [];
 
     {'id':'farewell', 'file':'farewelltoafriend.mp3', "gain":0.05, "icon":"music" },
     {'id':'swamp', 'file':'swamp.mp3', "gain":0.05, "icon":"water" },
+    {'id':'beach', 'file':'beach.mp3', "gain":0.05, "icon":"water" },
+    {'id':'seasidemarket', 'file':'seasidemarket.mp3', "gain":0.05, "icon":"water" },
+    {'id':'onboard', 'file':'onboard.mp3', "gain":0.05, "icon":"water" },
+    {'id':'sailing', 'file':'sailing.mp3', "gain":0.05, "icon":"water" },
     {'id':'drums', 'file':'kododrums.mp3', "gain":0.05, "icon":"shield" },
     {'id':'prophecy', 'file':'aprophecyfulfilled.mp3', "gain":0.05, "icon":"music" },
     {'id':'blizzard', 'file':'blizzardoutside.mp3', "gain":0.05, "icon":"water" },
