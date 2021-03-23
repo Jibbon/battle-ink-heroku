@@ -13,6 +13,23 @@ body { margin:0px; padding:0px; overflow: hidden; background:black; color:whites
 .dot { position:absolute; z-index:99; height:35px; background-color: rgba(2,2,2,0.66); border-radius:15px; padding-left:15px; padding-right:15px; cursor: pointer; top:100%; left:50%; opacity:1; transition:opacity 1s ease; }
 .dot.faded { opacity:0.3; }
 .dot.hidden { opacity:0; }
+.dot.loop {  }
+.dot.loop:after {
+    content:"\221E";
+    position:absolute;
+    width:25px;
+    height:25px;
+    border-radius: 100%;
+    display:inline-block;
+    color:black;
+    margin-left:10px;
+    top:-5px;
+    background:white;
+    line-height: 20px;
+    text-align: center;
+}
+
+
 box-icon { float:left; height:35px; }
 .trackname { float:left; margin-left:10px; line-height:35px; }
 
@@ -186,7 +203,7 @@ $.each(array, function(index, item){
         console.log("fresh!"); 
 
         // GENERATE THE TRACK LOCALLY
-        GenerateDot(item.id, item.file, item.gain, item.pan, item.icon);
+        GenerateDot(item.id, item.file, item.gain, item.pan, item.icon, item.loop);
         }
 });
 
@@ -217,27 +234,27 @@ if(mylibrary.some(track => track.file === file))
 
 // GENERATE THE TRACK LOCALLY
 
-function GenerateDot(name, file, gain, pan, icon) {
+function GenerateDot(name, file, gain, pan, icon, loop) {
     // make array object & push to local array
-    $new = {'id':name, 'file':file, "gain":gain, "pan":pan, "icon":icon };
+    $new = {'id':name, 'file':file, "gain":gain, "pan":pan, "icon":icon, "loop":loop };
     mytracks.push($new);
     
     var x = GetX(pan);
     var y = GetY(gain);
 
     // generate html element
-    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading'><box-icon color='whitesmoke' name='"+icon+"'></box-icon><div class='trackname'>"+name+"</div></div>";
+    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading'><box-icon color='whitesmoke' name='"+icon+"'></box-icon><div class='trackname'>"+name+"</div></div>";
     $("#arena").append($element);
 
     // toggle the sound item in drawer
     $(".sound-item[name="+name+"]").addClass("selected");
 
     // generate pixi-sound object
-    AddSound(name, file, gain, pan);
+    AddSound(name, file, gain, pan, loop);
 
 }
 
-function AddSound(name, file, gain, pan){
+function AddSound(name, file, gain, pan, loop){
 
     console.log("making sound: "+name+" using file: "+file+" with gain "+gain);
 
@@ -251,6 +268,7 @@ function AddSound(name, file, gain, pan){
         console.log(name+' is loaded');
         StartVolume(name, gain);
         StartPan(name, pan);
+        StartLoop(name, loop);
         PIXI.sound.play(name);
         MakeDraggable();
         $(".dot[target="+name+"]").removeClass("loading");
@@ -268,6 +286,17 @@ function StartVolume(target, gain){
 function StartPan(target, pan){
     var it = PIXI.sound._sounds[target];
     it.filters = [ new PIXI.sound.filters.StereoFilter(pan) ];
+}
+
+function StartLoop(target, loop){
+    var it = PIXI.sound._sounds[target];
+    it.loop = loop;
+    
+    if ( loop ) 
+        { 
+        $(".dot[target="+target+"]").addClass("loop");
+        }
+
 }
 
 // KILL SOUND FUNCTION
@@ -421,7 +450,29 @@ socket.on("changevolume", function(data){
 
 
 
+// GET CONTEXT MENU
 
+$(document).on("contextmenu", ".dot", function(e){
+    e.preventDefault;
+    var sound = $(this).attr("target");
+    $(this).toggleClass("loop");
+    if ( $(this).hasClass("loop") ) { Loop(sound, true) }
+    else { Loop(sound, false) };
+    return false;
+});
+
+
+// SET LOOP
+
+function Loop(name, toggle){
+    var $data = {"name": name, "loop":toggle };
+    socket.emit("seedloop", $data);
+}
+
+socket.on("feedloop", function(data){
+    var it = PIXI.sound._sounds[data.name];
+    it.loop = data.loop;
+});
 
 
 
