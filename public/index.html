@@ -37,7 +37,6 @@ box-icon { position:absolute; left:50%; top:50%; transform: translateX(-50%) tra
 <div id="on-air"></div>
 
 <div id="poster"></div>   
-<div id="overlay"></div>
 
 <div id="line" class="gm"></div>
 
@@ -102,7 +101,7 @@ function Clock(){
     console.log($servertime);
     console.log($localtime);
 
-    if ( $servertime < ( $localtime - 1000 ) ) { $("#on-air").removeClass("on"); }
+    if ( $servertime < ( $localtime - 10000 ) ) { $("#on-air").removeClass("on"); }
     else {  $("#on-air").addClass("on"); }
 
     setTimeout(Clock, 1000);

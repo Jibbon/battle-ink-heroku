@@ -14,31 +14,33 @@ var tracks = [];
 
   var library = [
 
-    {'id':'farewell', 'file':'farewelltoafriend.mp3', "gain":0.05, "icon":"music" },
-    {'id':'swamp', 'file':'swamp.mp3', "gain":0.05, "icon":"water" },
-    {'id':'beach', 'file':'beach.mp3', "gain":0.05, "icon":"water" },
-    {'id':'seasidemarket', 'file':'seasidemarket.mp3', "gain":0.05, "icon":"water" },
-    {'id':'onboard', 'file':'onboard.mp3', "gain":0.05, "icon":"water" },
-    {'id':'sailing', 'file':'sailing.mp3', "gain":0.05, "icon":"water" },
-    {'id':'drums', 'file':'kododrums.mp3', "gain":0.05, "icon":"shield" },
-    {'id':'prophecy', 'file':'aprophecyfulfilled.mp3', "gain":0.05, "icon":"music" },
-    {'id':'blizzard', 'file':'blizzardoutside.mp3', "gain":0.05, "icon":"water" },
-    {'id':'hearth', 'file':'hearth01.mp3', "gain":0.05, "icon":"water" },
-    {'id':'horror', 'file':'horror01.mp3', "gain":0.05, "icon":"music" },
-    {'id':'library', 'file':'library.mp3', "gain":0.05, "icon":"water" },
-    {'id':'storm', 'file':'rainandthunder.mp3', "gain":0.05, "icon":"water" },
-    {'id':'tavern', 'file':'tavern.mp3', "gain":0.05, "icon":"water" },
-    {'id':'theglory', 'file':'theglory.mp3', "gain":0.05, "icon":"music" },
-    {'id':'stream', 'file':'stream.mp3', "gain":0.05, "icon":"water" },
-    {'id':'cello', 'file':'cellofear01.mp3', "gain":0.05, "icon":"music" },
-    {'id':'kynespeace', 'file':'kynespeace.mp3', "gain":0.05, "icon":"music" },
-    {'id':'aurora', 'file':'aurora.mp3', "gain":0.05, "icon":"music" },
-    {'id':'deadmarshes', 'file':'deadmarshesedit.mp3', "gain":0.05, "icon":"music" },
-    {'id':'deathinthedarkness', 'file':'deathinthedarkness.mp3', "gain":0.05, "icon":"music" },
-    {'id':'drakardrums', 'file':'drakardrums.mp3', "gain":0.05, "icon":"shield" },
-    {'id':'forest', 'file':'forest.mp3', "gain":0.05, "icon":"water" },
-    {'id':'imperiallegions', 'file':'imperiallegiontheme.mp3', "gain":0.05, "icon":"music" },
-    {'id':'journeyend', 'file':'journeyend.mp3', "gain":0.05, "icon":"music" }
+    {'id':'farewell', 'file':'farewelltoafriend.mp3', "gain":0.05, "pan":0, "icon":"music" },
+    {'id':'swamp', 'file':'swamp.mp3', "gain":0.05, "pan":0, "icon":"water" },
+    {'id':'beach', 'file':'beach.mp3', "gain":0.05, "pan":0, "icon":"water" },
+    {'id':'seasidemarket', 'file':'seasidemarket.mp3', "gain":0.05, "pan":0, "icon":"water" },
+    {'id':'onboard', 'file':'onboard.mp3', "gain":0.05, "pan":0, "icon":"water" },
+    {'id':'sailing', 'file':'sailing.mp3', "gain":0.05, "pan":0, "icon":"water" },
+    {'id':'rainforest', 'file':'rainforest.mp3', "gain":0.05, "pan":0, "icon":"water" },
+    {'id':'ocean', 'file':'ocean.mp3', "gain":0.05, "pan":0, "icon":"water" },
+    {'id':'drums', 'file':'kododrums.mp3', "gain":0.05, "pan":0, "icon":"shield" },
+    {'id':'prophecy', 'file':'aprophecyfulfilled.mp3', "gain":0.05, "pan":0, "icon":"music" },
+    {'id':'blizzard', 'file':'blizzardoutside.mp3', "gain":0.05, "pan":0, "icon":"water" },
+    {'id':'hearth', 'file':'hearth01.mp3', "gain":0.05, "pan":0, "icon":"water" },
+    {'id':'horror', 'file':'horror01.mp3', "gain":0.05, "pan":0, "icon":"music" },
+    {'id':'library', 'file':'library.mp3', "gain":0.05, "pan":0, "icon":"water" },
+    {'id':'storm', 'file':'rainandthunder.mp3', "gain":0.05, "pan":0, "icon":"water" },
+    {'id':'tavern', 'file':'tavern.mp3', "gain":0.05, "pan":0, "icon":"water" },
+    {'id':'theglory', 'file':'theglory.mp3', "gain":0.05, "pan":0, "icon":"music" },
+    {'id':'stream', 'file':'stream.mp3', "gain":0.05, "pan":0, "icon":"water" },
+    {'id':'cello', 'file':'cellofear01.mp3', "gain":0.05, "pan":0, "icon":"music" },
+    {'id':'kynespeace', 'file':'kynespeace.mp3', "gain":0.05, "pan":0, "icon":"music" },
+    {'id':'aurora', 'file':'aurora.mp3', "gain":0.05, "pan":0, "icon":"music" },
+    {'id':'deadmarshes', 'file':'deadmarshesedit.mp3', "gain":0.05, "pan":0, "icon":"music" },
+    {'id':'deathinthedarkness', 'file':'deathinthedarkness.mp3', "gain":0.05, "pan":0, "icon":"music" },
+    {'id':'drakardrums', 'file':'drakardrums.mp3', "gain":0.05, "pan":0, "icon":"shield" },
+    {'id':'forest', 'file':'forest.mp3', "gain":0.05, "pan":0, "icon":"water" },
+    {'id':'imperiallegions', 'file':'imperiallegiontheme.mp3', "gain":0.05, "pan":0, "icon":"music" },
+    {'id':'journeyend', 'file':'journeyend.mp3', "gain":0.05, "pan":0, "icon":"music" }
 
     ];
 
@@ -62,7 +64,12 @@ io.on('connection', (socket) => {
     tracks[$index].gain = data.gain;
     io.emit("changevolume", data); 
     });
-  socket.on("pan", (data) => { io.emit("changepan", data); });
+  socket.on("pan", (data) => 
+    { 
+    var $index = tracks.findIndex(x => x.id === data.name);
+    tracks[$index].pan = data.pan;
+    io.emit("changepan", data); 
+    });
   socket.on("syncit", (data) => { io.emit("sync", data); });
   // add sound
   socket.on("seedsound", (data) => 
