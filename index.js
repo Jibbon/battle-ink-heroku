@@ -58,7 +58,8 @@ io.on('connection', (socket) => {
   socket.on('gettracks', (data) => { io.emit('sendtracks', tracks); });
   socket.on('getlibrary', (data) => { io.emit('sendlibrary', library); });
   socket.on('getbackground', (data) => { io.emit('feedbackground', background); });
-
+  // clock function
+  socket.on("tick", (data) => { io.emit("tock"); });
   socket.on("volume", (data) => 
     { 
     var $index = tracks.findIndex(x => x.id === data.name);

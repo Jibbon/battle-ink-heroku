@@ -134,6 +134,9 @@ var mylibrary = [];
 var $servertime = 0;
 var $localtime = 0;
 
+var $ticks = 0;
+var $tocks = 0;
+
 $(document).ready(function(){
     
     Start();
@@ -146,17 +149,25 @@ socket.on('time', function(timeString) {
     $servertime = timeString;
     });
 
+// SEND TICK TO THE SERVER
 function Clock(){
     
-    $localtime = new Date().getTime();
+    $ticks++;
+    socket.emit("tick");
 
-    //console.log($servertime);
-    //console.log($localtime);
+    setTimeout(CheckClock, 5000);
+    setTimeout(Clock, 10000);
+}
 
-    if ( $servertime < ( $localtime - 1000 ) ) { $("#on-air").removeClass("on"); }
-    else {  $("#on-air").addClass("on"); }
+//TOCK
 
-    setTimeout(Clock, 1000);
+socket.on("tock", function(data){
+    $tocks++;
+});
+
+function CheckClock(){
+    if ( $ticks == $tocks ) { $("#on-air").addClass("on"); }
+    else { $("#on-air").removeClass("on"); }
 }
 
 // UPLOAD OPTIONS
