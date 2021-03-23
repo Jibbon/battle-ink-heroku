@@ -81,8 +81,7 @@ var mylibrary = [];
 
 var $servertime = 0;
 var $localtime = 0;
-var $ticks = 0;
-var $tocks = 0;
+var $tick = false;
 
 $(document).ready(function(){
     
@@ -99,8 +98,9 @@ socket.on('time', function(timeString) {
     // SEND TICK TO THE SERVER
 function Clock(){
     
-    $ticks++;
+    $tick = true;
     socket.emit("tick");
+    console.log("tick");
 
     setTimeout(CheckClock, 5000);
     setTimeout(Clock, 10000);
@@ -109,12 +109,13 @@ function Clock(){
 //TOCK
 
 socket.on("tock", function(data){
-    $tocks++;
+    console.log("tock");
+    $tick = false;
 });
 
 function CheckClock(){
-    if ( $ticks == $tocks ) { $("#on-air").addClass("on"); }
-    else { $("#on-air").removeClass("on"); }
+    if ( $tick ) { $("#on-air").removeClass("on"); }
+    else { $("#on-air").addClass("on"); }
 }
 
 

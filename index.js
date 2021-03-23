@@ -45,7 +45,7 @@ var tracks = [];
 
     ];
 
-    var background = "https://cdna.artstation.com/p/assets/images/images/024/621/960/large/xh-d-2-2.jpg?1583007045";
+    var background = "https://cdna.artstation.com/p/assets/images/images/020/186/524/large/miloe-cute-258-final-8-mb-pngg.jpg?1566760419";
 
 
 io.on('connection', (socket) => {
