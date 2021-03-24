@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const fs = require('fs');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const port = process.env.PORT || 3000;
@@ -8,7 +9,11 @@ const port = process.env.PORT || 3000;
 app.use(express.static("public"));
 
 
-
+fs.readFile('test.json', (err, data) => {
+  if (err) throw err;
+  let student = JSON.parse(data);
+  console.log(student);
+});
 
 var tracks = [];
 
@@ -41,7 +46,8 @@ var tracks = [];
     {'id':'drakardrums', 'file':'drakardrums.mp3', "gain":0.05, "pan":0, "icon":"shield", "loop":false },
     {'id':'forest', 'file':'forest.mp3', "gain":0.05, "pan":0, "icon":"water", "loop":false },
     {'id':'imperiallegions', 'file':'imperiallegiontheme.mp3', "gain":0.05, "pan":0, "icon":"music", "loop":false },
-    {'id':'journeyend', 'file':'journeyend.mp3', "gain":0.05, "pan":0, "icon":"music", "loop":false }
+    {'id':'journeyend', 'file':'journeyend.mp3', "gain":0.05, "pan":0, "icon":"music", "loop":false },
+    {'id':'dawn', 'file':'dawn.mp3', "gain":0.05, "pan":0, "icon":"music", "loop":false }
 
     ];
 
