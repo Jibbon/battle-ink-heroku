@@ -1,1 +1,354 @@
-[{"id":"farewell","file":"farewelltoafriend.mp3","gain":0.05,"pan":0,"icon":"music","loop":false},{"id":"swamp","file":"swamp.mp3","gain":0.05,"pan":0,"icon":"water","loop":false},{"id":"firebolt","file":"firebolt.mp3","gain":0.05,"pan":0,"icon":"water","loop":false},{"id":"beach","file":"beach.mp3","gain":0.05,"pan":0,"icon":"water","loop":false},{"id":"seasidemarket","file":"seasidemarket.mp3","gain":0.05,"pan":0,"icon":"water","loop":false},{"id":"onboard","file":"onboard.mp3","gain":0.05,"pan":0,"icon":"water","loop":false},{"id":"sailing","file":"sailing.mp3","gain":0.05,"pan":0,"icon":"water","loop":false},{"id":"rainforest","file":"rainforest.mp3","gain":0.05,"pan":0,"icon":"water","loop":false},{"id":"ocean","file":"ocean.mp3","gain":0.05,"pan":0,"icon":"water","loop":false},{"id":"drums","file":"kododrums.mp3","gain":0.05,"pan":0,"icon":"shield","loop":false},{"id":"prophecy","file":"aprophecyfulfilled.mp3","gain":0.05,"pan":0,"icon":"music","loop":false},{"id":"blizzard","file":"blizzardoutside.mp3","gain":0.05,"pan":0,"icon":"water","loop":false},{"id":"hearth","file":"hearth01.mp3","gain":0.05,"pan":0,"icon":"water","loop":false},{"id":"horror","file":"horror01.mp3","gain":0.05,"pan":0,"icon":"music","loop":false},{"id":"library","file":"library.mp3","gain":0.05,"pan":0,"icon":"water","loop":false},{"id":"storm","file":"rainandthunder.mp3","gain":0.05,"pan":0,"icon":"water","loop":false},{"id":"tavern","file":"tavern.mp3","gain":0.05,"pan":0,"icon":"water","loop":false},{"id":"theglory","file":"theglory.mp3","gain":0.05,"pan":0,"icon":"music","loop":false},{"id":"stream","file":"stream.mp3","gain":0.05,"pan":0,"icon":"water","loop":false},{"id":"cello","file":"cellofear01.mp3","gain":0.05,"pan":0,"icon":"music","loop":false},{"id":"kynespeace","file":"kynespeace.mp3","gain":0.05,"pan":0,"icon":"music","loop":false},{"id":"aurora","file":"aurora.mp3","gain":0.05,"pan":0,"icon":"music","loop":false},{"id":"deadmarshes","file":"deadmarshesedit.mp3","gain":0.05,"pan":0,"icon":"music","loop":false},{"id":"deathinthedarkness","file":"deathinthedarkness.mp3","gain":0.05,"pan":0,"icon":"music","loop":false},{"id":"drakardrums","file":"drakardrums.mp3","gain":0.05,"pan":0,"icon":"shield","loop":false},{"id":"forest","file":"forest.mp3","gain":0.05,"pan":0,"icon":"water","loop":false},{"id":"imperiallegions","file":"imperiallegiontheme.mp3","gain":0.05,"pan":0,"icon":"music","loop":false},{"id":"journeyend","file":"journeyend.mp3","gain":0.05,"pan":0,"icon":"music","loop":false},{"id":"dawn","file":"dawn.mp3","gain":0.05,"pan":0,"icon":"music","loop":false}]
+[
+    {
+      "id": "farewell",
+      "file": "farewelltoafriend.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "swamp",
+      "file": "swamp.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "water",
+      "loop": false
+    },
+    {
+      "id": "firebolt",
+      "file": "firebolt.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "water",
+      "loop": false
+    },
+    {
+      "id": "beach",
+      "file": "beach.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "water",
+      "loop": false
+    },
+    {
+      "id": "seasidemarket",
+      "file": "seasidemarket.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "water",
+      "loop": false
+    },
+    {
+      "id": "onboard",
+      "file": "onboard.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "water",
+      "loop": false
+    },
+    {
+      "id": "sailing",
+      "file": "sailing.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "water",
+      "loop": false
+    },
+    {
+      "id": "rainforest",
+      "file": "rainforest.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "water",
+      "loop": false
+    },
+    {
+      "id": "ocean",
+      "file": "ocean.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "water",
+      "loop": false
+    },
+    {
+      "id": "drums",
+      "file": "kododrums.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "shield",
+      "loop": false
+    },
+    {
+      "id": "prophecy",
+      "file": "aprophecyfulfilled.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "blizzard",
+      "file": "blizzardoutside.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "water",
+      "loop": false
+    },
+    {
+      "id": "hearth",
+      "file": "hearth01.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "water",
+      "loop": false
+    },
+    {
+      "id": "horror",
+      "file": "horror01.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "library",
+      "file": "library.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "water",
+      "loop": false
+    },
+    {
+      "id": "storm",
+      "file": "rainandthunder.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "water",
+      "loop": false
+    },
+    {
+      "id": "tavern",
+      "file": "tavern.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "water",
+      "loop": false
+    },
+    {
+      "id": "theglory",
+      "file": "theglory.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "stream",
+      "file": "stream.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "water",
+      "loop": false
+    },
+    {
+      "id": "cello",
+      "file": "cellofear01.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "kynespeace",
+      "file": "kynespeace.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "aurora",
+      "file": "aurora.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "deadmarshes",
+      "file": "deadmarshesedit.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "deathinthedarkness",
+      "file": "deathinthedarkness.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "drakardrums",
+      "file": "drakardrums.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "shield",
+      "loop": false
+    },
+    {
+      "id": "forest",
+      "file": "forest.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "water",
+      "loop": false
+    },
+    {
+      "id": "imperiallegions",
+      "file": "imperiallegiontheme.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "journeyend",
+      "file": "journeyend.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "dawn",
+      "file": "dawn.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "caveambience",
+      "file": "caveambience.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "secunda",
+      "file": "secunda.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "dragonsreach",
+      "file": "dragonsreach.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "shatteredshields",
+      "file": "shatteredshields.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "silentfootsteps",
+      "file": "silentfootsteps.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "standingstones",
+      "file": "standingstones.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "thecastle",
+      "file": "thecastle.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "toothandclaw",
+      "file": "toothandclaw.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "towersandshadows",
+      "file": "towersandshadows.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "tundra",
+      "file": "tundra.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "watchtheskies",
+      "file": "watchtheskies.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "weaponsdrawndrum",
+      "file": "weaponsdrawndrum.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "shield",
+      "loop": false
+    },
+    {
+      "id": "weaponsdrawn",
+      "file": "weaponsdrawn.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "windguideyou",
+      "file": "windguideyou.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "winterstale",
+      "file": "winterstale.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    }
+  ]

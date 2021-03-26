@@ -7,6 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Unicase:wght@300&display=swap" rel="stylesheet">
 
 <style>
+
+* {
+    -webkit-touch-callout:none;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
+
 body { margin:0px; padding:0px; overflow: hidden; background:black; color:whitesmoke; font-family: 'Cormorant Unicase', serif; }
 
 .frame { position:relative; left:5%; top:30%; width:90%; height:60%; z-index:99; }
@@ -43,15 +52,23 @@ box-icon { float:left; height:35px; }
 #drawer.open { transform: translateX(0%); }
 #drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; top:25px; right:-75px; cursor: pointer;  }
 
+
+#preset-drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(10, 10, 13,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
+#preset-drawer.open { transform: translateX(0%); }
+#preset-drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; top:100px; right:-75px; cursor: pointer;  }
+.preset { cursor: pointer;}
+
 #art-drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(34, 83, 113,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
 #art-drawer.open { transform: translateX(0%); }
-#art-drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; top:100px; right:-75px; cursor: pointer; transition:all 0.3s ease; }
-#art-drawer-handle.hidden { opacity:0; visibility: hidden; }
-#art-url-frame { position:absolute; z-index:999999; font-size:14px; height:35px; width:auto; line-height:35px; padding-left:10px; padding-right:10px; color:whitesmoke; top:100px; left:0px; background:#222; border-radius:10px; transform: scale(0) translateX(-100%); transition: all 0.6s ease-in-out;  }
+#art-drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; top:175px; right:-75px; cursor: pointer; transition:all 0.3s ease; }
+#art-url-frame { position:absolute; z-index:999999; font-size:14px; height:35px; width:auto; line-height:35px; padding-left:10px; padding-right:10px; color:whitesmoke; top:175px; left:0px; background:#222; border-radius:10px; transform: scale(0) translateX(-100%); transition: all 0.6s ease-in-out;  }
 #art-url-frame.open { transform: scale(1) translateX(75px); }
 
-#soundlist { width:90%; margin-left:5%; }
-.sound-item { cursor:pointer; color:whitesmoke; border-radius:10px; height:20px; line-height:20px; padding-left:5px; margin-top:5px; font-size:14px; }
+.hidden { opacity:0; visibility: hidden; }
+
+#soundlist-container { overflow:hidden; }
+#soundlist { width:110%; height:90%; margin-top:10%; margin-left:5%; overflow-y: scroll; }
+.sound-item { cursor:pointer; list-style:none; color:whitesmoke; border-radius:10px; height:20px; line-height:20px; padding-left:5px; margin-top:5px; font-size:14px; }
 .sound-item.selected {  }
 .sound-item.selected:after {
     content:"\A";
@@ -88,9 +105,22 @@ box-icon { float:left; height:35px; }
         <box-icon name='library' color="whitesmoke" ></box-icon>
     </div>
 
-    <div id="soundlist">
+    <div id='soundlist-container'>
+        <div id="soundlist">
+            <div id="thesoundlist"></div>
+        </div>
+    </div>
 
-        <div id="thesoundlist"></div>
+</div>
+
+<div id="preset-drawer">
+    <div id="preset-drawer-handle">
+        <box-icon type='solid' name='save' color="whitesmoke"></box-icon>
+    </div>
+
+    <div id="presetlist">
+
+        <div id="thepresetlist"></div>
 
     </div>
 
@@ -126,12 +156,16 @@ box-icon { float:left; height:35px; }
 var socket = io();
 
 var mytracks = [];
-var mylibrary = [];    
+var mylibrary = [];   
+var presets = []; 
 
 var $servertime = 0;
 var $localtime = 0;
 
-var $tick = false;
+var $currentpreset = "1345768";
+
+var $tick = false;  
+
 
 $(document).ready(function(){
     
@@ -189,12 +223,60 @@ socket.on("sounduploaded", function(data){
 
 function Start(){
 
+socket.emit('getpresets');
 socket.emit("getbackground");
 socket.emit("getlibrary");
 socket.emit("gettracks");
 
 }
 
+
+// GATHER PRESENTS
+
+socket.on('sendpresets', function(data)
+    {
+    presets = data;
+    $.each(data, function(index, item){
+        console.log(item);
+        $element = '<div class="preset" target="'+item.id+'">'+item.title+'</div>';
+        $('#thepresetlist').append($element);
+    });
+});
+
+
+$(document).on('click', '.preset', function(){
+    $target = $(this).attr('target');
+    GatherPreset($target);
+});
+
+// GATHER THE PRESET FROM THE SERVER
+
+function GatherPreset(target){
+    var $index = presets.findIndex(x => x.id === target);
+    var library = presets[$index].library;
+    BuildPreset(library);
+}
+
+function BuildPreset(library){
+    console.log(library);
+
+    $.each(mytracks, function(index, item){
+        KillSound(item.id);
+        $(".sound-item[name="+item.id+"]").removeClass('selected');
+    });
+
+
+    $.each(library, function(index, item){
+
+        SeedPresetSound(item.id, item.file, item.gain, item.pan, item.icon, item.loop);
+
+
+    });
+
+    
+}
+
+// GATHER TRACKS TO LIBRARY
 socket.on("sendtracks", function(data){
     BuildTracks(data);
 });
@@ -202,7 +284,7 @@ socket.on("sendtracks", function(data){
 function BuildTracks(array){
 
 $.each(array, function(index, item){
-    //console.log(item);
+    console.log(item);
     if ( Existing(item.file)) 
         {
         console.log("already exits")    
@@ -245,9 +327,16 @@ if(mylibrary.some(track => track.file === file))
 
 function GenerateDot(name, file, gain, pan, icon, loop) {
     // make array object & push to local array
+    console.log(gain);
     $new = {'id':name, 'file':file, "gain":gain, "pan":pan, "icon":icon, "loop":loop };
     mytracks.push($new);
-    
+
+    // update current preset
+    var $index = presets.findIndex(x => x.id === $currentpreset);
+    var library = presets[$index].library;
+    library.push($new);
+    console.log(library);
+
     var x = GetX(pan);
     var y = GetY(gain);
 
@@ -418,16 +507,26 @@ socket.on("sendlibrary", function(data){
         console.log("fresh!"); 
 
         // ADD THE ITEM TO THE LOCAL LIBRARY
-        $element = '<div class="sound-item" name="'+item.id+'" file="'+item.file+'" icon="'+item.icon+'">'+item.id+'</div>'; 
+        $element = '<li class="sound-item" name="'+item.id+'" file="'+item.file+'" icon="'+item.icon+'">'+item.id+'</li>'; 
         $("#thesoundlist").append($element);
         }
 });
 
+SortSounds();
 
 });
 
 
+// SORT SOUND LIST
 
+function SortSounds(){
+    $("#thesoundlist li").sort(Sort).appendTo('#thesoundlist');
+}
+
+function Sort(a, b) {
+    return ($(b).text().toUpperCase()) < 
+    ($(a).text().toUpperCase()) ? 1 : -1; 
+    }
 
 
     // GAIN FUNCTION
@@ -489,6 +588,7 @@ socket.on("feedloop", function(data){
 
 function ChangePan(target, pan){
     var $data = {"name": target, "pan":pan };
+    console.log($data);
     socket.emit("pan", $data);
     
 }
@@ -556,29 +656,43 @@ socket.on("feedbackground",function(url){
 
 
 
-// DRAW FUNCTIONS
+// LIBRARY DRAW FUNCTIONS
 
 $(document).on("click", "#drawer-handle", function(){
     $("#drawer").toggleClass("open");
     $("#art-drawer-handle").toggleClass("hidden");
+    $("#preset-drawer-handle").toggleClass("hidden");
 });
 
 $(document).on("click", ".sound-item", function(){
     $(this).toggleClass("selected");
     var name = $(this).attr("name");
     var file = $(this).attr("file");
-    var icon = $(this).attr("icon")
+    var icon = $(this).attr("icon");
+    var gain = 0;
+    var pan = 0;
+    var loop = 0;
 
-    if ( $(this).hasClass("selected") ) { SeedSound(name, file, icon); }
+    if ( $(this).hasClass("selected") ) { SeedSound(name, file, gain, pan, icon, loop); }
     else { KillSound(name); }
     
 });
 
 
 
+// PRESET DRAW FUNCTIONS
+
+$(document).on("click", "#preset-drawer-handle", function(){
+    $("#preset-drawer").toggleClass("open");
+    $("#art-drawer-handle").toggleClass("hidden");
+    $("#drawer-handle").toggleClass("hidden");
+});
+
+
+
 // SEED NEW SOUND TO SERVER         
-function SeedSound(name, file, icon){
-    $data = {"name":name, "file":file, "icon":icon};
+function SeedSound(name, file, gain, pan, icon, loop) {
+    $data = {"name":name, "file":file, 'gain':gain, 'pan':pan, "icon":icon, 'loop':loop};
     socket.emit("seedsound", $data);
 }
 
@@ -588,7 +702,12 @@ socket.on("newsound", function(){
 
 
 
-// SET COORDINATES BASED ON PAN
+// SUMMON PRESET
+
+function SeedPresetSound(name, file, gain, pan, icon, loop){
+    $data = {"name":name, "file":file, "icon":icon, 'gain':gain, 'pan':pan, 'loop':loop};
+    socket.emit('seedpreset', $data);
+}
 
 
 
