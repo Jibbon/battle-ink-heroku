@@ -350,5 +350,21 @@
       "pan": 0,
       "icon": "music",
       "loop": false
+    },
+    {
+      "id": "thegaels",
+      "file": "thegaels.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "elves",
+      "file": "elves.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
     }
   ]
