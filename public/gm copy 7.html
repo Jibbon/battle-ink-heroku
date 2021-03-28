@@ -43,7 +43,7 @@ box-icon { float:left; height:35px; }
 .trackname { float:left; margin-left:10px; line-height:35px; }
 
 .tape { position: fixed; top:25px; right:25px; width:25px; height:25px; z-index:999; border:0px; }
-#line { position:absolute; opacity:0.33; left:50%; width:2px; height:100%; margin-left:-1px; z-index:0; background:none;}
+#line { position:absolute; opacity:0.33; left:50%; width:2px; height:100%; margin-left:-1px; z-index:0; background:gray;}
 #line.on { background:purple; }
 #poster { position:absolute; z-index:-1; width:100%; height:100%; background-size:cover; opacity:0.4; background-image:url(); background-position:50% 50%;}
 #veil{ position:absolute; z-index:0; width:100%; height:100%; background-size:cover; opacity:0.3; filter: invert(100%); background-image:url(img/veil.jpg); background-position:50% 50%;}
@@ -197,7 +197,7 @@ socket.on("tock", function(data){
 
 function CheckClock(){
     if ( $tick ) { $("#line").removeClass("on"); }
-    else {  }
+    else { $("#line").addClass("on"); }
 }
 
 // UPLOAD OPTIONS
@@ -252,20 +252,29 @@ $(document).on('click', '.preset', function(){
 
 socket.on("feedpreset", function(){
     console.log("A new preset has been requested...");
-    socket.emit("getbackground");
     socket.emit("wipetracklist");
 });
 
 
 socket.on("wipetracks", function(){
     console.log("wiping the track list clean...");
-    mytracks = [];
+    console.log(mytracks);
+    $length = mytracks.length;
 
-    PIXI.sound.removeAll();
-    $(".sound-item").removeClass('selected');
-    $(".dot").remove();
-    GatherPreset();
+    if ( $length == 0 ) { console.log("done"); mytracks = []; console.log(mytracks); GatherPreset(); return false; }
 
+    $.each(mytracks, function(index, item){
+        $(".sound-item[name="+item.id+"]").removeClass('selected');
+        PIXI.sound.stop(item.id);
+        $(".dot[target="+item.id+"]").remove();
+        
+        if ( index == $length - 1 ) 
+            { 
+            console.log("done"); mytracks = []; console.log(mytracks);
+            GatherPreset();
+            return false; 
+            }
+});
 });
 
 
@@ -341,7 +350,7 @@ if(mylibrary.some(track => track.file === file))
 // GENERATE THE TRACK LOCALLY
 
 function GenerateDot(name, file, gain, pan, icon, loop) {
-    console.log("Adding "+name+" to the canvas");
+    // make array object & push to local array
     //console.log(gain);
     $new = {'id':name, 'file':file, "gain":gain, "pan":pan, "icon":icon, "loop":loop };
     mytracks.push($new);
@@ -410,7 +419,6 @@ function StartPan(target, pan){
 }
 
 function StartLoop(target, loop){
-    console.log("Setting loop status to: "+loop);
     var it = PIXI.sound._sounds[target];
     it.loop = loop;
     
@@ -425,11 +433,11 @@ function StartLoop(target, loop){
 
 function KillSound(name){
     console.log("Killing track: "+name);
-    socket.emit("removesound", name);
+    $data = {"name":name, "preset":$currentpreset }
+    socket.emit("removesound", $data);
 }
 
 socket.on("soundscrubbed", function(name){
-    console.log("Scrubbing sound "+name);
     PIXI.sound.stop(name);
     $(".dot[target="+name+"]").remove();
     var $index = mytracks.findIndex(x => x.id === name);
@@ -614,7 +622,7 @@ socket.on("feedloop", function(data){
 
 function ChangePan(target, pan){
     var $data = {"name": target, "pan":pan, "preset":$currentpreset };
-    //console.log($data);
+    console.log($data);
     socket.emit("pan", $data);
     
 }
@@ -697,9 +705,9 @@ $(document).on("click", ".sound-item", function(){
     var icon = $(this).attr("icon");
     var gain = 0;
     var pan = 0;
-    var loop = false;
+    var loop = 0;
 
-    if ( $(this).hasClass("selected") ) { GenerateDot(name, file, gain, pan, icon, loop); }
+    if ( $(this).hasClass("selected") ) { SeedSound(name, file, gain, pan, icon, loop); }
     else { KillSound(name); }
     
 });
@@ -717,15 +725,15 @@ $(document).on("click", "#preset-drawer-handle", function(){
 
 
 // SEED NEW SOUND TO SERVER         
-//function SeedSound(name, file, gain, pan, icon, loop) {
-//    $data = {"name":name, "file":file, 'gain':gain, 'pan':pan, "icon":icon, 'loop':loop};
-//    console.log($data);
-//    socket.emit("seedsound", $data);
-//}
+function SeedSound(name, file, gain, pan, icon, loop) {
+    $data = {"name":name, "file":file, 'gain':gain, 'pan':pan, "icon":icon, 'loop':loop};
+    console.log($data);
+    socket.emit("seedsound", $data);
+}
 
-//socket.on("newsound", function(){
-//    socket.emit("gettracks");
-//});
+socket.on("newsound", function(){
+    socket.emit("gettracks");
+});
 
 
 

@@ -1,19 +1,79 @@
 [
-    {"id":"01", "title":"home", "library":
-        [
-        
+    {
+        "id": "01",
+        "title": "home",
+        "background": "https://cdnb.artstation.com/p/assets/images/images/025/511/797/large/nick-b-nb-m5a1.jpg?1586025568",
+        "library": [
+            {
+                "id": "forest",
+                "file": "forest.mp3",
+                "gain": 0.011,
+                "pan": 0,
+                "icon": "water",
+                "loop": true
+            },
+            {
+                "id": "standingstones",
+                "file": "standingstones.mp3",
+                "gain": 0.026,
+                "pan": -0.01,
+                "icon": "music",
+                "loop": false
+            },
+            {
+                "id": "stream",
+                "file": "stream.mp3",
+                "gain": 0.004,
+                "pan": -0.57,
+                "icon": "water",
+                "loop": true
+            }
         ]
     },
-    {"id":"1345768", "title":"swamp at night", "library":
-        [
-        {"id":"farewell","file":"farewelltoafriend.mp3","gain":0.05,"pan":0,"icon":"music","loop":false},
-        {"id":"swamp","file":"swamp.mp3","gain":0.005,"pan":0.3,"icon":"water","loop":false}
+    {
+        "id": "1345768",
+        "title": "swamp at night",
+        "background": "https://cdnb.artstation.com/p/assets/images/images/000/100/545/large/grzegorz-rutkowski-swamp-ambush-over-2-1400.jpg?1443932333",
+        "library": [
+            {
+                "id": "swamp",
+                "file": "swamp.mp3",
+                "gain": 0.024,
+                "pan": 0.03,
+                "icon": "water",
+                "loop": true
+            },
+            {
+                "id": "drakardrums",
+                "file": "drakardrums.mp3",
+                "gain": 0.048,
+                "pan": 0.02,
+                "icon": "shield",
+                "loop": 0
+            }
         ]
     },
-    {"id":"1345768567", "title":"on board the ship", "library":
-        [
-        {"id":"ocean","file":"ocean.mp3","gain":0.04,"pan":0,"icon":"music","loop":false},
-        {"id":"onboard","file":"onboard.mp3","gain":0.007,"pan":0.3,"icon":"water","loop":false}
+    {
+        "id": "1345768567",
+        "title": "on board the ship",
+        "background": "https://cdna.artstation.com/p/assets/images/images/030/706/228/large/kurmja-illust-pw-s1.jpg?1601403392",
+        "library": [
+            {
+                "id": "ocean",
+                "file": "ocean.mp3",
+                "gain": 0.029,
+                "pan": 0.01,
+                "loop": true,
+                "icon": "water"
+            },
+            {
+                "id": "farewell",
+                "file": "farewelltoafriend.mp3",
+                "gain": 0.054,
+                "pan": 0.03,
+                "icon": "music",
+                "loop": false
+            }
         ]
     }
-    ] 
+]

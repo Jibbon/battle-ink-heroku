@@ -14,7 +14,6 @@ var tracks = [];
 
 var presets = [];
 
-var currentpreset = "1345768567";
 
 fs.readFile('library.json', (err, data) => {
   if (err) throw err;
@@ -38,6 +37,8 @@ function UpdatePreset(library) {
 }
 
 
+var background = "https://cdna.artstation.com/p/assets/images/images/020/186/524/large/miloe-cute-258-final-8-mb-pngg.jpg?1566760419";
+
 
 io.on('connection', (socket) => {
   socket.on('chat message', msg => {
@@ -49,42 +50,14 @@ io.on('connection', (socket) => {
   socket.on('gettracks', (data) => { io.emit('sendtracks', tracks); });
   socket.on('getlibrary', (data) => { io.emit('sendlibrary', library); });
   socket.on('getpresets', (data) => { io.emit('sendpresets', presets); });
-  socket.on('changepreset', (preset) => 
-    { 
-    currentpreset = preset;
-    io.emit('feedpreset'); 
-    });
-  socket.on('getcurrentpreset', (data) => 
-    { 
-    var $index = presets.findIndex(x => x.id === currentpreset);
-    var library = presets[$index].library;
-    var $data = {"preset":currentpreset, "library":library};
-    io.emit('feedcurrentpreset', $data); 
-    });
-  // change background
-  socket.on("seedbackground", (url) => 
-  { 
-  var $index = presets.findIndex(x => x.id === currentpreset);
-  presets[$index].background = url;
-  UpdatePreset(presets);
-  io.emit("feedbackground", url); 
-  });
-  // request background
-  socket.on('getbackground', (data) => 
-    { 
-    var $index = presets.findIndex(x => x.id === currentpreset);
-    var background = presets[$index].background;
-    io.emit('feedbackground', background); 
-    });
+  socket.on('getbackground', (data) => { io.emit('feedbackground', background); });
   // clock function
   socket.on("tick", (data) => { io.emit("tock"); });
   socket.on("volume", (data) => 
     { 
-    var $index = presets.findIndex(x => x.id === data.preset);
-    var $indexofitem = presets[$index].library.findIndex(x => x.id === data.name);
-    presets[$index].library[$indexofitem].gain = data.gain;
-    UpdatePreset(presets);
-    io.emit("changevolume", data);
+    var $index = tracks.findIndex(x => x.id === data.name);
+    tracks[$index].gain = data.gain;
+    io.emit("changevolume", data); 
     });
   // add track to preset
   socket.on("updatepreset", (data) => 
@@ -97,19 +70,19 @@ io.on('connection', (socket) => {
   socket.on("pan", (data) => 
     { 
     var $index = presets.findIndex(x => x.id === data.preset);
+    console.log(data.preset);
+    console.log($index);
     var $indexofitem = presets[$index].library.findIndex(x => x.id === data.name);
     presets[$index].library[$indexofitem].pan = data.pan;
-    UpdatePreset(presets);
+    console.log( presets[$index].library[$indexofitem].pan );
     io.emit("changepan", data); 
+    UpdatePreset(presets);
     });
   // loop function
   socket.on("seedloop", (data) => 
     { 
-    var $index = presets.findIndex(x => x.id === currentpreset);
-    var $indexofitem = presets[$index].library.findIndex(x => x.id === data.name);
-    presets[$index].library[$indexofitem].loop = data.loop;
-    console.log(presets[$index].library);
-    UpdatePreset(presets);
+    var $index = tracks.findIndex(x => x.id === data.name);
+    tracks[$index].loop = data.loop;
     io.emit("feedloop", data); 
     });  
   // sync function
@@ -118,10 +91,7 @@ io.on('connection', (socket) => {
   socket.on("seedsound", (data) => 
     { 
     $new = {'id':data.name, 'file':data.file, "gain":data.gain, 'pan':data.pan, 'loop':data.loop, "icon":data.icon };
-    //tracks.push($new);
-    var $index = presets.findIndex(x => x.id === currentpreset);
-    presets[$index].library.push($new);
-    UpdatePreset(presets);
+    tracks.push($new);
     io.emit("newsound"); 
     });
     // add preset sound
@@ -129,29 +99,21 @@ io.on('connection', (socket) => {
     { 
     $new = {'id':data.name, 'file':data.file, "gain":data.gain, 'pan':data.pan, 'loop':data.loop, "icon":data.icon };
     tracks.push($new);
-    console.log(tracks.length);
-    
+    io.emit("newsound"); 
     });
-    // wipe track list
-    socket.on("wipetracklist", (data) => 
-      { 
-      console.log(tracks); 
-      tracks = []; 
-      console.log(tracks); 
-      socket.emit("wipetracks");
-      });
     // remove sound
     socket.on("removesound", (name) => 
     { 
-    //var $index = tracks.findIndex(x => x.id === name);
-    //tracks.splice($index, 1);
-    var $index = presets.findIndex(x => x.id === currentpreset);
-    var $indexofitem = presets[$index].library.findIndex(x => x.id === name);
-    presets[$index].library.splice($indexofitem, 1);
-    UpdatePreset(presets);
+    var $index = tracks.findIndex(x => x.id === name);
+    tracks.splice($index, 1);
     io.emit("soundscrubbed", name); 
     });
-    
+    // change background
+    socket.on("seedbackground", (url) => 
+      { 
+      background = url;
+      io.emit("feedbackground", url); 
+      });
 
 
 
