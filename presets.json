@@ -7,26 +7,42 @@
             {
                 "id": "forest",
                 "file": "forest.mp3",
-                "gain": 0.011,
-                "pan": 0,
+                "gain": 0.088,
+                "pan": 0.25,
                 "icon": "water",
                 "loop": true
             },
             {
                 "id": "standingstones",
                 "file": "standingstones.mp3",
-                "gain": 0.026,
-                "pan": -0.01,
+                "gain": 0.053,
+                "pan": -0.14,
                 "icon": "music",
                 "loop": false
             },
             {
                 "id": "stream",
                 "file": "stream.mp3",
-                "gain": 0.004,
-                "pan": -0.57,
+                "gain": 0.007,
+                "pan": -1.04,
                 "icon": "water",
                 "loop": true
+            },
+            {
+                "id": "cello",
+                "file": "cellofear01.mp3",
+                "gain": 0,
+                "pan": -0.01,
+                "icon": "music",
+                "loop": false
+            },
+            {
+                "id": "deadmarshes",
+                "file": "deadmarshesedit.mp3",
+                "gain": 0,
+                "pan": 0,
+                "icon": "music",
+                "loop": false
             }
         ]
     },
@@ -38,18 +54,18 @@
             {
                 "id": "swamp",
                 "file": "swamp.mp3",
-                "gain": 0.024,
-                "pan": 0.03,
+                "gain": 0.036,
+                "pan": -0.07,
                 "icon": "water",
                 "loop": true
             },
             {
                 "id": "drakardrums",
                 "file": "drakardrums.mp3",
-                "gain": 0.048,
-                "pan": 0.02,
+                "gain": 0.013,
+                "pan": -0.17,
                 "icon": "shield",
-                "loop": 0
+                "loop": true
             }
         ]
     },
@@ -69,10 +85,10 @@
             {
                 "id": "farewell",
                 "file": "farewelltoafriend.mp3",
-                "gain": 0.054,
-                "pan": 0.03,
+                "gain": 0.05,
+                "pan": 0.01,
                 "icon": "music",
-                "loop": false
+                "loop": true
             }
         ]
     }
