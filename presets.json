@@ -19,14 +19,6 @@
                 "pan": -0.02,
                 "icon": "water",
                 "loop": false
-            },
-            {
-                "id": "beach",
-                "file": "beach.mp3",
-                "gain": 0.146,
-                "pan": -0.24,
-                "icon": "water",
-                "loop": false
             }
         ]
     },
@@ -36,19 +28,19 @@
         "background": "https://cdnb.artstation.com/p/assets/images/images/000/100/545/large/grzegorz-rutkowski-swamp-ambush-over-2-1400.jpg?1443932333",
         "library": [
             {
-                "id": "drums",
-                "file": "kododrums.mp3",
-                "gain": 0.08,
-                "pan": 0.05,
-                "icon": "shield",
+                "id": "swamp",
+                "file": "swamp.mp3",
+                "gain": 0.037,
+                "pan": 0.03,
+                "icon": "water",
                 "loop": false
             },
             {
-                "id": "swamp",
-                "file": "swamp.mp3",
-                "gain": 0.035,
-                "pan": 0.07,
-                "icon": "water",
+                "id": "weaponsdrawn",
+                "file": "weaponsdrawn.mp3",
+                "gain": 0.088,
+                "pan": 0.01,
+                "icon": "music",
                 "loop": false
             }
         ]
@@ -73,6 +65,29 @@
                 "pan": 0.01,
                 "icon": "music",
                 "loop": true
+            }
+        ]
+    },
+    {
+        "id": "1345",
+        "title": "Mountains",
+        "background": "https://cdnb.artstation.com/p/assets/images/images/005/620/115/large/raphael-lacoste-mountain-rider-v02-net.jpg?1492521048",
+        "library": [
+            {
+                "id": "blizzard",
+                "file": "blizzardoutside.mp3",
+                "gain": 0.048,
+                "pan": -0.02,
+                "icon": "water",
+                "loop": false
+            },
+            {
+                "id": "towersandshadows",
+                "file": "towersandshadows.mp3",
+                "gain": 0.074,
+                "pan": 0,
+                "icon": "music",
+                "loop": false
             }
         ]
     }
