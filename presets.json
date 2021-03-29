@@ -5,43 +5,27 @@
         "background": "https://cdnb.artstation.com/p/assets/images/images/025/511/797/large/nick-b-nb-m5a1.jpg?1586025568",
         "library": [
             {
-                "id": "forest",
-                "file": "forest.mp3",
-                "gain": 0.088,
-                "pan": 0.25,
-                "icon": "water",
-                "loop": true
-            },
-            {
-                "id": "standingstones",
-                "file": "standingstones.mp3",
-                "gain": 0.053,
-                "pan": -0.14,
+                "id": "elves",
+                "file": "elves.mp3",
+                "gain": 0.11,
+                "pan": 0.02,
                 "icon": "music",
                 "loop": false
             },
             {
                 "id": "stream",
                 "file": "stream.mp3",
-                "gain": 0.007,
-                "pan": -1.04,
+                "gain": 0.003,
+                "pan": -0.02,
                 "icon": "water",
-                "loop": true
-            },
-            {
-                "id": "cello",
-                "file": "cellofear01.mp3",
-                "gain": 0,
-                "pan": -0.01,
-                "icon": "music",
                 "loop": false
             },
             {
-                "id": "deadmarshes",
-                "file": "deadmarshesedit.mp3",
-                "gain": 0,
-                "pan": 0,
-                "icon": "music",
+                "id": "beach",
+                "file": "beach.mp3",
+                "gain": 0.146,
+                "pan": -0.24,
+                "icon": "water",
                 "loop": false
             }
         ]
@@ -52,20 +36,20 @@
         "background": "https://cdnb.artstation.com/p/assets/images/images/000/100/545/large/grzegorz-rutkowski-swamp-ambush-over-2-1400.jpg?1443932333",
         "library": [
             {
-                "id": "swamp",
-                "file": "swamp.mp3",
-                "gain": 0.036,
-                "pan": -0.07,
-                "icon": "water",
-                "loop": true
+                "id": "drums",
+                "file": "kododrums.mp3",
+                "gain": 0.08,
+                "pan": 0.05,
+                "icon": "shield",
+                "loop": false
             },
             {
-                "id": "drakardrums",
-                "file": "drakardrums.mp3",
-                "gain": 0.013,
-                "pan": -0.17,
-                "icon": "shield",
-                "loop": true
+                "id": "swamp",
+                "file": "swamp.mp3",
+                "gain": 0.035,
+                "pan": 0.07,
+                "icon": "water",
+                "loop": false
             }
         ]
     },
@@ -77,14 +61,14 @@
             {
                 "id": "ocean",
                 "file": "ocean.mp3",
-                "gain": 0.029,
-                "pan": 0.01,
+                "gain": 0.06,
+                "pan": -0.04,
                 "loop": true,
                 "icon": "water"
             },
             {
-                "id": "farewell",
-                "file": "farewelltoafriend.mp3",
+                "id": "thegaels",
+                "file": "thegaels.mp3",
                 "gain": 0.05,
                 "pan": 0.01,
                 "icon": "music",
