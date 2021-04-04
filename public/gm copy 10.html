@@ -8,10 +8,6 @@
 
 <style>
 
-*, *:before, *:after {
-  box-sizing: border-box;
-}
-
 * {
     -webkit-touch-callout:none;
     -webkit-user-select:none;
@@ -47,9 +43,8 @@ body { margin:0px; padding:0px; overflow: hidden; background:black; color:whites
 }
 
 
-box-icon { height:50px; }
-
-.lefty { float:left; height:35px; }
+box-icon { height:35px; }
+.lefty { float:left; }
 
 .trackname { float:left; margin-left:10px; line-height:35px; }
 
@@ -69,7 +64,7 @@ box-icon { height:50px; }
     left:100px; 
     top:0px; 
     width:200px; 
-    height:90%;
+    height:80%;
     background:rgba(0, 0, 0,0.8); 
     transition:all 0.3s ease-in-out; 
     transform: translateY(-100%); 
@@ -109,26 +104,16 @@ background-size:cover;
 background-position: 50% 100%; 
 }
 
-#new-preset-button { text-align: center; margin-top:10px; margin-bottom:25px; }
-
 #art-drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(34, 83, 113,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
 #art-drawer.open { transform: translateX(0%); }
-#art-drawer-handle { margin-top:10px; margin-left:80%; height:50px; width:50px; cursor: pointer; }
-
-#art-url-frame { position:absolute; z-index:999999; font-size:14px; height:35px; width:auto; line-height:35px; padding-left:10px; padding-right:10px; color:whitesmoke; top:60px; left:240px; background:#222; border-radius:10px; transform: scale(0) translateX(-100%); transition: all 0.6s ease-in-out;  }
+#art-drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; bottom:10px; right:-75px; cursor: pointer; transition:all 0.3s ease; }
+#art-url-frame { position:absolute; z-index:999999; font-size:14px; height:35px; width:auto; line-height:35px; padding-left:10px; padding-right:10px; color:whitesmoke; bottom:25px; left:0px; background:#222; border-radius:10px; transform: scale(0) translateX(-100%); transition: all 0.6s ease-in-out;  }
 #art-url-frame.open { transform: scale(1) translateX(75px); }
-
-
-#title-drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(34, 83, 113,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
-#title-drawer.open { transform: translateX(0%); }
-#title-drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; bottom:60px; right:-75px; cursor: pointer; transition:all 0.3s ease; }
-#title-text-frame { font-size:14px; width:90%; margin-left:5%; margin-top:25px; height:35px; line-height:35px; padding-left:10px; padding-right:10px; color:whitesmoke; background:#222; border-radius:10px; cursor: text; }
-
 
 .hidden { opacity:0; visibility: hidden; }
 
 #soundlist-container { overflow:hidden; }
-#soundlist { width:110%; height:80%; margin-top:0px; margin-left:5%; overflow-y: scroll; }
+#soundlist { width:110%; height:96%; margin-top:10%; margin-left:5%; overflow-y: scroll; }
 .sound-item { position:relative; margin-left:20px; cursor:pointer; list-style:none; color:whitesmoke; border-radius:10px; height:20px; line-height:20px; padding-left:5px; margin-top:15px; font-size:14px; }
 .sound-item:hover { color:white; }
 .sound-item.selected {  }
@@ -152,12 +137,12 @@ background-position: 50% 100%;
     position:absolute; 
     z-index:0; 
     text-align:center; 
-    padding:0px; 
+    padding:10px; 
     top:100%; 
-    margin-top:35px; 
+    margin-top:0px; 
     left:50%; 
-    width:50px; 
-    height:50px; 
+    width:35px; 
+    height:35px; 
     background:black; 
     transform: translateX(-50%) translateY(-50%); 
     border-radius:100%; 
@@ -187,7 +172,6 @@ background-position: 50% 100%;
         <box-icon name='box' color="whitesmoke"></box-icon>
     </div>
     <div class="bannerstring"></div>
-    <div id="new-preset-button">NEW</div>
     <div id="thepresetlist"></div>
 </div>
 
@@ -199,12 +183,6 @@ background-position: 50% 100%;
     </div>
     <div class="bannerstring"></div>
 
-    <div id="title-text-frame" contenteditable="true"></div>
-
-    <div id="art-drawer-handle">
-        <box-icon type='solid' name='color-fill' color="whitesmoke"></box-icon>
-    </div>
-
     <div id='soundlist-container'>
         <div id="soundlist">
             <div id="thesoundlist"></div>
@@ -215,8 +193,11 @@ background-position: 50% 100%;
 
 
 
-
-
+<div id="art-drawer">
+    <div id="art-drawer-handle">
+        <box-icon type='solid' name='color-fill' color="whitesmoke"></box-icon>
+    </div>
+</div>
 
 <div id="art-url-frame" contenteditable="true"></div>
 
@@ -294,13 +275,6 @@ function CheckClock(){
 }
 
 
-// CREATE NEW PRESET
-
-$("#new-preset-button").click(function(){
-    socket.emit("addpreset");
-});
-
-
 // ZOOM OUT TO PRESETS
 
 $(document).on("click", "#preset-handle", function(){
@@ -339,7 +313,7 @@ function OpenPresets(){
 function CloseDrawer(){
     $draweropen = false;
     $("#drawer").removeClass("open");
-    $("#art-url-frame").removeClass("open");
+    $("#art-drawer-handle").removeClass("hidden");
     $("#preset-drawer-handle").removeClass("hidden");
 
 }
@@ -347,6 +321,7 @@ function CloseDrawer(){
 function OpenDrawer(){
     $draweropen = true;
     $("#drawer").addClass("open");
+    $("#art-drawer-handle").addClass("hidden");
     $("#preset-drawer-handle").addClass("hidden");
 
 }
@@ -396,20 +371,19 @@ socket.on('sendpresets', function(data)
 
 $(document).on('click', '.preset', function(e){
     $target = $(this).attr('target');
-    $name = $(this).html();
     console.log("Updating the central preset to: "+$target);
     socket.emit("changepreset", $target);
-    $("#title-text-frame").html($name);
+
+    ClosePresets();
+    CloseDrawer();
+
     e.stopPropagation();
 
 });
 
 
 socket.on("feedpreset", function(){
-    ClosePresets();
-    CloseDrawer();
     console.log("A new preset has been requested...");
-    socket.emit('getpresets');
     socket.emit("getbackground");
     socket.emit("wipetracklist");
 });
@@ -438,7 +412,6 @@ socket.on("feedcurrentpreset", function(data){
     console.log("Building audio tracks for current preset");
     $currentpreset = data.preset;
     BuildTracks(data.library);
-    $("#title-text-frame").html(data.title);
 });
 
 function SeedPresets(library){
@@ -812,24 +785,6 @@ socket.on("sync", function(data){
     PIXI.sound.stop(data.target);
     PIXI.sound.play(data.target);
     });
-
-
-
-// TITLE DRAW FUNCTIONS
-
-$(document).on("click", "#title-drawer-handle", function(){
-    $("#title-text-frame").toggleClass("open");
-});
-
-$("#title-text-frame").keypress(function(e) {
-  if(e.which == 13) {
-    e.preventDefault;
-    $value = $(this).html();
-    socket.emit("changetitle", $value);
-    $("#title-text-frame").toggleClass("open");
-    return false;
-  }
-});
 
 
 

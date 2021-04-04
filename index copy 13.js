@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const fs = require('fs');
-const { title } = require("process");
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const port = process.env.PORT || 3000;
@@ -59,8 +58,7 @@ io.on('connection', (socket) => {
     { 
     var $index = presets.findIndex(x => x.id === currentpreset);
     var library = presets[$index].library;
-    var title = presets[$index].title;
-    var $data = {"preset":currentpreset, "title":title, "library":library};
+    var $data = {"preset":currentpreset, "library":library};
     io.emit('feedcurrentpreset', $data); 
     });
   // change background
@@ -88,30 +86,12 @@ io.on('connection', (socket) => {
     UpdatePreset(presets);
     io.emit("changevolume", data);
     });
-    // change preset title
-  socket.on("changetitle", (data) => 
-    {  
-    var $index = presets.findIndex(x => x.id === currentpreset);
-    presets[$index].title = data;
-    UpdatePreset(presets);
-    io.emit('sendpresets', presets);
-    });
   // add track to preset
   socket.on("updatepreset", (data) => 
     {  
     var $index = presets.findIndex(x => x.id === data.preset);
     presets[$index].library.push(data.track);
     UpdatePreset(presets);
-    });
-  // ADD NEW PRESET
-  socket.on("addpreset", (data) => 
-    {
-    r = new Date().getTime();
-    $newpreset = {"id":""+r+"", "title":"untitled", "background":"https://cdnb.artstation.com/p/assets/images/images/010/961/837/large/niclas-nettelbladt-typewriter-front.jpg?1527149102", "library":[]};
-    presets.push($newpreset);
-    currentpreset = ""+r+"";
-    UpdatePreset(presets);
-    io.emit('feedpreset');   
     });
   // pan function
   socket.on("pan", (data) => 

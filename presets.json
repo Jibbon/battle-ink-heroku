@@ -1,22 +1,30 @@
 [
     {
         "id": "01",
-        "title": "home",
+        "title": "Elven Stones",
         "background": "https://cdnb.artstation.com/p/assets/images/images/025/511/797/large/nick-b-nb-m5a1.jpg?1586025568",
         "library": [
             {
                 "id": "elves",
                 "file": "elves.mp3",
-                "gain": 0.11,
-                "pan": 0.02,
+                "gain": 0.055,
+                "pan": 0.05,
                 "icon": "music",
                 "loop": false
             },
             {
                 "id": "stream",
                 "file": "stream.mp3",
-                "gain": 0.003,
-                "pan": -0.02,
+                "gain": 0.014,
+                "pan": -0.5,
+                "icon": "water",
+                "loop": false
+            },
+            {
+                "id": "forest",
+                "file": "forest.mp3",
+                "gain": 0.026,
+                "pan": 0.04,
                 "icon": "water",
                 "loop": false
             }
@@ -30,16 +38,16 @@
             {
                 "id": "swamp",
                 "file": "swamp.mp3",
-                "gain": 0.037,
-                "pan": 0.03,
+                "gain": 0.025,
+                "pan": 0.02,
                 "icon": "water",
                 "loop": false
             },
             {
                 "id": "weaponsdrawn",
                 "file": "weaponsdrawn.mp3",
-                "gain": 0.088,
-                "pan": 0.01,
+                "gain": 0.07,
+                "pan": -0.08,
                 "icon": "music",
                 "loop": false
             }
@@ -47,7 +55,7 @@
     },
     {
         "id": "1345768567",
-        "title": "on board the ship",
+        "title": "Lost At Sea",
         "background": "https://cdna.artstation.com/p/assets/images/images/030/706/228/large/kurmja-illust-pw-s1.jpg?1601403392",
         "library": [
             {
@@ -70,7 +78,7 @@
     },
     {
         "id": "1345",
-        "title": "Mountains",
+        "title": "Mountain Pass",
         "background": "https://cdnb.artstation.com/p/assets/images/images/005/620/115/large/raphael-lacoste-mountain-rider-v02-net.jpg?1492521048",
         "library": [
             {
@@ -86,6 +94,67 @@
                 "file": "towersandshadows.mp3",
                 "gain": 0.074,
                 "pan": 0,
+                "icon": "music",
+                "loop": false
+            }
+        ]
+    },
+    {
+        "id": "1617527144885",
+        "title": "Mountain Passage",
+        "background": "https://cdnb.artstation.com/p/assets/images/images/000/175/751/large/grzegorz-rutkowski-mountain-snow-enviro-2-1400.jpg?1443929967",
+        "library": [
+            {
+                "id": "cello",
+                "file": "cellofear01.mp3",
+                "gain": 0.082,
+                "pan": -0.03,
+                "icon": "music",
+                "loop": false
+            },
+            {
+                "id": "blizzard",
+                "file": "blizzardoutside.mp3",
+                "gain": 0.029,
+                "pan": -0.04,
+                "icon": "water",
+                "loop": false
+            }
+        ]
+    },
+    {
+        "id": "1617527446796",
+        "title": "Cave Days",
+        "background": "https://cdnb.artstation.com/p/assets/images/images/026/211/865/large/angelina-stroganova-cave.jpg?1588184488",
+        "library": [
+            {
+                "id": "caveambience",
+                "file": "caveambience.mp3",
+                "gain": 0.063,
+                "pan": -0.02,
+                "icon": "music",
+                "loop": false
+            }
+        ]
+    },
+    {
+        "id": "1617533554032",
+        "title": "Tavern",
+        "background": "https://cdna.artstation.com/p/assets/images/images/002/400/954/large/devin-platts-tavern4.jpg?1461289751",
+        "library": [
+            {
+                "id": "tavern",
+                "file": "tavern.mp3",
+                "gain": 0.048,
+                "pan": -0.48,
+                "icon": "water",
+                "loop": false
+            },
+            {
+                "id": "winterstale",
+                "file": "winterstale.mp3",
+                "gain": 0.136,
+                "pan": 0.66,
                 "icon": "music",
                 "loop": false
             }
