@@ -38,16 +38,16 @@
             {
                 "id": "swamp",
                 "file": "swamp.mp3",
-                "gain": 0.025,
-                "pan": 0.02,
+                "gain": 0.017,
+                "pan": -0.29,
                 "icon": "water",
                 "loop": false
             },
             {
                 "id": "weaponsdrawn",
                 "file": "weaponsdrawn.mp3",
-                "gain": 0.07,
-                "pan": -0.08,
+                "gain": 0.049,
+                "pan": 0.05,
                 "icon": "music",
                 "loop": false
             }
@@ -59,20 +59,20 @@
         "background": "https://cdna.artstation.com/p/assets/images/images/030/706/228/large/kurmja-illust-pw-s1.jpg?1601403392",
         "library": [
             {
-                "id": "ocean",
-                "file": "ocean.mp3",
-                "gain": 0.06,
-                "pan": -0.04,
-                "loop": true,
-                "icon": "water"
+                "id": "blizzard",
+                "file": "blizzardoutside.mp3",
+                "gain": 0,
+                "pan": 0,
+                "icon": "water",
+                "loop": false
             },
             {
-                "id": "thegaels",
-                "file": "thegaels.mp3",
-                "gain": 0.05,
-                "pan": 0.01,
-                "icon": "music",
-                "loop": true
+                "id": "beach",
+                "file": "beach.mp3",
+                "gain": 0.117,
+                "pan": -0.11,
+                "icon": "water",
+                "loop": false
             }
         ]
     },
@@ -92,8 +92,8 @@
             {
                 "id": "towersandshadows",
                 "file": "towersandshadows.mp3",
-                "gain": 0.074,
-                "pan": 0,
+                "gain": 0.082,
+                "pan": -0.02,
                 "icon": "music",
                 "loop": false
             }
@@ -104,14 +104,6 @@
         "title": "Mountain Passage",
         "background": "https://cdnb.artstation.com/p/assets/images/images/000/175/751/large/grzegorz-rutkowski-mountain-snow-enviro-2-1400.jpg?1443929967",
         "library": [
-            {
-                "id": "cello",
-                "file": "cellofear01.mp3",
-                "gain": 0.082,
-                "pan": -0.03,
-                "icon": "music",
-                "loop": false
-            },
             {
                 "id": "blizzard",
                 "file": "blizzardoutside.mp3",
@@ -124,16 +116,16 @@
     },
     {
         "id": "1617527446796",
-        "title": "Cave Days",
+        "title": "Cave Story 2",
         "background": "https://cdnb.artstation.com/p/assets/images/images/026/211/865/large/angelina-stroganova-cave.jpg?1588184488",
         "library": [
             {
                 "id": "caveambience",
                 "file": "caveambience.mp3",
-                "gain": 0.063,
+                "gain": 0.015,
                 "pan": -0.02,
                 "icon": "music",
-                "loop": false
+                "loop": true
             }
         ]
     },
@@ -145,16 +137,16 @@
             {
                 "id": "tavern",
                 "file": "tavern.mp3",
-                "gain": 0.048,
-                "pan": -0.48,
+                "gain": 0.013,
+                "pan": -0.49,
                 "icon": "water",
                 "loop": false
             },
             {
                 "id": "winterstale",
                 "file": "winterstale.mp3",
-                "gain": 0.136,
-                "pan": 0.66,
+                "gain": 0.043,
+                "pan": 0.47,
                 "icon": "music",
                 "loop": false
             }

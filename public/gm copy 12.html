@@ -90,16 +90,17 @@ background-position: 50% 100%;
     position:fixed; 
     z-index:9999; 
     top:0px; 
-    left:100px; 
-    width:200px; 
+    left:0px; 
+    width:300px; 
     border-radius:15px; 
     padding-bottom:75px; 
     padding-top:50px; 
     background:rgba(0, 0, 0,0.8); 
-    transform:translateY(-100%); 
+    left:50%; 
+    transform:translateX(-50%) translateY(-100%); 
     transition:all 0.3s ease-in-out; 
     cursor: pointer; }
-#presetlist.open { transform:translateY(-15px); }
+#presetlist.revealed { transform:translateX(-50%) translateY(-15px); }
 #thepresetlist { width:100%; text-align: center; }
 .preset { cursor: pointer;}
 #preset-background { position:absolute; display:none; height:100%; width:100%; bottom:0px; left:0px; z-index:-1; 
@@ -108,23 +109,26 @@ background-size:cover;
 background-position: 50% 100%; 
 }
 
-#new-preset-button { position:absolute; bottom:0px; left:50%; transform:translateX(-50%); margin-bottom:25px; }
+#new-preset-button { text-align: center; margin-top:10px; margin-bottom:25px; }
 
 #art-drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(34, 83, 113,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
 #art-drawer.open { transform: translateX(0%); }
+#art-drawer-handle { margin-top:10px; margin-left:80%; height:50px; width:50px; cursor: pointer; }
 
-
+#art-url-frame { position:absolute; z-index:999999; font-size:14px; height:35px; width:auto; line-height:35px; padding-left:10px; padding-right:10px; color:whitesmoke; top:60px; left:240px; background:#222; border-radius:10px; transform: scale(0) translateX(-100%); transition: all 0.6s ease-in-out;  }
+#art-url-frame.open { transform: scale(1) translateX(75px); }
 
 
 #title-drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(34, 83, 113,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
 #title-drawer.open { transform: translateX(0%); }
 #title-drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; bottom:60px; right:-75px; cursor: pointer; transition:all 0.3s ease; }
+#title-text-frame { font-size:14px; width:90%; margin-left:5%; margin-top:25px; height:35px; line-height:35px; padding-left:10px; padding-right:10px; color:whitesmoke; background:#222; border-radius:10px; cursor: text; }
 
 
 .hidden { opacity:0; visibility: hidden; }
 
 #soundlist-container { overflow:hidden; }
-#soundlist { width:110%; height:95%; margin-top:10%; margin-left:5%; overflow-y: scroll; }
+#soundlist { width:110%; height:80%; margin-top:0px; margin-left:5%; overflow-y: scroll; }
 .sound-item { position:relative; margin-left:20px; cursor:pointer; list-style:none; color:whitesmoke; border-radius:10px; height:20px; line-height:20px; padding-left:5px; margin-top:15px; font-size:14px; }
 .sound-item:hover { color:white; }
 .sound-item.selected {  }
@@ -161,26 +165,6 @@ background-position: 50% 100%;
 .bannerstring { display:none; position:absolute; z-index:-1; top:100%; left:50%; width:2px; height:50px; background:black; transform: translateX(-50%); border-radius:100%; }
 
 
-#tool-drawer { position:fixed; top:-5px; left:25px; height:300px; width:50px; background:rgba(0, 0, 0,0.8); border-radius:10px; transform:translateY(-250px); transition: all 0.6s ease-in-out; }
-#tool-drawer.open { transform: translateY(0px);}
-
-.tool-handle { position:absolute; cursor: pointer; width:100%; text-align: center; height:50px; line-height:50px; }
-.tool-handle.on { background:rgba(50, 50, 50, 0.8); }
-
-#preset-handle { top:25px;  }
-#name-drawer-handle { top:75px;  }
-#sound-drawer-handle { top:125px;  }
-#art-drawer-handle { top:175px;  }
-#tool-drawer-handle { bottom:0px; }
-
-
-
-#art-url-frame { position:absolute; z-index:999999; font-size:14px; height:50px; width:auto; line-height:50px; padding-left:10px; padding-right:10px; color:whitesmoke; top:170px; left:10px; background:#222; border-radius:10px; transform: scale(0) translateX(-100%); transition: all 0.6s ease-in-out;  }
-#art-url-frame.open { transform: scale(1) translateX(75px); }
-
-#title-text-frame { position:absolute; z-index:999999; font-size:14px; height:50px; width:auto; line-height:50px; padding-left:10px; padding-right:10px; color:whitesmoke; top:70px; left:10px; background:#222; border-radius:10px; transform: scale(0) translateX(-100%); transition: all 0.6s ease-in-out;  }
-#title-text-frame.open { transform: scale(1) translateX(75px); }
-
 </style>
 
 
@@ -197,42 +181,36 @@ background-position: 50% 100%;
 
 <div class='frame' id="arena"></div>
 
-<div id="tool-drawer">
-    <div id="preset-handle" class="tool-handle">
+<div id="presetlist">
+    <div id="preset-background"></div>
+    <div id="preset-handle" class="handle">
         <box-icon name='library' color="whitesmoke"></box-icon>
     </div>
-    <div id="tool-drawer-handle" class="tool-handle">
-        <box-icon name='cog' type="solid" color="whitesmoke"></box-icon>
-    </div>
-    <div id="name-drawer-handle" class="tool-handle">
-        <box-icon name='font-color' color="whitesmoke"></box-icon>
-    </div>
-    <div id="sound-drawer-handle" class="tool-handle">
-        <box-icon name='music' type="solid" color="whitesmoke"></box-icon>
-    </div>
-    <div id="art-drawer-handle" class="tool-handle">
-        <box-icon type='solid' name='color-fill' color="whitesmoke"></box-icon>
-    </div>
-</div>
-
-<div id="art-url-frame" class="drawer" contenteditable="true"></div>
-<div id="title-text-frame" class="drawer" contenteditable="true"></div>
-
-
-<div id="presetlist" class="drawer"> 
-    <div id="new-preset-button">
-        <box-icon type='solid' name='bookmark-plus' color="whitesmoke"></box-icon>
-    </div>
+    <div class="bannerstring"></div>
+    <div id="new-preset-button">NEW</div>
     <div id="thepresetlist"></div>
 </div>
 
 
-<div id="drawer" class="drawer">
+<div id="drawer">
+    <div id="drawer-background"></div>
+    <div id="drawer-handle" class="handle">
+        <box-icon name='cog' type="solid" color="whitesmoke"></box-icon>
+    </div>
+    <div class="bannerstring"></div>
+
+    <div id="title-text-frame" contenteditable="true"></div>
+
+    <div id="art-drawer-handle">
+        <box-icon type='solid' name='color-fill' color="whitesmoke"></box-icon>
+    </div>
+
     <div id='soundlist-container'>
         <div id="soundlist">
             <div id="thesoundlist"></div>
         </div>
     </div>
+
 </div>
 
 
@@ -240,6 +218,7 @@ background-position: 50% 100%;
 
 
 
+<div id="art-url-frame" contenteditable="true"></div>
 
 
 
@@ -324,6 +303,14 @@ $("#new-preset-button").click(function(){
 
 // ZOOM OUT TO PRESETS
 
+$(document).on("click", "#preset-handle", function(){
+
+    $(this).toggleClass("revealed");
+
+    if ( $(this).hasClass("revealed") ) { $listopen = true; OpenPresets(); } 
+    else { $listopen = false; ClosePresets(); }   
+
+});
 
 $(document).on("click", "#poster-layer", function(){
     console.log("Hit the poster");
@@ -332,6 +319,9 @@ $(document).on("click", "#poster-layer", function(){
 
 
 function ClosePresets(){
+    $("#presetlist").removeClass("revealed");
+    $("#preset-handle").removeClass("revealed");
+    $("#drawer-handle").removeClass("open");
     $("#poster").removeClass("clouded");
     $(".frame").removeClass("faded");
     $("#poster-layer").removeClass("active");
@@ -339,6 +329,7 @@ function ClosePresets(){
 }
 
 function OpenPresets(){
+    $("#presetlist").addClass("revealed");
     $("#poster").addClass("clouded");
     $(".frame").addClass("faded");
     $("#poster-layer").addClass("active");
@@ -348,11 +339,16 @@ function OpenPresets(){
 function CloseDrawer(){
     $draweropen = false;
     $("#drawer").removeClass("open");
-    }
+    $("#art-url-frame").removeClass("open");
+    $("#preset-drawer-handle").removeClass("hidden");
+
+}
 
 function OpenDrawer(){
     $draweropen = true;
     $("#drawer").addClass("open");
+    $("#preset-drawer-handle").addClass("hidden");
+
 }
 
 // UPLOAD OPTIONS
@@ -429,10 +425,6 @@ socket.on("wipetracks", function(){
     GatherPreset();
 
 });
-
-
-
-
 
 
 //GATHER A PRESET
@@ -610,18 +602,6 @@ socket.on("soundscrubbed", function(name){
     presets[$presetindex].library.splice($presetitem, 1);
     console.log(presets);
 });
-
-
-
-// TOOLS
-
-$(document).on("click", "#tool-drawer-handle", function(){
-    $("#tool-drawer").toggleClass("open");
-    $(".drawer").removeClass("open");
-    $(".tool-handle").removeClass("on");
-});
-
-
 
 
 
@@ -817,6 +797,7 @@ socket.on("changepan", function(data){
 
 
 
+
 // SYNC FUNCTION
 
 $(document).on("dblclick", ".dot", function(){
@@ -843,18 +824,8 @@ socket.on("sync", function(data){
 
 // TITLE DRAW FUNCTIONS
 
-$(document).on("click", "#name-drawer-handle", function(){
-    $(".drawer").removeClass("open");
-    $(".tool-handle").not(this).removeClass("on");
-    if ( $(this).hasClass("on") ) 
-        {
-        $(this).removeClass("on");
-        }
-    else 
-        {
-        $("#title-text-frame").addClass("open");
-        $(this).addClass("on");
-        }
+$(document).on("click", "#title-drawer-handle", function(){
+    $("#title-text-frame").toggleClass("open");
 });
 
 $("#title-text-frame").keypress(function(e) {
@@ -874,17 +845,7 @@ $("#title-text-frame").keypress(function(e) {
 
 
 $(document).on("click", "#art-drawer-handle", function(){
-    $(".drawer").removeClass("open");
-    $(".tool-handle").not(this).removeClass("on");
-    if ( $(this).hasClass("on") ) 
-        {
-        $(this).removeClass("on");
-        }
-    else 
-        {
-        $("#art-url-frame").addClass("open");
-        $(this).addClass("on");
-        }
+    $("#art-url-frame").toggleClass("open");
 });
 
 $("#art-url-frame").keypress(function(e) {
@@ -907,18 +868,12 @@ socket.on("feedbackground",function(url){
 
 // LIBRARY DRAW FUNCTIONS
 
-$(document).on("click", "#sound-drawer-handle", function(){
-    $(".drawer").removeClass("open");
-    $(".tool-handle").not(this).removeClass("on");
-    if ( $(this).hasClass("on") ) 
-        {
-        $(this).removeClass("on");
-        }
-    else 
-        {
-        $("#drawer").addClass("open");
-        $(this).addClass("on");
-        }
+$(document).on("click", "#drawer-handle", function(){
+    
+    $(this).toggleClass("open");
+
+    if ( $(this).hasClass("open") ) { OpenDrawer(); }
+    else { CloseDrawer(); }
 });
 
 $(document).on("click", ".sound-item", function(){
@@ -939,18 +894,10 @@ $(document).on("click", ".sound-item", function(){
 
 // PRESET DRAW FUNCTIONS
 
-$(document).on("click", "#preset-handle", function(){
-    $(".drawer").removeClass("open");
-    $(".tool-handle").not(this).removeClass("on");
-    if ( $(this).hasClass("on") ) 
-        {
-        $(this).removeClass("on");
-        }
-    else 
-        {
-        $("#presetlist").addClass("open");
-        $(this).addClass("on");
-        }
+$(document).on("click", "#preset-drawer-handle", function(){
+    $("#preset-drawer").toggleClass("open");
+    $("#art-drawer-handle").toggleClass("hidden");
+    $("#drawer-handle").toggleClass("hidden");
 });
 
 
