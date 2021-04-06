@@ -12,7 +12,7 @@
   box-sizing: border-box;
 }
 
-.noselect {
+* {
     -webkit-touch-callout:none;
     -webkit-user-select:none;
     -moz-user-select:none;
@@ -65,68 +65,55 @@ box-icon { height:50px; }
 #drawer 
     { 
     position:fixed; 
-    left:0px; 
+    z-index:9999;
+    left:100px; 
     top:0px; 
     width:200px; 
-    height:100%; 
+    height:90%;
     background:rgba(0, 0, 0,0.8); 
-    z-index:999; 
-    transition:all 0.3s ease-in-out; 
-    transform: translateX(-100%); 
-    padding-top:50px;
-    overflow: hidden;
+    transition:all 0.6s ease-in-out; 
+    transform: translateY(-100%); 
+    border-radius:15px; 
+    padding-bottom:35px;
+    padding-top:35px;
+    cursor: pointer;
     }
-#drawer.open { transform: translateX(0%); }
-
-#soundlist { width:110%; height:100%; overflow-y: scroll; padding-top:25px; padding-bottom:50px; }
-
-
-
-
+#drawer.open { transform: translateY(-50px); }
+#drawer-background { position:absolute; display:none; height:100%; width:100%; bottom:0px; left:0px; z-index:-1; background-image:url(img/librarybanner.png);
+background-size:cover;
+background-position: 50% 100%; 
+} 
 
 
-
-
-#presetlist
+#presetlist 
     { 
     position:fixed; 
-    left:0px; 
+    z-index:9999; 
     top:0px; 
+    left:100px; 
     width:200px; 
-    height:100%; 
+    border-radius:15px; 
+    padding-bottom:75px; 
+    padding-top:50px; 
     background:rgba(0, 0, 0,0.8); 
-    z-index:999; 
+    transform:translateY(-100%); 
     transition:all 0.3s ease-in-out; 
-    transform: translateX(-100%); 
-    padding-top:50px;
-    overflow: hidden;
-    }
-#presetlist.open { transform: translateX(0%); }
+    cursor: pointer; }
+#presetlist.open { transform:translateY(-15px); }
+#thepresetlist { width:100%; text-align: center; }
+.preset { cursor: pointer;}
+#preset-background { position:absolute; display:none; height:100%; width:100%; bottom:0px; left:0px; z-index:-1; 
+background-image:url(img/banner.png);
+background-size:cover;
+background-position: 50% 100%; 
+}
 
-#thepresetlist { width:110%; height:100%; overflow-y: scroll; padding-top:25px; padding-bottom:25px; }
-.preset { cursor: pointer; font-size:14px; margin-left:20px; padding-left:5px; height:30px; line-height: 30px; }
+#new-preset-button { position:absolute; bottom:0px; left:50%; transform:translateX(-50%); margin-bottom:25px; }
 
-
-#new-preset-button { position:absolute; bottom:0px; left:5%; margin-left:20px; margin-bottom:25px; cursor: pointer; }
-
-#art-drawer 
-    { 
-    position:fixed; 
-    left:0px; 
-    top:0px; 
-    width:200px; 
-    height:100%; 
-    background:rgba(0, 0, 0,0.8); 
-    z-index:999; 
-    transition:all 0.3s ease-in-out; 
-    transform: translateX(-100%); 
-    padding-top:50px;
-    overflow: hidden;
-    }
+#art-drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(34, 83, 113,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
 #art-drawer.open { transform: translateX(0%); }
-#artlist { width:110%; height:100%; overflow-y: scroll; padding-bottom:10px; }
-.art-option { width:180px; height:100px; margin-left:10px; margin-top:10px; background-size:cover; background-position: 50% 50%; cursor:pointer; }
-#custom-art-option { width:180px; margin-left:10px; height:50px; margin-top:10px; background-position: 50% 50%; text-align: right; }
+
+
 
 
 #title-drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(34, 83, 113,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
@@ -137,19 +124,8 @@ box-icon { height:50px; }
 .hidden { opacity:0; visibility: hidden; }
 
 #soundlist-container { overflow:hidden; }
-.sound-item 
-    { 
-    position:relative; 
-    margin-left:20px; 
-    cursor:pointer; 
-    list-style:none; 
-    color:whitesmoke; 
-    border-radius:10px; 
-    height:30px; 
-    line-height:30px; 
-    padding-left:5px; 
-    font-size:14px; 
-    }
+#soundlist { width:110%; height:95%; margin-top:10%; margin-left:5%; overflow-y: scroll; }
+.sound-item { position:relative; margin-left:20px; cursor:pointer; list-style:none; color:whitesmoke; border-radius:10px; height:20px; line-height:20px; padding-left:5px; margin-top:15px; font-size:14px; }
 .sound-item:hover { color:white; }
 .sound-item.selected {  }
 .sound-item.selected:before {
@@ -161,7 +137,7 @@ box-icon { height:50px; }
     background: whitesmoke;
     display:inline-block;
     left:-15px;
-    top:10px;
+    top:6px;
 }
 
 #poster-layer { position:fixed; display:none; width:100%; height:100%; z-index:9999; opacity:0; }
@@ -188,45 +164,27 @@ box-icon { height:50px; }
 #tool-drawer { position:fixed; z-index:9999999; top:-5px; left:25px; height:350px; width:50px; background:rgba(0, 0, 0,0.8); border-radius:10px; transform:translateY(-300px); transition: all 0.6s ease-in-out; }
 #tool-drawer.open { transform: translateY(0px);}
 
-.tool-handle { float:left; cursor: pointer; width:50px; text-align: center; height:50px; line-height:50px; }
-.tool-handle.on { background:rgba(55, 55, 55, 0.8); }
+.tool-handle { position:absolute; cursor: pointer; width:100%; text-align: center; height:50px; line-height:50px; }
+.tool-handle.on { background:#222; }
+
+#preset-handle { top:25px;  }
+#name-drawer-handle { top:75px;  }
+#sound-drawer-handle { top:125px;  }
+#art-drawer-handle { top:175px;  }
+#delete-handle { top:225px;}
+#tool-drawer-handle { bottom:0px; }
 
 
 
-#art-url-frame 
-    { 
-    position:absolute; 
-    z-index:999999; 
-    font-size:14px; 
-    height:50px; 
-    width:auto; 
-    line-height:50px; 
-    padding-left:10px; 
-    padding-right:10px; 
-    color:whitesmoke; 
-    top:70px; 
-    left:0px; 
-    background:#222; 
-    border-radius:10px; 
-    transform: translateX(-100%); 
-    transition: all 0.3s ease-in-out; 
-    opacity: 0;
-    }
-#art-url-frame.open { transform: translateX(220px); opacity: 1; }
+#art-url-frame { position:absolute; z-index:999999; font-size:14px; height:50px; width:auto; line-height:50px; padding-left:10px; padding-right:10px; color:whitesmoke; top:170px; left:10px; background:#222; border-radius:10px; transform: scale(0) translateX(-100%); transition: all 0.6s ease-in-out;  }
+#art-url-frame.open { transform: scale(1) translateX(75px); }
 
-#title-text-frame { position:absolute; font-size:16px; height:50px; width:auto; line-height:50px; padding-left:10px; padding-right:10px; color:whitesmoke; left:50%; border-radius:10px; transform: translateX(-50%);  }
+#title-text-frame { position:absolute; z-index:999999; font-size:14px; height:50px; width:auto; line-height:50px; padding-left:10px; padding-right:10px; color:whitesmoke; top:70px; left:10px; background:#222; border-radius:10px; transform: scale(0) translateX(-100%); transition: all 0.6s ease-in-out;  }
+#title-text-frame.open { transform: scale(1) translateX(75px); }
 
-#delete-frame { position:absolute; z-index:999999; font-size:14px; height:50px; width:auto; line-height:50px; padding-left:10px; padding-right:10px; color:whitesmoke; top:75px; left:150px; background:#d11a2a; border-radius:10px; transform: translateY(-200px); transition: all 0.3s ease-in-out;  }
-#delete-frame.open { transform: translateY(0px); }
+#delete-frame { position:absolute; z-index:999999; font-size:14px; height:50px; width:auto; line-height:50px; padding-left:10px; padding-right:10px; color:whitesmoke; top:220px; left:10px; background:#d11a2a; border-radius:10px; transform: scale(0) translateX(-100%); transition: all 0.6s ease-in-out;  }
+#delete-frame.open { transform: scale(1) translateX(75px); }
 #delete-button { color:white; font-weight: bold; cursor: pointer; }
-
-#header { position:fixed; z-index:9999999999; background-color: rgba(0,0,0,.32); height:50px; width:100%; }
-
-[contenteditable] {
-  outline: 0px solid transparent;
-}
-
-
 
 </style>
 
@@ -238,37 +196,36 @@ box-icon { height:50px; }
 
 <div id="poster"></div>   
 
-<div id="header">
-    
-    <div id="preset-handle" class="tool-handle">
-        <box-icon name='library' color="whitesmoke"></box-icon>
-    </div>
-
-    <div id="sound-drawer-handle" class="tool-handle">
-        <box-icon name='music' type="solid" color="whitesmoke"></box-icon>
-    </div>
-
-    <div id="art-drawer-handle" class="tool-handle">
-        <box-icon type='solid' name='color-fill' color="whitesmoke"></box-icon>
-    </div>
-    <div id="delete-handle" class="tool-handle">
-        <box-icon name='trash' color="whitesmoke"></box-icon>
-    </div>
-
-    <div id="title-text-frame" class="drawer" contenteditable="true"></div>
-
-</div>
-
 <div id="line"></div>
 
 <div id="poster-layer"></div>
 
 <div class='frame' id="arena"></div>
 
+<div id="tool-drawer">
+    <div id="preset-handle" class="tool-handle">
+        <box-icon name='library' color="whitesmoke"></box-icon>
+    </div>
 
+    <div id="name-drawer-handle" class="tool-handle">
+        <box-icon name='font-color' color="whitesmoke"></box-icon>
+    </div>
+    <div id="sound-drawer-handle" class="tool-handle">
+        <box-icon name='music' type="solid" color="whitesmoke"></box-icon>
+    </div>
+    <div id="art-drawer-handle" class="tool-handle">
+        <box-icon type='solid' name='color-fill' color="whitesmoke"></box-icon>
+    </div>
+    <div id="delete-handle" class="tool-handle">
+        <box-icon name='trash' color="whitesmoke"></box-icon>
+    </div>
+    <div id="tool-drawer-handle" class="tool-handle">
+        <box-icon name='cog' type="solid" color="whitesmoke"></box-icon>
+    </div>
+</div>
 
 <div id="art-url-frame" class="drawer" contenteditable="true"></div>
-
+<div id="title-text-frame" class="drawer" contenteditable="true"></div>
 <div id="delete-frame" class="drawer">
     <div id="delete-button">DELETE</div>
 </div>
@@ -283,33 +240,12 @@ box-icon { height:50px; }
 
 
 <div id="drawer" class="drawer">
+    <div id='soundlist-container'>
         <div id="soundlist">
             <div id="thesoundlist"></div>
         </div>
+    </div>
 </div>
-
-
-<div id="art-drawer" class="drawer">
-        <div id="artlist">
-            <div id="theartlist">
-                <div id='custom-art-option'>
-                    <box-icon name='image-add' style='width:35px; height:35px; margin-top:15px; cursor: pointer;' color='#777'></box-icon>
-                </div>
-                <div class="art-option" file="forest.jpg"></div>
-                <div class="art-option" file="mosswood.jpg"></div>
-                <div class="art-option" file="autumnwood.jpg"></div>
-                <div class="art-option" file="springstream.jpg"></div>
-                <div class="art-option" file="waterfall.jpg"></div>
-                <div class="art-option" file="mountains.jpg"></div>
-                <div class="art-option" file="coldmountains.jpg"></div>
-                <div class="art-option" file="mountaintrail.jpg"></div>
-                <div class="art-option" file="desertravine.jpg"></div>
-                <div class="art-option" file="winterbeach.jpg"></div>
-
-            </div>
-        </div>
-</div>
-
 
 
 
@@ -395,8 +331,6 @@ function CheckClock(){
 
 $("#new-preset-button").click(function(){
     socket.emit("addpreset");
-    $(".drawer").removeClass("open");
-    $("#preset-handle").removeClass("on");
 });
 
 
@@ -459,20 +393,8 @@ socket.emit("getbackground");
 socket.emit("getlibrary");
 socket.emit("getcurrentpreset");
 
-GenerateBackgrounds();
-
 }
 
-// BACKGROUND FUNCTIONS
-
-$(".art-option").each(function(){
-    var file = $(this).attr("file");
-    $(this).css("background-image", "url(backgrounds/"+file+")");
-});
-
-$('#custom-art-option').click(function(){
-    $("#art-url-frame").toggleClass('open');
-});
 
 // GATHER PRESENTS
 
@@ -482,7 +404,7 @@ socket.on('sendpresets', function(data)
     presets = data;
     $.each(data, function(index, item){
         //console.log(item);
-        $element = '<div class="preset noselect" target="'+item.id+'">'+item.title+'</div>';
+        $element = '<div class="preset" target="'+item.id+'">'+item.title+'</div>';
         $('#thepresetlist').append($element);
     });
 });
@@ -500,9 +422,9 @@ $(document).on('click', '.preset', function(e){
 
 
 socket.on("feedpreset", function(){
+    ClosePresets();
+    CloseDrawer();
     console.log("A new preset has been requested...");
-    $(".drawer").removeClass("open");
-    $("#preset-handle").removeClass("on");
     socket.emit('getpresets');
     socket.emit("getbackground");
     socket.emit("wipetracklist");
@@ -621,7 +543,7 @@ function GenerateDot(name, file, gain, pan, icon, loop) {
     var y = GetY(gain);
 
     // generate html element
-    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading noselect'><box-icon class='lefty' color='whitesmoke' name='"+icon+"'></box-icon><div class='trackname'>"+name+"</div></div>";
+    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading'><box-icon class='lefty' color='whitesmoke' name='"+icon+"'></box-icon><div class='trackname'>"+name+"</div></div>";
     $("#arena").append($element);
 
     // toggle the sound item in drawer
@@ -809,7 +731,7 @@ socket.on("sendlibrary", function(data){
         console.log("fresh!"); 
 
         // ADD THE ITEM TO THE LOCAL LIBRARY
-        $element = '<li class="sound-item noselect" name="'+item.id+'" file="'+item.file+'" icon="'+item.icon+'">'+item.id+'</li>'; 
+        $element = '<li class="sound-item" name="'+item.id+'" file="'+item.file+'" icon="'+item.icon+'">'+item.id+'</li>'; 
         $("#thesoundlist").append($element);
         }
 });
@@ -952,7 +874,7 @@ $("#title-text-frame").keypress(function(e) {
     e.preventDefault;
     $value = $(this).html();
     socket.emit("changetitle", $value);
-    window.getSelection().removeAllRanges();
+    $("#title-text-frame").toggleClass("open");
     return false;
   }
 });
@@ -972,7 +894,7 @@ $(document).on("click", "#art-drawer-handle", function(){
         }
     else 
         {
-        $("#art-drawer").addClass("open");
+        $("#art-url-frame").addClass("open");
         $(this).addClass("on");
         }
 });
@@ -982,7 +904,7 @@ $("#art-url-frame").keypress(function(e) {
     e.preventDefault;
     $value = $(this).html();
     socket.emit("seedbackground", $value);
-    $("#art-drawer").toggleClass("open");
+    $("#art-url-frame").toggleClass("open");
     return false;
   }
 });
@@ -994,11 +916,6 @@ socket.on("feedbackground",function(url){
 });
 
 
-$(document).on("click", ".art-option", function(){
-    $filename = $(this).attr('file');
-    $value = 'backgrounds/'+$filename;
-    socket.emit("seedbackground", $value);
-});
 
 
 // DELETE FUNCTIONS

@@ -15,7 +15,7 @@ var tracks = [];
 
 var presets = [];
 
-var currentpreset = "1617691801507";
+var currentpreset = "1345768567";
 
 fs.readFile('library.json', (err, data) => {
   if (err) throw err;
@@ -107,7 +107,7 @@ io.on('connection', (socket) => {
   socket.on("addpreset", (data) => 
     {
     r = new Date().getTime();
-    $newpreset = {"id":""+r+"", "title":"untitled", "background":"https://jooinn.com/images/blank-canvas-texture-2.jpg", "library":[]};
+    $newpreset = {"id":""+r+"", "title":"untitled", "background":"https://cdnb.artstation.com/p/assets/images/images/010/961/837/large/niclas-nettelbladt-typewriter-front.jpg?1527149102", "library":[]};
     presets.push($newpreset);
     currentpreset = ""+r+"";
     UpdatePreset(presets);

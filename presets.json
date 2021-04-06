@@ -1,135 +1,5 @@
 [
     {
-        "id": "01",
-        "title": "Elven Stones",
-        "background": "https://cdnb.artstation.com/p/assets/images/images/025/511/797/large/nick-b-nb-m5a1.jpg?1586025568",
-        "library": [
-            {
-                "id": "elves",
-                "file": "elves.mp3",
-                "gain": 0.055,
-                "pan": 0.05,
-                "icon": "music",
-                "loop": false
-            },
-            {
-                "id": "stream",
-                "file": "stream.mp3",
-                "gain": 0.014,
-                "pan": -0.5,
-                "icon": "water",
-                "loop": false
-            },
-            {
-                "id": "forest",
-                "file": "forest.mp3",
-                "gain": 0.026,
-                "pan": 0.04,
-                "icon": "water",
-                "loop": false
-            }
-        ]
-    },
-    {
-        "id": "1345768",
-        "title": "swamp at night",
-        "background": "https://cdnb.artstation.com/p/assets/images/images/000/100/545/large/grzegorz-rutkowski-swamp-ambush-over-2-1400.jpg?1443932333",
-        "library": [
-            {
-                "id": "swamp",
-                "file": "swamp.mp3",
-                "gain": 0.017,
-                "pan": -0.29,
-                "icon": "water",
-                "loop": false
-            },
-            {
-                "id": "weaponsdrawn",
-                "file": "weaponsdrawn.mp3",
-                "gain": 0.049,
-                "pan": 0.05,
-                "icon": "music",
-                "loop": false
-            }
-        ]
-    },
-    {
-        "id": "1345768567",
-        "title": "Lost At Sea",
-        "background": "https://cdna.artstation.com/p/assets/images/images/030/706/228/large/kurmja-illust-pw-s1.jpg?1601403392",
-        "library": [
-            {
-                "id": "blizzard",
-                "file": "blizzardoutside.mp3",
-                "gain": 0,
-                "pan": 0,
-                "icon": "water",
-                "loop": false
-            },
-            {
-                "id": "beach",
-                "file": "beach.mp3",
-                "gain": 0.117,
-                "pan": -0.11,
-                "icon": "water",
-                "loop": false
-            }
-        ]
-    },
-    {
-        "id": "1345",
-        "title": "Mountain Pass",
-        "background": "https://cdnb.artstation.com/p/assets/images/images/005/620/115/large/raphael-lacoste-mountain-rider-v02-net.jpg?1492521048",
-        "library": [
-            {
-                "id": "blizzard",
-                "file": "blizzardoutside.mp3",
-                "gain": 0.048,
-                "pan": -0.02,
-                "icon": "water",
-                "loop": false
-            },
-            {
-                "id": "towersandshadows",
-                "file": "towersandshadows.mp3",
-                "gain": 0.082,
-                "pan": -0.02,
-                "icon": "music",
-                "loop": false
-            }
-        ]
-    },
-    {
-        "id": "1617527144885",
-        "title": "Mountain Passage",
-        "background": "https://cdnb.artstation.com/p/assets/images/images/000/175/751/large/grzegorz-rutkowski-mountain-snow-enviro-2-1400.jpg?1443929967",
-        "library": [
-            {
-                "id": "blizzard",
-                "file": "blizzardoutside.mp3",
-                "gain": 0.029,
-                "pan": -0.04,
-                "icon": "water",
-                "loop": false
-            }
-        ]
-    },
-    {
-        "id": "1617527446796",
-        "title": "Cave Story 2",
-        "background": "https://cdnb.artstation.com/p/assets/images/images/026/211/865/large/angelina-stroganova-cave.jpg?1588184488",
-        "library": [
-            {
-                "id": "caveambience",
-                "file": "caveambience.mp3",
-                "gain": 0.015,
-                "pan": -0.02,
-                "icon": "music",
-                "loop": true
-            }
-        ]
-    },
-    {
         "id": "1617533554032",
         "title": "Tavern",
         "background": "https://cdna.artstation.com/p/assets/images/images/002/400/954/large/devin-platts-tavern4.jpg?1461289751",
@@ -137,17 +7,71 @@
             {
                 "id": "tavern",
                 "file": "tavern.mp3",
-                "gain": 0.013,
-                "pan": -0.49,
+                "gain": 0.031,
+                "pan": -0.07,
                 "icon": "water",
-                "loop": false
+                "loop": true
             },
             {
                 "id": "winterstale",
                 "file": "winterstale.mp3",
-                "gain": 0.043,
-                "pan": 0.47,
+                "gain": 0.082,
+                "pan": 0.56,
                 "icon": "music",
+                "loop": true
+            },
+            {
+                "id": "hearth",
+                "file": "hearth01.mp3",
+                "gain": 0.089,
+                "pan": -0.79,
+                "icon": "water",
+                "loop": true
+            }
+        ]
+    },
+    {
+        "id": "1617697836363",
+        "title": "Waterfall",
+        "background": "https://cdna.artstation.com/p/assets/images/images/006/163/652/large/ivan-laliashvili-waterfalls-by-ivanlaliashvili-dbbbpit.jpg?1496481923<br>",
+        "library": [
+            {
+                "id": "forest",
+                "file": "forest.mp3",
+                "gain": 0.057,
+                "pan": -0.71,
+                "icon": "water",
+                "loop": false
+            },
+            {
+                "id": "stream",
+                "file": "stream.mp3",
+                "gain": 0.023,
+                "pan": -0.03,
+                "icon": "water",
+                "loop": false
+            }
+        ]
+    },
+    {
+        "id": "1617704638497",
+        "title": "Moss Wood",
+        "background": "https://cdna.artstation.com/p/assets/images/images/009/764/694/large/robert-berg-wood1.jpg?1520786494",
+        "library": [
+            {
+                "id": "elves",
+                "file": "elves.mp3",
+                "gain": 0.038,
+                "pan": 0,
+                "icon": "music",
+                "loop": false
+            },
+            {
+                "id": "forest",
+                "file": "forest.mp3",
+                "gain": 0.016,
+                "pan": -0.01,
+                "icon": "water",
                 "loop": false
             }
         ]
