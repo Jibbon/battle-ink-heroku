@@ -49,7 +49,16 @@
     {
         "id": "123456",
         "name": "iceland",
-        "players": [],
+        "players": [
+            {
+                "id": "C48WhlTBfSoa_ivmAAAD",
+                "name": "name"
+            },
+            {
+                "id": "4aTTs3-qdvgE--WgAAAJ",
+                "name": "name"
+            }
+        ],
         "tracks": [],
         "presets": [
             {
@@ -82,6 +91,6 @@
                 "library": []
             }
         ],
-        "currentpreset": "1617877012791"
+        "currentpreset": "1617783647612"
     }
 ]
