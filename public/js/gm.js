@@ -123,8 +123,23 @@ socket.emit("getcurrentpreset", $room);
 
 GenerateBackgrounds();
 
+GenerateLink();
+
 
 }
+
+
+// GENERATE PLAYER LINK
+
+function GenerateLink(){
+    $("#link-handle").attr("url","http://www.battle.ink#"+$room);
+}
+
+$(document).on("click", "#link-handle", function(){
+    $link = $(this).attr("url");
+    copyToClipboard($link);
+    alert("Link copied");
+});
 
 // BACKGROUND FUNCTIONS
 
@@ -780,6 +795,15 @@ function SeedPresetSound(name, file, gain, pan, icon, loop){
 }
 
 
+// COPY TO CLIPBOARD FUNCTION
+
+function copyToClipboard(text) {
+    var $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val(text).select();
+    document.execCommand("copy");
+    $temp.remove();
+}
 
 
  

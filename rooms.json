@@ -2,7 +2,12 @@
     {
         "id": "135467",
         "name": "realm",
-        "players": [],
+        "players": [
+            {
+                "id": "yQ79vE5l2t_URbJ9AAAl",
+                "name": "name"
+            }
+        ],
         "tracks": [],
         "presets": [
             {
