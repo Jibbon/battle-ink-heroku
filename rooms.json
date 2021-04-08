@@ -2,12 +2,7 @@
     {
         "id": "135467",
         "name": "realm",
-        "players": [
-            {
-                "id": "yQ79vE5l2t_URbJ9AAAl",
-                "name": "name"
-            }
-        ],
+        "players": [],
         "tracks": [],
         "presets": [
             {
@@ -54,12 +49,7 @@
     {
         "id": "123456",
         "name": "iceland",
-        "players": [
-            {
-                "id": "Wu3xbYKu5rqDdSJnAAAT",
-                "name": "name"
-            }
-        ],
+        "players": [],
         "tracks": [],
         "presets": [
             {
