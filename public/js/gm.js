@@ -152,7 +152,7 @@ function GenerateBackgrounds()
         });
     }
 
-$('#custom-art-option').click(function(){
+$(document).on("click",'#custom-art-option', function(){
     $("#art-url-frame").toggleClass('open');
 });
 
@@ -668,13 +668,13 @@ $(document).on("click", "#art-drawer-handle", function(){
         }
 });
 
-$("#art-url-frame").keypress(function(e) {
+$(document).on("keypress","#art-url-frame", function(e) {
   if(e.which == 13) {
     e.preventDefault;
     $value = $(this).html();
     $data = {"room":$room, "url":$value};
     socket.emit("seedbackground", $data);
-    $("#art-drawer").toggleClass("open");
+    $(this).removeClass("open");
     return false;
   }
 });
