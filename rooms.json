@@ -2,16 +2,7 @@
     {
         "id": "135467",
         "name": "realm",
-        "players": [
-            {
-                "id": "2NjpWvnK9EmTgYgKAAAT",
-                "name": "name"
-            },
-            {
-                "id": "FCelpKJVwlpT6djcAAAB",
-                "name": "name"
-            }
-        ],
+        "players": [],
         "tracks": [],
         "presets": [
             {
@@ -69,20 +60,26 @@
                     {
                         "id": "dragonsreach",
                         "file": "dragonsreach.mp3",
-                        "gain": 0.112,
-                        "pan": -0.06,
+                        "gain": 0.082,
+                        "pan": -0.02,
                         "icon": "music",
-                        "loop": false
+                        "loop": true
                     },
                     {
                         "id": "blizzard",
                         "file": "blizzardoutside.mp3",
-                        "gain": 0.045,
-                        "pan": -0.01,
+                        "gain": 0.064,
+                        "pan": -0.02,
                         "icon": "water",
-                        "loop": false
+                        "loop": true
                     }
                 ]
+            },
+            {
+                "id": "1617877012791",
+                "title": "Random",
+                "background": "backgrounds/autumnwood.jpg",
+                "library": []
             }
         ],
         "currentpreset": "1617783647612"

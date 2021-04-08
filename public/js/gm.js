@@ -102,7 +102,14 @@ socket.on("sounduploaded", function(data){
 
 
 
+function StartPlayer(){
 
+    console.log("Starting up for room "+$room);
+    socket.emit('getlibrary', $room);
+    socket.emit('getpresets', $room);
+    socket.emit("getbackground", $room);
+    socket.emit("getcurrentpreset", $room);
+}
 
 
 function Start(){
@@ -116,8 +123,6 @@ socket.emit("getcurrentpreset", $room);
 
 GenerateBackgrounds();
 
-GenerateArtstationBackground();
-
 
 }
 
@@ -127,8 +132,8 @@ function GenerateBackgrounds()
     {
     $(".art-option").each(function()
         {
-        var file = $(this).attr("file");
-        $(this).css("background-image", "url(backgrounds/"+file+")");
+        var url = $(this).attr("url");
+        $(this).css("background-image", "url("+url+")");
         });
     }
 
@@ -667,9 +672,8 @@ socket.on("feedbackground",function(url){
 
 
 $(document).on("click", ".art-option", function(){
-    $filename = $(this).attr('file');
-    $value = 'backgrounds/'+$filename;
-    $data = {"room":$room, "url":$value};
+    $url = $(this).attr('url');
+    $data = {"room":$room, "url":$url};
     socket.emit("seedbackground", $data);
 });
 
@@ -778,29 +782,4 @@ function SeedPresetSound(name, file, gain, pan, icon, loop){
 
 
 
-// ARTSTATION STUFF
-
-function GenerateArtstationBackground()
-    {
-    $.ajax({
-        url: "https://cors-anywhere.herokuapp.com/https://www.artstation.com/random_project.json?category=fantasy",
-        contentType: "json",
-        success: function(data) 
-            {
-            console.log(data);
-            $image = data.cover.medium_image_url;
-            UpdatePoster($image);
-            //var $artistlink = '<a href="'+data.user.permalink+'">'+data.user.full_name+'</a>'; 
-            //$("#artist-name").html($artistlink);
-            //$("#work-title").html(data.title);
-            }
-    });
-    }    
-    
-function UpdatePoster(img){
-    
-    $("#artstation").css("background-image", "url("+img+")");
-
-    //$("#poster").css("background-image","url("+img+")");
-    
-}    
+ 

@@ -38,6 +38,7 @@ fs.readFile('rooms.json', (err, data) => {
 
 function UpdateRooms(array) {
 
+  console.log("Writing to file...");
   fs.writeFile("rooms.json", JSON.stringify(array, null, 4), (err) => {
     if (err) {  console.error(err);  return; };
 });
@@ -49,68 +50,67 @@ function MovePlayerIntoRoom(id, room) {
 
   console.log("Moving player "+id+" to room "+room);
 
+  var $array = [];
+
   $player = {"id":id, "name":"name"};
 
   rooms.forEach(function(value, index){
     if ( value.id === room ) 
       {  
       value.players.push($player);
+      $array = value.players;
       }
+  
+  UpdateRooms(rooms);
+
+  console.log(allClients);
+  
+  io.in(room).emit("updateplayers", $array);
+
   });
+
+  
+
 }
 
 
 
 function RemovePlayerFromRoom(id, room) {
 
-  console.log("Removing player "+id+" from room "+room);
+  if ( room != "lobby" )
+    {
+    console.log("Removing player "+id+" from room "+room);
+    var $roomindex = rooms.findIndex(x => x.id === room);
+    var $indexofplayer = rooms[$roomindex].players.findIndex(x => x.id === id);
 
-  $room = 0;
-  $target = 0;
+    rooms[$roomindex].players.splice($indexofplayer, 1);
 
-  rooms.forEach(function(item, index){
-    if ( item.id == room )
-      {
-      $room = index; 
-      }
-  });
+    UpdateRooms(rooms);
 
-  rooms[$room].players.forEach(function(item, index){
-    if ( item.id == id ) { $target = index }
-  });
-  
-  rooms[$room].players.splice($target, 1);
-
-  io.in(room).emit('players', rooms[$room].players);
-
-  RemovePlayerFromLobby(id);
+    io.in(room).emit('players', rooms[$roomindex].players);
+    
+    }
 
 }
 
 
-function RemovePlayerFromLobby(id)
+function RemovePlayerFromLobby(socketid)
   {
     console.log("Removing client from the lobby");    
-    var i = allClients.indexOf(id);
-    allClients.splice(i, 1);
-    console.log("Online we have:");
+    var $socketindex = allClients.findIndex(x => x.id === socketid);
+    allClients.splice($socketindex, 1);
     console.log(allClients);
 
   }
 
 
 
-  function GetRoom(socketid){
-
-    var $room;
-    console.log("Retrieving room name");
-    allClients.forEach(function(value, index)
-      {
-      if ( value.id == socketid ) { $room = value.room; } 
-      });
-    
-      return $room;
-  }
+  function GetRoom(socketid)
+    {
+    var $socketindex = allClients.findIndex(x => x.id === socketid);
+    var $theroom = allClients[$socketindex].room;
+    return $theroom;
+    }
 
 
 
@@ -134,6 +134,8 @@ io.on('connection', (socket) => {
     var $room = GetRoom(socket.id);
     console.log($room);
     RemovePlayerFromRoom(socket.id, $room);
+    RemovePlayerFromLobby(socket.id);
+
 
     });
 

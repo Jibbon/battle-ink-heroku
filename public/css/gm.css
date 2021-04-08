@@ -216,3 +216,4 @@
     outline: 0px solid transparent;
   }
   
+  #player-list { position:fixed; bottom:25px; right:25px; font-size:10px; color:hotpink; }

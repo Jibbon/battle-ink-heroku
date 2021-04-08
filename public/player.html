@@ -41,14 +41,10 @@ textarea, input, button { outline: none; font-family: inherit; }
 
 </head>
 
-<body>
-
 
 
     <div id="enter-screen">
         <img id="logo" src="img/battledotinkshield.png" />
-        <input id='keyhole' type="text"></input>
-        <div id="loaderbar"><div id="loaderbar-inner"></div></div>
       <div id="enter-button">ENTER</div>
     </div>  
 
@@ -81,34 +77,30 @@ textarea, input, button { outline: none; font-family: inherit; }
 var unlocksound = new Audio('audio/unlock.mp3');
 var entersound = new Audio('audio/enter.mp3');
 
-var $virgin = true;
+var $url;
 
 $(document).ready(function(){
-    $('#keyhole').focus();
+
+    var a = window.location.href;
+    var room = a.split('#')[1];
+
+    socket.emit('checkroom',room);
+
     Clock();
+
+
+
 });
 
-$("#keyhole").keypress(function(e) {
-  if(e.which == 13) {
-    e.preventDefault;
-    $value = $(this).val();
-    socket.emit('checkroom', $value);
-    window.getSelection().removeAllRanges();
-    return false;
-    }
-});
 
 socket.on('unlockroom', function(data){
     $room = data.room;
     console.log(data);
 
     unlocksound.play();
-    $("#keyhole").blur();
     $("#enter-button").show();
     setTimeout(function(){ $("#enter-button").addClass("active"); }, 100);
         
-    $("#keyhole").css("color","white");
-
 });   
 
 
@@ -116,7 +108,6 @@ $("#enter-button").click(function(){
     
     entersound.play();
 
-    $('#keyhole').fadeOut();
     $(this).fadeOut();
     $("#logo").fadeOut();
     socket.emit('register',$room);
@@ -132,29 +123,8 @@ socket.on("welcome", function(){
 socket.on("players", function(data){
     console.log("Receiving player list...");
     console.log(data);
-
-    $("#player-list").html("");
-
-    if ( $virgin ) 
-        { 
-        $virgin = false;
-        $('body').load('dm.html'); 
-        }
-    });
-    
-
-    socket.on("updateplayers", function(data){
-        console.log("Receiving player list...");
-        console.log(data);
-        $.each(data, function(index, item)
-            {
-            console.log(item.id);
-            $element = '<div class="player">'+item.id+'</div>';
-            $("#player-list").append($element);
-            });
-    });
-    
-
+    $('body').load('simple.html');
+});
 </script>
 
 
