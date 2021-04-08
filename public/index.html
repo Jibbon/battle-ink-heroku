@@ -130,32 +130,31 @@ $("#enter-button").click(function(){
 socket.on("welcome", function(){
     console.log("You've been welcomed into the room");
     $("#enter-screen").fadeOut();
-});
-
-socket.on("players", function(data){
-    console.log("Receiving player list...");
-    console.log(data);
-
-    $("#player-list").html("");
 
     if ( $virgin ) 
         { 
         $virgin = false;
         $('body').load('dm.html'); 
         }
-    });
+
+});
+
+socket.on("updateplayers", function(data){
+    console.log("Receiving player list!");
+    console.log(data);
+
+    $("#player-list").html("");
+
+    $.each(data, function(index, item)
+        {
+        console.log(item.id);
+        $element = '<div class="avatar" socket="'+item.id+'"></div>';
+        $("#player-list").append($element);
+        });
+});
     
 
-    socket.on("updateplayers", function(data){
-        console.log("Receiving player list...");
-        console.log(data);
-        $.each(data, function(index, item)
-            {
-            console.log(item.id);
-            $element = '<div class="player">'+item.id+'</div>';
-            $("#player-list").append($element);
-            });
-    });
+
     
 
 </script>

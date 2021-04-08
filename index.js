@@ -87,7 +87,7 @@ function RemovePlayerFromRoom(id, room) {
 
     UpdateRooms(rooms);
 
-    io.in(room).emit('players', rooms[$roomindex].players);
+    io.in(room).emit('updateplayers', rooms[$roomindex].players);
     
     }
 
@@ -171,7 +171,12 @@ io.on('connection', (socket) => {
 
       io.to(socket.id).emit('welcome');
       var $roomindex = rooms.findIndex(x => x.id === room);
-      io.in(room).emit('players',rooms[$roomindex].players); 
+
+      setTimeout(function(){
+        io.in(room).emit('updateplayers',rooms[$roomindex].players); 
+      }, 3000);
+
+      
 
 
       });

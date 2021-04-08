@@ -54,7 +54,12 @@
     {
         "id": "123456",
         "name": "iceland",
-        "players": [],
+        "players": [
+            {
+                "id": "Wu3xbYKu5rqDdSJnAAAT",
+                "name": "name"
+            }
+        ],
         "tracks": [],
         "presets": [
             {
