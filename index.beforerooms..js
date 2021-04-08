@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const fs = require('fs');
+const { title } = require("process");
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const port = process.env.PORT || 3000;
@@ -14,7 +15,7 @@ var tracks = [];
 
 var presets = [];
 
-var currentpreset = "1345768567";
+var currentpreset = "1617533554032";
 
 fs.readFile('library.json', (err, data) => {
   if (err) throw err;
@@ -32,7 +33,6 @@ function UpdatePreset(library) {
 
   fs.writeFile("presets.json", JSON.stringify(library, null, 4), (err) => {
     if (err) {  console.error(err);  return; };
-    console.log("File has been created");
 });
 
 }
@@ -58,7 +58,8 @@ io.on('connection', (socket) => {
     { 
     var $index = presets.findIndex(x => x.id === currentpreset);
     var library = presets[$index].library;
-    var $data = {"preset":currentpreset, "library":library};
+    var title = presets[$index].title;
+    var $data = {"preset":currentpreset, "title":title, "library":library};
     io.emit('feedcurrentpreset', $data); 
     });
   // change background
@@ -86,6 +87,14 @@ io.on('connection', (socket) => {
     UpdatePreset(presets);
     io.emit("changevolume", data);
     });
+    // change preset title
+  socket.on("changetitle", (data) => 
+    {  
+    var $index = presets.findIndex(x => x.id === currentpreset);
+    presets[$index].title = data;
+    UpdatePreset(presets);
+    io.emit('sendpresets', presets);
+    });
   // add track to preset
   socket.on("updatepreset", (data) => 
     {  
@@ -93,6 +102,35 @@ io.on('connection', (socket) => {
     presets[$index].library.push(data.track);
     UpdatePreset(presets);
     });
+  // ADD NEW PRESET
+  socket.on("addpreset", (data) => 
+    {
+    r = new Date().getTime();
+    $newpreset = {"id":""+r+"", "title":"untitled", "background":"https://jooinn.com/images/blank-canvas-texture-2.jpg", "library":[]};
+    presets.push($newpreset);
+    currentpreset = ""+r+"";
+    UpdatePreset(presets);
+    io.emit('feedpreset');   
+    });
+  // DELETE PRESET
+  socket.on("deletepreset", function(){
+    var $index = presets.findIndex(x => x.id === currentpreset);
+
+    var number = presets.length;
+    if ( number > 1 ) 
+      {
+      presets.splice($index, 1);
+      UpdatePreset(presets);
+      currentpreset = presets[0].id;
+      io.emit('feedpreset');  
+      }
+    else 
+      {
+      io.emit("lastpreset");
+      }
+    
+  });  
+  
   // pan function
   socket.on("pan", (data) => 
     { 
@@ -108,7 +146,6 @@ io.on('connection', (socket) => {
     var $index = presets.findIndex(x => x.id === currentpreset);
     var $indexofitem = presets[$index].library.findIndex(x => x.id === data.name);
     presets[$index].library[$indexofitem].loop = data.loop;
-    console.log(presets[$index].library);
     UpdatePreset(presets);
     io.emit("feedloop", data); 
     });  
@@ -129,15 +166,12 @@ io.on('connection', (socket) => {
     { 
     $new = {'id':data.name, 'file':data.file, "gain":data.gain, 'pan':data.pan, 'loop':data.loop, "icon":data.icon };
     tracks.push($new);
-    console.log(tracks.length);
     
     });
     // wipe track list
     socket.on("wipetracklist", (data) => 
       { 
-      console.log(tracks); 
       tracks = []; 
-      console.log(tracks); 
       socket.emit("wipetracks");
       });
     // remove sound

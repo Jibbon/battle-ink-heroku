@@ -1,157 +1,7 @@
-<html>
-
-<head>
-
-
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Unicase:wght@300&display=swap" rel="stylesheet">
-
-<style>
-
-* {
-    -webkit-touch-callout:none;
-    -webkit-user-select:none;
-    -moz-user-select:none;
-    -ms-user-select:none;
-    user-select:none;
-}
-
-body { margin:0px; padding:0px; overflow: hidden; background:black; color:whitesmoke; font-family: 'Cormorant Unicase', serif; }
-
-.frame { position:relative; left:5%; top:30%; width:90%; height:60%; z-index:99; }
-.dot { position:absolute; z-index:99; height:35px; background-color: rgba(2,2,2,0.66); border-radius:15px; padding-left:15px; padding-right:15px; cursor: pointer; top:100%; left:50%; opacity:1; transition:opacity 1s ease; }
-.dot.faded { opacity:0.3; }
-.dot.hidden { opacity:0; }
-.dot.loop {  }
-.dot.loop:after {
-    content:"\221E";
-    position:absolute;
-    width:25px;
-    height:25px;
-    border-radius: 100%;
-    display:inline-block;
-    color:black;
-    margin-left:10px;
-    top:-5px;
-    background:white;
-    line-height: 20px;
-    text-align: center;
-}
-
-
-box-icon { float:left; height:35px; }
-.trackname { float:left; margin-left:10px; line-height:35px; }
-
-.tape { position: fixed; top:25px; right:25px; width:25px; height:25px; z-index:999; border:0px; }
-#line { position:absolute; opacity:0.33; left:50%; width:2px; height:100%; margin-left:-1px; z-index:0; background:none;}
-#line.on { background:purple; }
-#poster { position:absolute; z-index:-1; width:100%; height:100%; background-size:cover; opacity:0.4; background-image:url(); background-position:50% 50%;}
-#veil{ position:absolute; z-index:0; width:100%; height:100%; background-size:cover; opacity:0.3; filter: invert(100%); background-image:url(img/veil.jpg); background-position:50% 50%;}
-
-#drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(10, 10, 13,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
-#drawer.open { transform: translateX(0%); }
-#drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; top:25px; right:-75px; cursor: pointer;  }
-
-
-#preset-drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(10, 10, 13,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
-#preset-drawer.open { transform: translateX(0%); }
-#preset-drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; top:100px; right:-75px; cursor: pointer;  }
-.preset { cursor: pointer;}
-
-#art-drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(34, 83, 113,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
-#art-drawer.open { transform: translateX(0%); }
-#art-drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; top:175px; right:-75px; cursor: pointer; transition:all 0.3s ease; }
-#art-url-frame { position:absolute; z-index:999999; font-size:14px; height:35px; width:auto; line-height:35px; padding-left:10px; padding-right:10px; color:whitesmoke; top:175px; left:0px; background:#222; border-radius:10px; transform: scale(0) translateX(-100%); transition: all 0.6s ease-in-out;  }
-#art-url-frame.open { transform: scale(1) translateX(75px); }
-
-.hidden { opacity:0; visibility: hidden; }
-
-#soundlist-container { overflow:hidden; }
-#soundlist { width:110%; height:90%; margin-top:10%; margin-left:5%; overflow-y: scroll; }
-.sound-item { cursor:pointer; list-style:none; color:whitesmoke; border-radius:10px; height:20px; line-height:20px; padding-left:5px; margin-top:15px; font-size:14px; }
-.sound-item.selected {  }
-.sound-item.selected:after {
-    content:"\A";
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background: whitesmoke;
-    display:inline-block;
-    margin-left:10px;
-    transform: translateY(2px);
-}
-
-.loading { opacity:0.3; filter:blur(1px); };
-
-
-</style>
-
-
-
-</head>
-
-<body>
-
-<div id="poster"></div>   
-
-<div id="line"></div>
-
-
-<div class='frame' id="arena"></div>
-
-
-<div id="drawer">
-    <div id="drawer-handle">
-        <box-icon name='library' color="whitesmoke" ></box-icon>
-    </div>
-
-    <div id='soundlist-container'>
-        <div id="soundlist">
-            <div id="thesoundlist"></div>
-        </div>
-    </div>
-
-</div>
-
-<div id="preset-drawer">
-    <div id="preset-drawer-handle">
-        <box-icon type='solid' name='save' color="whitesmoke"></box-icon>
-    </div>
-
-    <div id="presetlist">
-        <div id="thepresetlist"></div>
-    </div>
-
-</div>
-
-
-<div id="art-drawer">
-    <div id="art-drawer-handle">
-        <box-icon type='solid' name='color-fill' color="whitesmoke"></box-icon>
-    </div>
-</div>
-
-<div id="art-url-frame" contenteditable="true"></div>
-
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="js/jquery-3.4.1.min.js"></script>
-
-    <script src="js/jquery.dragon.js"></script>
-    <script src="js/jquery.dragon-slider.js"></script>
-
-    <script src="js/boxicons.js"></script>
-
-
-<script src="js/pixi.min.js"></script>
-<script src="js/pixi-sound.js"></script>
-
-
-
-
-<script>
 
 var socket = io();
+
+var $room;
 
 var mytracks = [];
 var mylibrary = [];   
@@ -160,17 +10,12 @@ var presets = [];
 var $servertime = 0;
 var $localtime = 0;
 
+var $listopen = false; 
+var $draweropen = false;
+
 var $currentpreset = "1345768";
 
 var $tick = false;  
-
-
-$(document).ready(function(){
-    
-    Start();
-    Clock();
-    
-});
 
 
 socket.on('time', function(timeString) {
@@ -200,6 +45,49 @@ function CheckClock(){
     else {  }
 }
 
+
+// CREATE NEW PRESET
+
+$(document).on("click", "#new-preset-button", function(){
+    socket.emit("addpreset", $room);
+    $(".drawer").removeClass("open");
+    $("#preset-handle").removeClass("on");
+});
+
+
+// ZOOM OUT TO PRESETS
+
+
+$(document).on("click", "#poster-layer", function(){
+    //console.log("Hit the poster");
+    if ( $listopen ) { ClosePresets(); }
+});
+
+
+function ClosePresets(){
+    $("#poster").removeClass("clouded");
+    $(".frame").removeClass("faded");
+    $("#poster-layer").removeClass("active");
+    $listopen = false;
+}
+
+function OpenPresets(){
+    $("#poster").addClass("clouded");
+    $(".frame").addClass("faded");
+    $("#poster-layer").addClass("active");
+    $listopen = true;
+}
+
+function CloseDrawer(){
+    $draweropen = false;
+    $("#drawer").removeClass("open");
+    }
+
+function OpenDrawer(){
+    $draweropen = true;
+    $("#drawer").addClass("open");
+}
+
 // UPLOAD OPTIONS
 
 //var uploader = new SocketIOFileUpload(socket);
@@ -209,9 +97,7 @@ function CheckClock(){
 //});
 
 socket.on("sounduploaded", function(data){
-    socket.emit("getlibrary");
-
-
+    socket.emit("getlibrary", data);
 });
 
 
@@ -221,44 +107,74 @@ socket.on("sounduploaded", function(data){
 
 function Start(){
 
-socket.emit('getpresets');
-socket.emit("getbackground");
-socket.emit("getlibrary");
-socket.emit("getcurrentpreset");
+console.log("Starting up for room "+$room);
+socket.emit('getlibrary', $room);
+socket.emit('getpresets', $room);
+socket.emit("getbackground", $room);
+socket.emit("getcurrentpreset", $room);
+
+
+GenerateBackgrounds();
+
+GenerateArtstationBackground();
+
 
 }
 
+// BACKGROUND FUNCTIONS
+
+function GenerateBackgrounds()
+    {
+    $(".art-option").each(function()
+        {
+        var file = $(this).attr("file");
+        $(this).css("background-image", "url(backgrounds/"+file+")");
+        });
+    }
+
+$('#custom-art-option').click(function(){
+    $("#art-url-frame").toggleClass('open');
+});
 
 // GATHER PRESENTS
 
 socket.on('sendpresets', function(data)
     {
+    console.log(data);
     $('#thepresetlist').html("");
     presets = data;
     $.each(data, function(index, item){
         //console.log(item);
-        $element = '<div class="preset" target="'+item.id+'">'+item.title+'</div>';
+        $element = '<div class="preset noselect" target="'+item.id+'">'+item.title+'</div>';
         $('#thepresetlist').append($element);
     });
 });
 
 
-$(document).on('click', '.preset', function(){
+$(document).on('click', '.preset', function(e){
     $target = $(this).attr('target');
+    $name = $(this).html();
     console.log("Updating the central preset to: "+$target);
-    socket.emit("changepreset", $target);
+    $data = {"room":$room, "preset":$target };
+    socket.emit("changepreset", $data);
+    $("#title-text-frame").html($name);
+    e.stopPropagation();
+
 });
 
 
 socket.on("feedpreset", function(){
     console.log("A new preset has been requested...");
-    socket.emit("getbackground");
-    socket.emit("wipetracklist");
+    $(".drawer").removeClass("open");
+    $("#preset-handle").removeClass("on");
+    socket.emit('getpresets', $room);
+    socket.emit("getbackground", $room);
+    socket.emit("wipetracklist", $room);
 });
 
 
 socket.on("wipetracks", function(){
-    console.log("wiping the track list clean...");
+    //console.log("wiping the track list clean...");
     mytracks = [];
 
     PIXI.sound.removeAll();
@@ -269,17 +185,22 @@ socket.on("wipetracks", function(){
 });
 
 
+
+
+
+
 //GATHER A PRESET
 
 function GatherPreset(){
     console.log("Requesting track list for the current preset");
-    socket.emit("getcurrentpreset");
+    socket.emit("getcurrentpreset", $room);
 }
 
 socket.on("feedcurrentpreset", function(data){
     console.log("Building audio tracks for current preset");
     $currentpreset = data.preset;
     BuildTracks(data.library);
+    $("#title-text-frame").html(data.title);
 });
 
 function SeedPresets(library){
@@ -291,22 +212,24 @@ function SeedPresets(library){
 
 // GATHER TRACKS TO LIBRARY
 socket.on("sendtracks", function(data){
+    console.log("Receiving the tracks...");
+    console.log(data);
     BuildTracks(data);
 });
 
 function BuildTracks(array){
 
-    console.log(array);
+    //console.log(array);
 
 $.each(array, function(index, item){
     //console.log(item);
     if ( Existing(item.file)) 
         {
-        console.log("already exits")    
+        //console.log("already exits")    
         }
     else 
         { 
-        console.log("fresh!"); 
+        //console.log("fresh!"); 
 
         // GENERATE THE TRACK LOCALLY
         GenerateDot(item.id, item.file, item.gain, item.pan, item.icon, item.loop);
@@ -354,8 +277,8 @@ function GenerateDot(name, file, gain, pan, icon, loop) {
     //console.log($existing);
      if ( $existing === -1 ) 
         { 
-        console.log("Adding song to the preset library"); library.push($new); 
-        $fulldata = {"preset":$currentpreset, "track":$new };
+        //console.log("Adding song to the preset library"); library.push($new); 
+        $fulldata = {"room":$room, "preset":$currentpreset, "track":$new };
         socket.emit("updatepreset", $fulldata);
         }
     //console.log(library);
@@ -364,7 +287,7 @@ function GenerateDot(name, file, gain, pan, icon, loop) {
     var y = GetY(gain);
 
     // generate html element
-    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading'><box-icon color='whitesmoke' name='"+icon+"'></box-icon><div class='trackname'>"+name+"</div></div>";
+    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading noselect'><box-icon class='lefty' color='whitesmoke' name='"+icon+"'></box-icon><div class='trackname'>"+name+"</div></div>";
     $("#arena").append($element);
 
     // toggle the sound item in drawer
@@ -377,7 +300,7 @@ function GenerateDot(name, file, gain, pan, icon, loop) {
 
 function AddSound(name, file, gain, pan, loop){
 
-    console.log("making sound: "+name+" using file: "+file+" with gain "+gain);
+    //console.log("making sound: "+name+" using file: "+file+" with gain "+gain);
 
     // do the pixi.js thing
     PIXI.sound.add(name, {
@@ -386,7 +309,7 @@ function AddSound(name, file, gain, pan, loop){
     loaded: function() {
         // duration can only be used once the sound is loaded
         //console.log('Duration: ', PIXI.sound.duration(sound), 'seconds');
-        console.log(name+' is loaded');
+        //console.log(name+' is loaded');
         StartVolume(name, gain);
         StartPan(name, pan);
         StartLoop(name, loop);
@@ -410,7 +333,7 @@ function StartPan(target, pan){
 }
 
 function StartLoop(target, loop){
-    console.log("Setting loop status to: "+loop);
+    //console.log("Setting loop status to: "+loop);
     var it = PIXI.sound._sounds[target];
     it.loop = loop;
     
@@ -424,18 +347,38 @@ function StartLoop(target, loop){
 // KILL SOUND FUNCTION
 
 function KillSound(name){
-    console.log("Killing track: "+name);
-    socket.emit("removesound", name);
+    //console.log("Killing track: "+name);
+    $data = {"room":$room, "name":name };
+    socket.emit("removesound", $data);
 }
 
 socket.on("soundscrubbed", function(name){
-    console.log("Scrubbing sound "+name);
+    //console.log("Scrubbing sound "+name);
     PIXI.sound.stop(name);
     $(".dot[target="+name+"]").remove();
     var $index = mytracks.findIndex(x => x.id === name);
     mytracks.splice($index, 1);
-    console.log(mytracks);
+    //console.log(mytracks);
+    // remove from local preset library
+    // update current preset
+    var $presetindex = presets.findIndex(x => x.id === $currentpreset);
+    var $presetitem = presets[$presetindex].library.findIndex(x => x.id === name);
+    //console.log($presetitem);
+    presets[$presetindex].library.splice($presetitem, 1);
+    //console.log(presets);
 });
+
+
+
+// TOOLS
+
+$(document).on("click", "#tool-drawer-handle", function(){
+    $("#tool-drawer").toggleClass("open");
+    $(".drawer").removeClass("open");
+    $(".tool-handle").removeClass("on");
+});
+
+
 
 
 
@@ -520,20 +463,22 @@ function GetY(gain){
 
 socket.on("sendlibrary", function(data){
     
+    console.log("Receiving the library...");
+
     $("#thesoundlist").html("");
 
     $.each(data, function(index, item){
     //console.log(item);
     if ( ExistingInLibrary(item.file)) 
         {
-        console.log("already exits in library")    
+        //console.log("already exits in library")    
         }
     else 
         { 
-        console.log("fresh!"); 
+        //console.log("fresh!"); 
 
         // ADD THE ITEM TO THE LOCAL LIBRARY
-        $element = '<li class="sound-item" name="'+item.id+'" file="'+item.file+'" icon="'+item.icon+'">'+item.id+'</li>'; 
+        $element = '<li class="sound-item noselect" name="'+item.id+'" file="'+item.file+'" icon="'+item.icon+'">'+item.id+'</li>'; 
         $("#thesoundlist").append($element);
         }
 });
@@ -559,7 +504,7 @@ function Sort(a, b) {
 
 function ChangeGain(target, gain){
     
-    var $data = {"name": target, "gain":gain, "preset":$currentpreset };
+    var $data = {"room":$room, "name": target, "gain":gain, "preset":$currentpreset };
     socket.emit("volume", $data);
 
 }
@@ -599,7 +544,7 @@ $(document).on("contextmenu", ".dot", function(e){
 // SET LOOP
 
 function Loop(name, toggle){
-    var $data = {"name": name, "loop":toggle };
+    var $data = {"room":$room, "name": name, "loop":toggle };
     socket.emit("seedloop", $data);
 }
 
@@ -613,7 +558,7 @@ socket.on("feedloop", function(data){
 // PAN FUNCTION
 
 function ChangePan(target, pan){
-    var $data = {"name": target, "pan":pan, "preset":$currentpreset };
+    var $data = {"room":$room, "name": target, "pan":pan, "preset":$currentpreset };
     //console.log($data);
     socket.emit("pan", $data);
     
@@ -624,7 +569,6 @@ socket.on("changepan", function(data){
     it.filters = [ new PIXI.sound.filters.StereoFilter(data.pan) ];
     //console.log(it);
 });
-
 
 
 
@@ -644,7 +588,7 @@ $(document).on("dblclick", ".dot", function(){
 function Sync(target){
     var it = PIXI.sound._sounds[target];
     var currenttime = it.media.context.audioContext.currentTime;
-    var $data = {"target": target, "current":currenttime };
+    var $data = {"room":$room, "target": target, "current":currenttime };
     socket.emit("syncit", $data);
 }
 
@@ -656,20 +600,61 @@ socket.on("sync", function(data){
 
 
 
+// TITLE DRAW FUNCTIONS
+
+$(document).on("click", "#name-drawer-handle", function(){
+    $(".drawer").removeClass("open");
+    $(".tool-handle").not(this).removeClass("on");
+    if ( $(this).hasClass("on") ) 
+        {
+        $(this).removeClass("on");
+        }
+    else 
+        {
+        $("#title-text-frame").addClass("open");
+        $(this).addClass("on");
+        }
+});
+
+$(document).on("keypress", "#title-text-frame", function(e) {
+  if(e.which == 13) {
+    e.preventDefault;
+    $value = $(this).html();
+    $data = {"room":$room, "title":$value};
+    socket.emit("changetitle", $data);
+    console.log($data);
+    window.getSelection().removeAllRanges();
+    return false;
+  }
+});
+
+
+
 
 // ART DRAW FUNCTIONS
 
 
 $(document).on("click", "#art-drawer-handle", function(){
-    $("#art-url-frame").toggleClass("open");
+    $(".drawer").removeClass("open");
+    $(".tool-handle").not(this).removeClass("on");
+    if ( $(this).hasClass("on") ) 
+        {
+        $(this).removeClass("on");
+        }
+    else 
+        {
+        $("#art-drawer").addClass("open");
+        $(this).addClass("on");
+        }
 });
 
 $("#art-url-frame").keypress(function(e) {
   if(e.which == 13) {
     e.preventDefault;
     $value = $(this).html();
-    socket.emit("seedbackground", $value);
-    $("#art-url-frame").toggleClass("open");
+    $data = {"room":$room, "url":$value};
+    socket.emit("seedbackground", $data);
+    $("#art-drawer").toggleClass("open");
     return false;
   }
 });
@@ -681,13 +666,59 @@ socket.on("feedbackground",function(url){
 });
 
 
+$(document).on("click", ".art-option", function(){
+    $filename = $(this).attr('file');
+    $value = 'backgrounds/'+$filename;
+    $data = {"room":$room, "url":$value};
+    socket.emit("seedbackground", $data);
+});
+
+
+// DELETE FUNCTIONS
+
+$(document).on("click", "#delete-handle", function(){
+    $(".drawer").removeClass("open");
+    $(".tool-handle").not(this).removeClass("on");
+    if ( $(this).hasClass("on") ) 
+        {
+        $(this).removeClass("on");
+        }
+    else 
+        {
+        //$("#delete-frame").addClass("open");
+        $(this).addClass("on");
+        if (window.confirm("Are you sure you want to delete this scene?")) 
+            {
+                console.log("deleting current preset");
+                $(".drawer").removeClass("open");
+                $("#delete-handle").removeClass("on");
+                socket.emit("deletepreset", $room);
+            } 
+ 
+        }
+});
+
+
+
+socket.on("lastpreset", function(){
+    alert("You can't delete the last scene.");
+});
+
 
 // LIBRARY DRAW FUNCTIONS
 
-$(document).on("click", "#drawer-handle", function(){
-    $("#drawer").toggleClass("open");
-    $("#art-drawer-handle").toggleClass("hidden");
-    $("#preset-drawer-handle").toggleClass("hidden");
+$(document).on("click", "#sound-drawer-handle", function(){
+    $(".drawer").removeClass("open");
+    $(".tool-handle").not(this).removeClass("on");
+    if ( $(this).hasClass("on") ) 
+        {
+        $(this).removeClass("on");
+        }
+    else 
+        {
+        $("#drawer").addClass("open");
+        $(this).addClass("on");
+        }
 });
 
 $(document).on("click", ".sound-item", function(){
@@ -708,10 +739,18 @@ $(document).on("click", ".sound-item", function(){
 
 // PRESET DRAW FUNCTIONS
 
-$(document).on("click", "#preset-drawer-handle", function(){
-    $("#preset-drawer").toggleClass("open");
-    $("#art-drawer-handle").toggleClass("hidden");
-    $("#drawer-handle").toggleClass("hidden");
+$(document).on("click", "#preset-handle", function(){
+    $(".drawer").removeClass("open");
+    $(".tool-handle").not(this).removeClass("on");
+    if ( $(this).hasClass("on") ) 
+        {
+        $(this).removeClass("on");
+        }
+    else 
+        {
+        $("#presetlist").addClass("open");
+        $(this).addClass("on");
+        }
 });
 
 
@@ -732,16 +771,36 @@ $(document).on("click", "#preset-drawer-handle", function(){
 // SUMMON PRESET
 
 function SeedPresetSound(name, file, gain, pan, icon, loop){
-    $data = {"name":name, "file":file, "icon":icon, 'gain':gain, 'pan':pan, 'loop':loop};
+    $data = {"room":$room, "name":name, "file":file, "icon":icon, 'gain':gain, 'pan':pan, 'loop':loop};
     socket.emit('seedpreset', $data);
 }
 
 
 
 
+// ARTSTATION STUFF
 
-</script>
+function GenerateArtstationBackground()
+    {
+    $.ajax({
+        url: "https://cors-anywhere.herokuapp.com/https://www.artstation.com/random_project.json?category=fantasy",
+        contentType: "json",
+        success: function(data) 
+            {
+            console.log(data);
+            $image = data.cover.medium_image_url;
+            UpdatePoster($image);
+            //var $artistlink = '<a href="'+data.user.permalink+'">'+data.user.full_name+'</a>'; 
+            //$("#artist-name").html($artistlink);
+            //$("#work-title").html(data.title);
+            }
+    });
+    }    
+    
+function UpdatePoster(img){
+    
+    $("#artstation").css("background-image", "url("+img+")");
 
-</body>
-
-</html>
+    //$("#poster").css("background-image","url("+img+")");
+    
+}    

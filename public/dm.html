@@ -1,0 +1,82 @@
+<div id="poster"></div>   
+
+<div id="header">
+    
+    <div id="preset-handle" class="tool-handle">
+        <box-icon name='library' color="whitesmoke"></box-icon>
+    </div>
+
+    <div id="sound-drawer-handle" class="tool-handle">
+        <box-icon name='music' type="solid" color="whitesmoke"></box-icon>
+    </div>
+
+    <div id="art-drawer-handle" class="tool-handle">
+        <box-icon type='solid' name='color-fill' color="whitesmoke"></box-icon>
+    </div>
+    <div id="delete-handle" class="tool-handle">
+        <box-icon name='trash' color="whitesmoke"></box-icon>
+    </div>
+
+    <div id="title-text-frame" class="drawer" contenteditable="true"></div>
+
+</div>
+
+<div id="line"></div>
+
+<div id="poster-layer"></div>
+
+<div class='frame' id="arena"></div>
+
+
+
+<div id="art-url-frame" class="drawer" contenteditable="true"></div>
+
+<div id="delete-frame" class="drawer">
+    <div id="delete-button">DELETE</div>
+</div>
+
+
+<div id="presetlist" class="drawer"> 
+    <div id="new-preset-button">
+        <box-icon type='solid' name='bookmark-plus' color="whitesmoke"></box-icon>
+    </div>
+    <div id="thepresetlist"></div>
+</div>
+
+
+<div id="drawer" class="drawer">
+        <div id="soundlist">
+            <div id="thesoundlist"></div>
+        </div>
+</div>
+
+
+<div id="art-drawer" class="drawer">
+        <div id="artlist">
+            <div id="theartlist">
+                <div id='custom-art-option'>
+                    <box-icon name='image-add' style='width:35px; height:35px; margin-top:15px; cursor: pointer;' color='#777'></box-icon>
+                </div>
+                <div class="art-option" id="artstation" file="forest.jpg"></div>
+                <div class="art-option" file="forest.jpg"></div>
+                <div class="art-option" file="mosswood.jpg"></div>
+                <div class="art-option" file="autumnwood.jpg"></div>
+                <div class="art-option" file="springstream.jpg"></div>
+                <div class="art-option" file="waterfall.jpg"></div>
+                <div class="art-option" file="mountains.jpg"></div>
+                <div class="art-option" file="coldmountains.jpg"></div>
+                <div class="art-option" file="mountaintrail.jpg"></div>
+                <div class="art-option" file="desertravine.jpg"></div>
+                <div class="art-option" file="winterbeach.jpg"></div>
+
+            </div>
+        </div>
+</div>
+
+<script> 
+
+$(document).ready(function(){
+    Start(); 
+});
+
+</script>

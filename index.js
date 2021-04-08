@@ -9,6 +9,13 @@ const port = process.env.PORT || 3000;
 // Static files
 app.use(express.static("public"));
 
+
+
+var rooms = [];
+
+var allClients = [];
+
+
 var library;
 
 var tracks = [];
@@ -23,112 +30,300 @@ fs.readFile('library.json', (err, data) => {
 });
 
 
-fs.readFile('presets.json', (err, data) => {
+fs.readFile('rooms.json', (err, data) => {
   if (err) throw err;
-  presets = JSON.parse(data);
+  rooms = JSON.parse(data);
 });
 
 
-function UpdatePreset(library) {
+function UpdateRooms(array) {
 
-  fs.writeFile("presets.json", JSON.stringify(library, null, 4), (err) => {
+  fs.writeFile("rooms.json", JSON.stringify(array, null, 4), (err) => {
     if (err) {  console.error(err);  return; };
-    console.log("File has been created");
 });
 
 }
 
 
+function MovePlayerIntoRoom(id, room) {
+
+  console.log("Moving player "+id+" to room "+room);
+
+  $player = {"id":id, "name":"name"};
+
+  rooms.forEach(function(value, index){
+    if ( value.id === room ) 
+      {  
+      value.players.push($player);
+      }
+  });
+}
+
+
+
+function RemovePlayerFromRoom(id, room) {
+
+  console.log("Removing player "+id+" from room "+room);
+
+  $room = 0;
+  $target = 0;
+
+  rooms.forEach(function(item, index){
+    if ( item.id == room )
+      {
+      $room = index; 
+      }
+  });
+
+  rooms[$room].players.forEach(function(item, index){
+    if ( item.id == id ) { $target = index }
+  });
+  
+  rooms[$room].players.splice($target, 1);
+
+  io.in(room).emit('players', rooms[$room].players);
+
+  RemovePlayerFromLobby(id);
+
+}
+
+
+function RemovePlayerFromLobby(id)
+  {
+    console.log("Removing client from the lobby");    
+    var i = allClients.indexOf(id);
+    allClients.splice(i, 1);
+    console.log("Online we have:");
+    console.log(allClients);
+
+  }
+
+
+
+  function GetRoom(socketid){
+
+    var $room;
+    console.log("Retrieving room name");
+    allClients.forEach(function(value, index)
+      {
+      if ( value.id == socketid ) { $room = value.room; } 
+      });
+    
+      return $room;
+  }
+
+
+
+
+
+
 
 io.on('connection', (socket) => {
+  
+  console.log(socket.id+ " is now connected.");
+  $newplayer = {"id":socket.id, "room":"lobby"};
+  allClients.push($newplayer);
+  console.log("Online we have:");
+  console.log(allClients);
+
+  // DISCONNECT SEQUENCE
+
+  socket.on('disconnect', function() {
+    console.log(socket.id + ' has hung up.');
+    
+    var $room = GetRoom(socket.id);
+    console.log($room);
+    RemovePlayerFromRoom(socket.id, $room);
+
+    });
+
+
+  // GM CHECK ROOM FOR LOGIN
+  socket.on("checkroom", (data) => 
+      { 
+      rooms.forEach(myFunction);
+        
+        function myFunction(value, index, array) {
+              if ( value.id == data ) 
+                {  
+                $data = {'room':value.id, 'index':index};
+                io.to(socket.id).emit("unlockroom", $data);
+                }
+            }
+         
+      });
+
+      // REGISTER WITH ROOM
+      socket.on('register', (room) => 
+      {
+      console.log("Registering "+socket.id);
+      socket.join(room);
+
+      allClients.forEach(function(item, index){
+        if ( item.id === socket.id ) 
+          { 
+          item.room = room; 
+          MovePlayerIntoRoom(item.id, item.room);  
+          }
+      });
+
+      io.to(socket.id).emit('welcome');
+      var $roomindex = rooms.findIndex(x => x.id === room);
+      io.in(room).emit('players',rooms[$roomindex].players); 
+
+
+      });
+
+
+
   socket.on('chat message', msg => {
     io.emit('chat message', msg);
   });
 
-  setInterval(() => io.emit('time', new Date().getTime()), 1000);
+  setInterval(() => socket.emit('time', new Date().getTime()), 1000);
 
-  socket.on('gettracks', (data) => { io.emit('sendtracks', tracks); });
-  socket.on('getlibrary', (data) => { io.emit('sendlibrary', library); });
-  socket.on('getpresets', (data) => { io.emit('sendpresets', presets); });
-  socket.on('changepreset', (preset) => 
+  socket.on('gettracks', (room) => { io.in(room).emit('sendtracks', tracks); });
+  socket.on('getlibrary', (room) => 
     { 
-    currentpreset = preset;
-    io.emit('feedpreset'); 
+    console.log("Request received for library for room "+room);
+    io.in(room).emit('sendlibrary', library); 
     });
-  socket.on('getcurrentpreset', (data) => 
+  
+    // GET PRESETS
+  
+    socket.on('getpresets', (room) => 
+      { 
+      var $index = rooms.findIndex(x => x.id === room);
+      var $presets = rooms[$index].presets;
+      io.in(room).emit('sendpresets', $presets); 
+      });
+  
+    // CHANGE PRESET
+  
+    socket.on('changepreset', (data) => 
+      { 
+      console.log("changing preset");
+      console.log(data);
+      var $index = rooms.findIndex(x => x.id === data.room);
+      var $currentpreset = rooms[$index].currentpreset;
+      
+      rooms[$index].currentpreset = data.preset;
+      
+      UpdateRooms(rooms);
+      io.in(data.room).emit('feedpreset'); 
+      });
+  socket.on('getcurrentpreset', (room) => 
     { 
-    var $index = presets.findIndex(x => x.id === currentpreset);
-    var library = presets[$index].library;
-    var title = presets[$index].title;
-    var $data = {"preset":currentpreset, "title":title, "library":library};
-    io.emit('feedcurrentpreset', $data); 
+    var $index = rooms.findIndex(x => x.id === room);
+    var $presets = rooms[$index].presets;
+    var $currentpreset = rooms[$index].currentpreset;
+    console.log($currentpreset);
+    var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
+
+    var library = $presets[$indexofcurrentpreset].library;
+    var title = $presets[$indexofcurrentpreset].title;
+    var $data = {"preset":$currentpreset, "title":title, "library":library};
+    io.in(room).emit('feedcurrentpreset', $data); 
     });
   // change background
-  socket.on("seedbackground", (url) => 
+  socket.on("seedbackground", (data) => 
   { 
-  var $index = presets.findIndex(x => x.id === currentpreset);
-  presets[$index].background = url;
-  UpdatePreset(presets);
-  io.emit("feedbackground", url); 
+  var $index = rooms.findIndex(x => x.id === data.room);
+  var $presets = rooms[$index].presets;
+  var $currentpreset = rooms[$index].currentpreset;
+  var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
+
+  $presets[$indexofcurrentpreset].background = data.url;
+  
+  UpdateRooms(rooms);
+  io.in(data.room).emit("feedbackground", data.url); 
   });
   // request background
-  socket.on('getbackground', (data) => 
+  socket.on('getbackground', (room) => 
     { 
-    var $index = presets.findIndex(x => x.id === currentpreset);
-    var background = presets[$index].background;
-    io.emit('feedbackground', background); 
+    var $index = rooms.findIndex(x => x.id === room);
+    var $presets = rooms[$index].presets;
+    var $currentpreset = rooms[$index].currentpreset;
+    var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
+    
+    var background = $presets[$indexofcurrentpreset].background;
+    io.in(room).emit('feedbackground', background); 
     });
   // clock function
   socket.on("tick", (data) => { io.emit("tock"); });
   socket.on("volume", (data) => 
     { 
-    var $index = presets.findIndex(x => x.id === data.preset);
-    var $indexofitem = presets[$index].library.findIndex(x => x.id === data.name);
-    presets[$index].library[$indexofitem].gain = data.gain;
-    UpdatePreset(presets);
-    io.emit("changevolume", data);
+    var $index = rooms.findIndex(x => x.id === data.room);
+    var $presets = rooms[$index].presets;
+    var $indexofpreset = $presets.findIndex(x => x.id === data.preset);
+    var $indexofitem = $presets[$indexofpreset].library.findIndex(x => x.id === data.name);
+
+    $presets[$indexofpreset].library[$indexofitem].gain = data.gain;
+
+    UpdateRooms(rooms);
+    io.in(data.room).emit("changevolume", data);
     });
     // change preset title
   socket.on("changetitle", (data) => 
     {  
-    var $index = presets.findIndex(x => x.id === currentpreset);
-    presets[$index].title = data;
-    UpdatePreset(presets);
-    io.emit('sendpresets', presets);
+    var $index = rooms.findIndex(x => x.id === data.room);
+    var $presets = rooms[$index].presets;
+    var $currentpreset = rooms[$index].currentpreset;
+    var $targetindex = $presets.findIndex(x => x.id === $currentpreset);
+    
+    $presets[$targetindex].title = data.title;
+
+    UpdateRooms(rooms);
+    io.in(data.room).emit('sendpresets', $presets);
     });
   // add track to preset
   socket.on("updatepreset", (data) => 
     {  
-    var $index = presets.findIndex(x => x.id === data.preset);
-    presets[$index].library.push(data.track);
-    UpdatePreset(presets);
+    var $index = rooms.findIndex(x => x.id === data.room);
+    var $presets = rooms[$index].presets;
+    var $currentpreset = rooms[$index].currentpreset;
+    var $indexofpreset = $presets.findIndex(x => x.id === data.preset);
+      
+    $presets[$indexofpreset].library.push(data.track);
+    UpdateRooms(rooms);
     });
   // ADD NEW PRESET
-  socket.on("addpreset", (data) => 
+  socket.on("addpreset", (room) => 
     {
     r = new Date().getTime();
     $newpreset = {"id":""+r+"", "title":"untitled", "background":"https://jooinn.com/images/blank-canvas-texture-2.jpg", "library":[]};
-    presets.push($newpreset);
-    currentpreset = ""+r+"";
-    UpdatePreset(presets);
-    io.emit('feedpreset');   
+    
+    var $index = rooms.findIndex(x => x.id === room);
+    var $presets = rooms[$index].presets;
+    
+    $presets.push($newpreset);
+    rooms[$index].currentpreset = ""+r+"";
+    
+    UpdateRooms(rooms);
+    io.in(room).emit('feedpreset');   
     });
   // DELETE PRESET
-  socket.on("deletepreset", function(){
-    var $index = presets.findIndex(x => x.id === currentpreset);
+  socket.on("deletepreset", function(room){
 
-    var number = presets.length;
-    console.log(number);
+    var $index = rooms.findIndex(x => x.id === room);
+    var $presets = rooms[$index].presets;
+    var $currentpreset = rooms[$index].currentpreset;
+
+    var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
+
+    var number = $presets.length;
     if ( number > 1 ) 
       {
-      presets.splice($index, 1);
-      UpdatePreset(presets);
-      currentpreset = presets[0].id;
-      io.emit('feedpreset');  
+        
+      $presets.splice($indexofcurrentpreset, 1);
+      rooms[$index].currentpreset = $presets[0].id;
+      UpdateRooms(rooms);
+
+      io.in(room).emit('feedpreset');  
       }
     else 
       {
-      io.emit("lastpreset");
+      io.in(room).emit("lastpreset");
       }
     
   });  
@@ -136,33 +331,49 @@ io.on('connection', (socket) => {
   // pan function
   socket.on("pan", (data) => 
     { 
-    console.log(data);
-    var $index = presets.findIndex(x => x.id === data.preset);
-    var $indexofitem = presets[$index].library.findIndex(x => x.id === data.name);
-    presets[$index].library[$indexofitem].pan = data.pan;
-    UpdatePreset(presets);
-    io.emit("changepan", data); 
+    var $index = rooms.findIndex(x => x.id === data.room);
+    var $presets = rooms[$index].presets;
+    var $currentpreset = rooms[$index].currentpreset;
+
+    var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
+
+    var $indexofitem = $presets[$indexofcurrentpreset].library.findIndex(x => x.id === data.name);
+    
+    $presets[$indexofcurrentpreset].library[$indexofitem].pan = data.pan;
+
+    UpdateRooms(rooms);
+    io.in(data.room).emit("changepan", data); 
     });
   // loop function
   socket.on("seedloop", (data) => 
     { 
-    var $index = presets.findIndex(x => x.id === currentpreset);
-    var $indexofitem = presets[$index].library.findIndex(x => x.id === data.name);
-    presets[$index].library[$indexofitem].loop = data.loop;
-    console.log(presets[$index].library);
-    UpdatePreset(presets);
-    io.emit("feedloop", data); 
+    var $index = rooms.findIndex(x => x.id === data.room);
+    var $presets = rooms[$index].presets;
+    var $currentpreset = rooms[$index].currentpreset;
+    var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
+    var $indexofitem = $presets[$indexofcurrentpreset].library.findIndex(x => x.id === data.name);
+    
+    $presets[$indexofcurrentpreset].library[$indexofitem].loop = data.loop;
+
+    UpdateRooms(rooms);
+    io.in(data.room).emit("feedloop", data); 
     });  
   // sync function
-  socket.on("syncit", (data) => { io.emit("sync", data); });
+  socket.on("syncit", (data) => { io.in(data.room).emit("sync", data); });
   // add sound
   socket.on("seedsound", (data) => 
     { 
     $new = {'id':data.name, 'file':data.file, "gain":data.gain, 'pan':data.pan, 'loop':data.loop, "icon":data.icon };
     //tracks.push($new);
-    var $index = presets.findIndex(x => x.id === currentpreset);
-    presets[$index].library.push($new);
-    UpdatePreset(presets);
+
+    var $index = rooms.findIndex(x => x.id === data.room);
+    var $presets = rooms[$index].presets;
+    var $currentpreset = rooms[$index].currentpreset;
+    var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
+
+    $presets[$indexofcurrentpreset].library.push($new);
+
+    UpdateRooms(rooms);
     io.emit("newsound"); 
     });
     // add preset sound
@@ -170,27 +381,30 @@ io.on('connection', (socket) => {
     { 
     $new = {'id':data.name, 'file':data.file, "gain":data.gain, 'pan':data.pan, 'loop':data.loop, "icon":data.icon };
     tracks.push($new);
-    console.log(tracks.length);
     
     });
     // wipe track list
-    socket.on("wipetracklist", (data) => 
+    socket.on("wipetracklist", (room) => 
       { 
-      console.log(tracks); 
       tracks = []; 
-      console.log(tracks); 
-      socket.emit("wipetracks");
+      io.in(room).emit("wipetracks");
       });
     // remove sound
-    socket.on("removesound", (name) => 
+    socket.on("removesound", (data) => 
     { 
     //var $index = tracks.findIndex(x => x.id === name);
     //tracks.splice($index, 1);
-    var $index = presets.findIndex(x => x.id === currentpreset);
-    var $indexofitem = presets[$index].library.findIndex(x => x.id === name);
-    presets[$index].library.splice($indexofitem, 1);
-    UpdatePreset(presets);
-    io.emit("soundscrubbed", name); 
+
+    var $index = rooms.findIndex(x => x.id === data.room);
+    var $presets = rooms[$index].presets;
+    var $currentpreset = rooms[$index].currentpreset;
+    var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
+    var $indexofitem = $presets[$indexofcurrentpreset].library.findIndex(x => x.id === data.name);
+
+    $presets[$indexofcurrentpreset].library.splice($indexofitem, 1);
+
+    UpdateRooms(rooms);
+    io.in(data.room).emit("soundscrubbed", data.name); 
     });
     
 
