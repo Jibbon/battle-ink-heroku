@@ -132,7 +132,7 @@ GenerateLink();
 // GENERATE PLAYER LINK
 
 function GenerateLink(){
-    $("#link-handle").attr("url","http://www.battle.ink#"+$room);
+    $("#link-handle").attr("url","http://www.battle.ink/player.html#"+$room);
 }
 
 $(document).on("click", "#link-handle", function(){
