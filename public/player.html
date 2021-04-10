@@ -25,7 +25,7 @@
         }
 
 body { margin:0px; padding:0px; overflow: hidden; background:black; }
-#enter-screen { position:fixed; width:100%; height:100%; top:0px; left:0px; z-index:9999999; background-color: black; }
+#enter-screen { position:fixed; width:100%; height:100%; top:0px; left:0px; z-index:9999999;}
 #enter-button { position: absolute; z-index:1; opacity:0; top:50%; left:50%; text-align:center; transform:translateX(-50%) translateY(0px); cursor: pointer; font-size:1rem; letter-spacing: 0.3rem; color:whitesmoke; display:none; transition:all 0.6s ease; }
 #enter-button.active { opacity:1; transform:translateX(-50%) translateY(75px); } 
 #logo { position: absolute; z-index:3; width:200px; height:auto; top:50%; left:50%; transform:translateX(-50%) translateY(-120%); opacity: 0.66; } 
@@ -35,12 +35,16 @@ input { -webkit-user-select:text; border-radius: 15px; border-style:solid; borde
 
 textarea, input, button { outline: none; font-family: inherit; }
 
+#poster { position:absolute; z-index:0; width:100%; height:100%; background-size:cover; opacity:0.66; background-image:url(); background-position:50% 50%; transition: filter 1s ease; will-change: filter; }
+#poster.clouded{ filter: blur(3px); opacity:0.6; }
+
 </style>
 
 
 
 </head>
 
+<div id="poster" class="clouded"></div>   
 
 
     <div id="enter-screen">
@@ -66,18 +70,20 @@ textarea, input, button { outline: none; font-family: inherit; }
 <script src="js/pixi.min.js"></script>
 <script src="js/pixi-sound.js"></script>
 
-<script src="js/gm.js?v=1.6"></script>
 
 
 
 
 <script>
 
+var socket = io();
+
+var $room;
+
+var mytracks = [];
 
 var unlocksound = new Audio('audio/unlock.mp3');
 var entersound = new Audio('audio/enter.mp3');
-
-var $url;
 
 $(document).ready(function(){
 
@@ -85,9 +91,6 @@ $(document).ready(function(){
     var room = a.split('#')[1];
 
     socket.emit('checkroom',room);
-
-    Clock();
-
 
 
 });
@@ -118,19 +121,285 @@ $("#enter-button").click(function(){
 socket.on("welcome", function(){
     console.log("You've been welcomed into the room");
     $("#enter-screen").fadeOut();
+    $("#poster").removeClass("clouded");
+    StartPlayer();
 });
 
 socket.on("updateplayers", function(data){
     console.log("Receiving player list...");
     console.log(data);
-    $('body').load('simple.html');
 });
 
 socket.on('time', function(timeString) {
-  console.log(timeString);
+  //console.log(timeString);
 });
 
 </script>
 
+<script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function StartPlayer(){
+
+    console.log("Starting up for room "+$room);
+    socket.emit("getbackground", $room);
+    GatherPreset();
+}
+
+
+
+
+socket.on("feedpreset", function(){
+    console.log("A new preset has been requested...");
+    //$(".drawer").removeClass("open");
+    //$("#preset-handle").removeClass("on");
+    //socket.emit('getpresets', $room);
+    socket.emit("getbackground", $room);
+    socket.emit("wipetracklist", $room);
+});
+
+
+socket.on("wipetracks", function(){
+    console.log("wiping the track list clean...");
+    mytracks = [];
+    PIXI.sound.removeAll();
+    //$(".sound-item").removeClass('selected');
+    //$(".dot").remove();
+    //GatherPreset();
+
+});
+
+
+
+
+
+
+//GATHER A PRESET
+
+function GatherPreset(){
+    console.log("Requesting track list for the current preset");
+    socket.emit("getcurrentpresetstart", $room);
+}
+
+socket.on("feedcurrentpresetstart", function(data){
+    console.log("Building audio tracks for current preset");
+    //BuildTracks(data.library);
+
+    $.each(data.library, function(index, item){
+        GenerateDot(item.id, item.file, item.gain, item.pan, item.loop);
+    });
+
+
+});
+
+
+// GATHER TRACKS TO LIBRARY
+//socket.on("sendtracks", function(data){
+//    console.log("Receiving the tracks...");
+//    console.log(data);
+//    BuildTracks(data);
+//});
+
+function BuildTracks(array){
+
+    //console.log(array);
+
+$.each(array, function(index, item){
+    //console.log(item);
+    if ( Existing(item.file)) 
+        {
+        console.log("already exits")    
+        }
+    else 
+        { 
+        console.log("fresh!"); 
+
+        // GENERATE THE TRACK LOCALLY
+        GenerateDot(item.id, item.file, item.gain, item.pan, item.loop);
+        }
+});
+
+}
+
+function Existing(file){
+
+// Find if the array contains an object by comparing the property value
+if(mytracks.some(track => track.file === file))
+    {
+    return true;
+    } 
+    else { return false; }
+}
+
+
+
+
+
+// GENERATE THE TRACK LOCALLY
+
+function GenerateDot(name, file, gain, pan, loop) {
+    console.log("Adding "+name+" to the canvas");
+    //console.log(gain);
+    $new = {'id':name, 'file':file, "gain":gain, "pan":pan, "loop":loop };
+    mytracks.push($new);
+    console.log(mytracks);
+    AddSound(name, file, gain, pan, loop);
+
+}
+
+function AddSound(name, file, gain, pan, loop){
+
+    // do the pixi.js thing
+    PIXI.sound.add(name, {
+    url: 'audio/'+file,
+    preload: true,
+    loaded: function() {
+        // duration can only be used once the sound is loaded
+        StartVolume(name, gain);
+        StartPan(name, pan);
+        StartLoop(name, loop);
+        PIXI.sound.play(name);
+        }
+    });
+
+}
+
+function StartVolume(target, gain){
+    var it = PIXI.sound._sounds[target];
+    it.volume = gain;
+}
+
+
+function StartPan(target, pan){
+    var it = PIXI.sound._sounds[target];
+    it.filters = [ new PIXI.sound.filters.StereoFilter(pan) ];
+}
+
+function StartLoop(target, loop){
+    //console.log("Setting loop status to: "+loop);
+    var it = PIXI.sound._sounds[target];
+    it.loop = loop;
+    
+    if ( loop ) 
+        { 
+        //$(".dot[target="+target+"]").addClass("loop");
+        }
+
+}
+
+// KILL SOUND FUNCTION
+
+socket.on("soundscrubbed", function(name){
+    console.log("Scrubbing sound "+name);
+    PIXI.sound.stop(name);
+    //$(".dot[target="+name+"]").remove();
+    var $index = mytracks.findIndex(x => x.id === name);
+    mytracks.splice($index, 1);
+    console.log(mytracks);
+
+    //console.log(mytracks);
+    // remove from local preset library
+    // update current preset
+    //var $presetindex = presets.findIndex(x => x.id === $currentpreset);
+    //var $presetitem = presets[$presetindex].library.findIndex(x => x.id === name);
+    //console.log($presetitem);
+    //presets[$presetindex].library.splice($presetitem, 1);
+    //console.log(presets);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // GAIN FUNCTION
+
+
+socket.on("changevolume", function(data){ 
+
+    var it = PIXI.sound._sounds[data.name];
+    it.volume = data.gain;
+
+});
+
+
+
+
+
+
+// SET LOOP
+
+function Loop(name, toggle){
+    var $data = {"room":$room, "name": name, "loop":toggle };
+    socket.emit("seedloop", $data);
+}
+
+socket.on("feedloop", function(data){
+    var it = PIXI.sound._sounds[data.name];
+    it.loop = data.loop;
+});
+
+
+
+// PAN FUNCTION
+
+socket.on("changepan", function(data){
+    var it = PIXI.sound._sounds[data.name];
+    it.filters = [ new PIXI.sound.filters.StereoFilter(data.pan) ];
+    //console.log(it);
+});
+
+
+
+
+
+
+
+// SYNC FUNCTION
+
+socket.on("sync", function(data){
+    var it = PIXI.sound._sounds[data.target];
+    PIXI.sound.stop(data.target);
+    PIXI.sound.play(data.target);
+    });
+
+
+    // BACKGROUND FEED
+
+socket.on("feedbackground",function(url){
+    console.log("Receiving new background feed...");
+    $("#poster").css("background-image","url("+url+")");
+    $("#art-url-frame").html(url);
+});
+
+
+socket.on("newsound", function(data){
+    console.log("New sound feed...");
+    GenerateDot(data.name, data.file, data.gain, data.pan, data.loop);
+});
+
+
+</script>
 
 </html>

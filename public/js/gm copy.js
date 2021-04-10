@@ -102,7 +102,14 @@ socket.on("sounduploaded", function(data){
 
 
 
+function StartPlayer(){
 
+    console.log("Starting up for room "+$room);
+    socket.emit('getlibrary', $room);
+    socket.emit('getpresets', $room);
+    socket.emit("getbackground", $room);
+    socket.emit("getcurrentpreset", $room);
+}
 
 
 function Start(){
@@ -140,7 +147,7 @@ socket.on("feedbackgrounds", function(array){
 
     $.each(array, function(index, item){
 
-        var element = '<div class="art-option" url="'+item.filename+'" style="background-image:url('+item.filename+');"></div>';
+        var element = '<div class="art-option" url="backgrounds/'+item.filename+'" style="background-image:url(backgrounds/'+item.filename+');"></div>';
         $("#theartlist").append(element);
 
     });
@@ -284,7 +291,6 @@ function GenerateDot(name, file, gain, pan, icon, loop) {
     //console.log(gain);
     $new = {'id':name, 'file':file, "gain":gain, "pan":pan, "icon":icon, "loop":loop };
     mytracks.push($new);
-    console.log(mytracks);
 
     // update current preset
     var $index = presets.findIndex(x => x.id === $currentpreset);
@@ -318,8 +324,6 @@ function GenerateDot(name, file, gain, pan, icon, loop) {
 function AddSound(name, file, gain, pan, loop){
 
     //console.log("making sound: "+name+" using file: "+file+" with gain "+gain);
-
-    SeedSound(name, file, gain, pan, loop);
 
     // do the pixi.js thing
     PIXI.sound.add(name, {
@@ -377,7 +381,7 @@ socket.on("soundscrubbed", function(name){
     $(".dot[target="+name+"]").remove();
     var $index = mytracks.findIndex(x => x.id === name);
     mytracks.splice($index, 1);
-    console.log(mytracks);
+    //console.log(mytracks);
     // remove from local preset library
     // update current preset
     var $presetindex = presets.findIndex(x => x.id === $currentpreset);
@@ -672,7 +676,7 @@ $(document).on("keypress","#art-url-frame", function(e) {
     e.preventDefault;
     $value = $(this).html();
     $data = {"room":$room, "url":$value};
-    socket.emit("downloadbackground", $data);
+    socket.emit("seedbackground", $data);
     $(this).removeClass("open");
     return false;
   }
@@ -773,14 +777,16 @@ $(document).on("click", "#preset-handle", function(){
 
 
 
-//SEED NEW SOUND TO SERVER         
-function SeedSound(name, file, gain, pan, loop) {
-    console.log("Sending sound out to players");
-    $data = {"room":$room, "name":name, "file":file, 'gain':gain, 'pan':pan, 'loop':loop};
-    console.log($data);
-    socket.emit("seedsound", $data);
-}
+// SEED NEW SOUND TO SERVER         
+//function SeedSound(name, file, gain, pan, icon, loop) {
+//    $data = {"name":name, "file":file, 'gain':gain, 'pan':pan, "icon":icon, 'loop':loop};
+//    console.log($data);
+//    socket.emit("seedsound", $data);
+//}
 
+//socket.on("newsound", function(){
+//    socket.emit("gettracks");
+//});
 
 
 

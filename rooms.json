@@ -2,19 +2,13 @@
     {
         "id": "135467",
         "name": "realm",
-        "backgrounds": [
-            {
-                "id": "1618055737094",
-                "filename": "1618055737094.png"
-            }
-        ],
         "players": [],
         "tracks": [],
         "presets": [
             {
                 "id": "1617697836363",
                 "title": "Waterfall",
-                "background": "https://cdna.artstation.com/p/assets/images/images/006/163/652/large/ivan-laliashvili-waterfalls-by-ivanlaliashvili-dbbbpit.jpg?1496481923<br>",
+                "background": "https://cdna.artstation.com/p/assets/images/images/006/163/652/large/ivan-laliashvili-waterfalls-by-ivanlaliashvili-dbbbpit.jpg?1496481923",
                 "library": [
                     {
                         "id": "forest",
@@ -55,70 +49,80 @@
     {
         "id": "123456",
         "name": "iceland",
-        "backgrounds": [
+        "players": [
             {
-                "id": 1618057775365,
-                "filename": "1618057775365.jpg"
+                "id": "t8svWanblM7sKvmRAAAL",
+                "name": "name"
             },
             {
-                "id": 1618057802856,
-                "filename": "1618057802856.jpg"
-            },
-            {
-                "id": 1618057815276,
-                "filename": "1618057815276.jpg"
-            },
-            {
-                "id": 1618057936150,
-                "filename": "1618057936150.jpg"
-            },
-            {
-                "id": 1618058313168,
-                "filename": "1618058313168.jpg"
+                "id": "cV6QvZudn8s2uh4nAAAT",
+                "name": "name"
             }
         ],
-        "players": [],
         "tracks": [],
         "presets": [
             {
                 "id": "1617783647612",
                 "title": "Mountain Pass",
-                "background": "backgrounds/1618057815276.jpg",
+                "background": "https://cdnb.artstation.com/p/assets/images/images/005/620/115/large/raphael-lacoste-mountain-rider-v02-net.jpg?1492521048",
                 "library": [
-                    {
-                        "id": "dragonsreach",
-                        "file": "dragonsreach.mp3",
-                        "gain": 0.082,
-                        "pan": -0.02,
-                        "icon": "music",
-                        "loop": true
-                    },
                     {
                         "id": "blizzard",
                         "file": "blizzardoutside.mp3",
-                        "gain": 0.064,
-                        "pan": -0.02,
+                        "gain": 0.031,
+                        "pan": 0.03,
                         "icon": "water",
-                        "loop": true
+                        "loop": false
+                    },
+                    {
+                        "id": "secunda",
+                        "file": "secunda.mp3",
+                        "gain": 0,
+                        "pan": 0.04,
+                        "icon": "music",
+                        "loop": false
+                    },
+                    {
+                        "id": "drums",
+                        "file": "kododrums.mp3",
+                        "gain": 0.124,
+                        "pan": 0.03,
+                        "icon": "shield",
+                        "loop": false
                     }
                 ]
             },
             {
                 "id": "1617877012791",
-                "title": "Random",
-                "background": "backgrounds/1618057936150.jpg",
+                "title": "Ship",
+                "background": "https://cdna.artstation.com/p/assets/images/images/001/928/000/large/sebastien-kaczorowski-marais6art.jpg?1454701768",
                 "library": [
                     {
-                        "id": "drums",
-                        "file": "kododrums.mp3",
-                        "gain": 0.048,
-                        "pan": 0.01,
-                        "icon": "shield",
+                        "id": "stream",
+                        "file": "stream.mp3",
+                        "gain": 0.031,
+                        "pan": -0.04,
+                        "icon": "water",
+                        "loop": false
+                    }
+                ]
+            },
+            {
+                "id": "1618086053062",
+                "title": "Swamp",
+                "background": "https://cdnb.artstation.com/p/assets/images/images/027/763/537/large/connor-sheehan-forest-scene-01-final-02.jpg?1592481413",
+                "library": [
+                    {
+                        "id": "swamp",
+                        "file": "swamp.mp3",
+                        "gain": 0.018,
+                        "pan": 0.02,
+                        "icon": "water",
                         "loop": false
                     }
                 ]
             }
         ],
-        "currentpreset": "1617877012791"
+        "currentpreset": "1617783647612"
     }
 ]

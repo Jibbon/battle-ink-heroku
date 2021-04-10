@@ -6,6 +6,43 @@ const express = require("express");
 
 const server = express()
     .use(express.static("public"))
+    .post('/', function (req, res){
+      var form = new formidable.IncomingForm();
+      
+      var $newname;
+      var r;
+
+      form.parse(req);
+    
+      form.on('fileBegin', function (name, file)
+        {
+        r = new Date().getTime();
+        var extension = file.name.split('.').pop();
+        $newname = r+"."+extension;
+        file.path = __dirname + '/public/backgrounds/' + $newname;
+      });
+    
+      
+
+      form.on('file', function (name, file){
+          console.log('Uploaded ' + $newname);
+          
+          var $new = { "id": r, "filename": $newname };
+
+          //var $index = rooms.findIndex(x => x.id === data.room);
+          //rooms[1].backgrounds.push($new);
+          //UpdateRooms(rooms);
+
+          //io.emit('feedbackgrounds', rooms[1].backgrounds); 
+
+      });
+
+      form.on('end', () => {
+        console.log("finished");
+      });
+    
+      
+    })
     .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
   const io = require('socket.io')(server);
@@ -19,17 +56,12 @@ var rooms = [];
 var allClients = [];
 var library;
 var tracks = [];
-var backgrounds = [];
 
 fs.readFile('library.json', (err, data) => {
   if (err) throw err;
   library = JSON.parse(data);
 });
 
-fs.readFile('backgrounds.json', (err, data) => {
-  if (err) throw err;
-  backgrounds = JSON.parse(data);
-});
 
 fs.readFile('rooms.json', (err, data) => {
   if (err) throw err;
@@ -46,14 +78,6 @@ function UpdateRooms(array) {
 
 }
 
-function UpdateBackgrounds() {
-
-  console.log("Writing to file...");
-  fs.writeFile("backgrounds.json", JSON.stringify(backgrounds, null, 4), (err) => {
-    if (err) {  console.error(err);  return; };
-});
-
-}
 
 function MovePlayerIntoRoom(id, room) {
 
@@ -209,9 +233,9 @@ io.on('connection', (socket) => {
 
     socket.on('getbackgrounds', (room) => 
     { 
-    //var $index = rooms.findIndex(x => x.id === room);
-    //var $backgrounds = rooms[$index].backgrounds;
-    io.in(room).emit('feedbackgrounds', backgrounds); 
+    var $index = rooms.findIndex(x => x.id === room);
+    var $backgrounds = rooms[$index].backgrounds;
+    io.in(room).emit('feedbackgrounds', $backgrounds); 
     });
 
     // GET PRESETS
@@ -250,21 +274,6 @@ io.on('connection', (socket) => {
     var $data = {"preset":$currentpreset, "title":title, "library":library};
     io.in(room).emit('feedcurrentpreset', $data); 
     });
-
-    socket.on('getcurrentpresetstart', (room) => 
-    { 
-    var $index = rooms.findIndex(x => x.id === room);
-    var $presets = rooms[$index].presets;
-    var $currentpreset = rooms[$index].currentpreset;
-    console.log($currentpreset);
-    var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
-
-    var library = $presets[$indexofcurrentpreset].library;
-    var title = $presets[$indexofcurrentpreset].title;
-    var $data = {"preset":$currentpreset, "title":title, "library":library};
-    io.to(socket.id).emit('feedcurrentpresetstart', $data); 
-    });
-
   // change background
   socket.on("seedbackground", (data) => 
   { 
@@ -276,34 +285,7 @@ io.on('connection', (socket) => {
   $presets[$indexofcurrentpreset].background = data.url;
   
   UpdateRooms(rooms);
-
   io.in(data.room).emit("feedbackground", data.url); 
-
-  });
-  // create/upload/download background
-  socket.on("downloadbackground", (data) => 
-  { 
-  
-    r = new Date().getTime();
-    var $new = { "id": r, "filename": data.url };
-    backgrounds.push($new);
-
-    UpdateBackgrounds();
-
-    io.in(data.room).emit('feedbackgrounds', backgrounds); 
-
-
-    var $index = rooms.findIndex(x => x.id === data.room);
-    var $presets = rooms[$index].presets;
-    var $currentpreset = rooms[$index].currentpreset;
-    var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
-
-    $presets[$indexofcurrentpreset].background = r;
-  
-    UpdateRooms(rooms);
-
-    io.in(data.room).emit("feedbackground", data.url); 
-
   });
   // request background
   socket.on('getbackground', (room) => 
@@ -430,8 +412,18 @@ io.on('connection', (socket) => {
   // add sound
   socket.on("seedsound", (data) => 
     { 
-    $new = {'id':data.name, 'file':data.file, "gain":data.gain, 'pan':data.pan, 'loop':data.loop };
-    io.in(data.room).emit("newsound", data); 
+    $new = {'id':data.name, 'file':data.file, "gain":data.gain, 'pan':data.pan, 'loop':data.loop, "icon":data.icon };
+    //tracks.push($new);
+
+    var $index = rooms.findIndex(x => x.id === data.room);
+    var $presets = rooms[$index].presets;
+    var $currentpreset = rooms[$index].currentpreset;
+    var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
+
+    $presets[$indexofcurrentpreset].library.push($new);
+
+    UpdateRooms(rooms);
+    io.emit("newsound"); 
     });
     // add preset sound
     socket.on("seedpreset", (data) => 

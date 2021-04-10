@@ -29,13 +29,11 @@ body { margin:0px; padding:0px; overflow: hidden; background:black; }
 #enter-button { position: absolute; z-index:1; opacity:0; top:50%; left:50%; text-align:center; transform:translateX(-50%) translateY(0px); cursor: pointer; font-size:1rem; letter-spacing: 0.3rem; color:whitesmoke; display:none; transition:all 0.6s ease; }
 #enter-button.active { opacity:1; transform:translateX(-50%) translateY(75px); } 
 #logo { position: absolute; z-index:3; width:200px; height:auto; top:50%; left:50%; transform:translateX(-50%) translateY(-120%); opacity: 0.66; } 
-#keyhole { position:absolute; z-index:3; text-align:center; background:rgba(255,255,255,0.1); color:whitesmoke; font-size:33px; top:50%; left:50%; width:33%; height:66px; transform:translateX(-50%) translateY(-50%); }
-#text { position:absolute; z-index:3; text-align:center; color:whitesmoke; font-variant:small-caps; font-size:14px; top:50%; left:50%; width:33%; margin-top:-50px; transform:translateX(-50%) translateY(-50%); }
+#keyhole { position:absolute; z-index:3; text-align:center; background:rgba(25,25,25,1); color:whitesmoke; font-size:33px; top:50%; left:50%; width:33%; height:66px; transform:translateX(-50%) translateY(-50%); }
 
 input { -webkit-user-select:text; border-radius: 15px; border-style:solid; border-color: transparent; }
 
 textarea, input, button { outline: none; font-family: inherit; }
-
 
 </style>
 
@@ -43,15 +41,10 @@ textarea, input, button { outline: none; font-family: inherit; }
 
 </head>
 
-<body>
-
 
 
     <div id="enter-screen">
         <img id="logo" src="img/battledotinkshield.png" />
-        <div id="text">enter room key</div>
-        <input id='keyhole' type="text"></input>
-        <div id="loaderbar"><div id="loaderbar-inner"></div></div>
       <div id="enter-button">ENTER</div>
     </div>  
 
@@ -73,7 +66,7 @@ textarea, input, button { outline: none; font-family: inherit; }
 <script src="js/pixi.min.js"></script>
 <script src="js/pixi-sound.js"></script>
 
-<script src="js/gm.js?v=1.5"></script>
+<script src="js/gm.js?v=1.6"></script>
 
 
 
@@ -84,34 +77,30 @@ textarea, input, button { outline: none; font-family: inherit; }
 var unlocksound = new Audio('audio/unlock.mp3');
 var entersound = new Audio('audio/enter.mp3');
 
-var $virgin = true;
+var $url;
 
 $(document).ready(function(){
-    $('#keyhole').focus();
+
+    var a = window.location.href;
+    var room = a.split('#')[1];
+
+    socket.emit('checkroom',room);
+
     Clock();
+
+
+
 });
 
-$("#keyhole").keypress(function(e) {
-  if(e.which == 13) {
-    e.preventDefault;
-    $value = $(this).val();
-    socket.emit('checkroom', $value);
-    window.getSelection().removeAllRanges();
-    return false;
-    }
-});
 
 socket.on('unlockroom', function(data){
     $room = data.room;
     console.log(data);
 
     unlocksound.play();
-    $("#keyhole").blur();
     $("#enter-button").show();
     setTimeout(function(){ $("#enter-button").addClass("active"); }, 100);
         
-    $("#keyhole").css("color","white");
-
 });   
 
 
@@ -119,7 +108,6 @@ $("#enter-button").click(function(){
     
     entersound.play();
 
-    $('#keyhole').fadeOut();
     $(this).fadeOut();
     $("#logo").fadeOut();
     socket.emit('register',$room);
@@ -130,34 +118,17 @@ $("#enter-button").click(function(){
 socket.on("welcome", function(){
     console.log("You've been welcomed into the room");
     $("#enter-screen").fadeOut();
-
-    if ( $virgin ) 
-        { 
-        $virgin = false;
-        $('body').load('dm.html'); 
-        }
-
 });
 
 socket.on("updateplayers", function(data){
-    console.log("Receiving player list!");
+    console.log("Receiving player list...");
     console.log(data);
-
-    $("#player-list").html("");
-
-    $.each(data, function(index, item)
-        {
-        console.log(item.id);
-        $element = '<div class="avatar" socket="'+item.id+'"></div>';
-        $("#player-list").append($element);
-        });
+    $('body').load('simple.html');
 });
-    
 
 socket.on('time', function(timeString) {
-  //console.log(timeString);
+  console.log(timeString);
 });
-    
 
 </script>
 
