@@ -38,7 +38,7 @@ const server = express()
 
       });
     
-      //res.sendFile(__dirname + '/public/index.html');
+      res.sendFile(__dirname + '/public/index.html');
     })
     .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
