@@ -19,7 +19,7 @@ const server = express()
           console.log('Uploaded ' + file.name);
       });
     
-      res.sendFile(__dirname + '/public/index.html');
+      //res.sendFile(__dirname + '/public/index.html');
     })
     .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
