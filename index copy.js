@@ -1,22 +1,28 @@
-const PORT = process.env.PORT || 3000;
-const fs = require('fs');
-
 const express = require("express");
+const app = express();
+const fs = require('fs');
+const { title } = require("process");
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const port = process.env.PORT || 3000;
 
-const server = express()
-    .use(express.static("public"))
-    .listen(PORT, () => console.log(`Listening on ${PORT}`));
-
-  const io = require('socket.io')(server);
-
-  setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+// Static files
+app.use(express.static("public"));
 
 
 
 var rooms = [];
+
 var allClients = [];
+
+
 var library;
+
 var tracks = [];
+
+var presets = [];
+
+var currentpreset = "1617533554032";
 
 fs.readFile('library.json', (err, data) => {
   if (err) throw err;
@@ -414,3 +420,6 @@ io.on('connection', (socket) => {
 
 });
 
+http.listen(port, () => {
+  console.log(`Socket.IO server running at http://localhost:${port}/`);
+});

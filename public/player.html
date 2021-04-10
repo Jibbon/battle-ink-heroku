@@ -125,6 +125,11 @@ socket.on("updateplayers", function(data){
     console.log(data);
     $('body').load('simple.html');
 });
+
+socket.on('time', function(timeString) {
+  console.log(timeString);
+});
+
 </script>
 
 
