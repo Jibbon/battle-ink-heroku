@@ -49,7 +49,16 @@
     {
         "id": "123456",
         "name": "iceland",
-        "players": [],
+        "players": [
+            {
+                "id": "xKBK_6qd_n3l6fFWAAAF",
+                "name": "name"
+            },
+            {
+                "id": "OPg68cydmV4pliysAAAB",
+                "name": "name"
+            }
+        ],
         "tracks": [],
         "presets": [
             {
@@ -60,25 +69,17 @@
                     {
                         "id": "blizzard",
                         "file": "blizzardoutside.mp3",
-                        "gain": 0.031,
-                        "pan": 0.03,
+                        "gain": 0.033,
+                        "pan": -0.24,
                         "icon": "water",
                         "loop": false
                     },
                     {
-                        "id": "secunda",
-                        "file": "secunda.mp3",
-                        "gain": 0,
-                        "pan": 0.04,
+                        "id": "theglory",
+                        "file": "theglory.mp3",
+                        "gain": 0.047,
+                        "pan": 0,
                         "icon": "music",
-                        "loop": false
-                    },
-                    {
-                        "id": "drums",
-                        "file": "kododrums.mp3",
-                        "gain": 0.124,
-                        "pan": 0.03,
-                        "icon": "shield",
                         "loop": false
                     }
                 ]
@@ -114,6 +115,6 @@
                 ]
             }
         ],
-        "currentpreset": "1617783647612"
+        "currentpreset": "1618086053062"
     }
 ]

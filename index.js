@@ -248,7 +248,7 @@ io.on('connection', (socket) => {
     var library = $presets[$indexofcurrentpreset].library;
     var title = $presets[$indexofcurrentpreset].title;
     var $data = {"preset":$currentpreset, "title":title, "library":library};
-    io.in(room).emit('feedcurrentpreset', $data); 
+    io.to(socket.id).emit('feedcurrentpreset', $data); 
     });
 
     socket.on('getcurrentpresetstart', (room) => 

@@ -112,7 +112,7 @@ socket.emit('getlibrary', $room);
 socket.emit('getpresets', $room);
 socket.emit('getbackgrounds', $room);
 socket.emit("getbackground", $room);
-socket.emit("getcurrentpreset", $room);
+socket.emit("getcurrentpresetstart", $room);
 
 GenerateLink();
 
@@ -219,6 +219,15 @@ socket.on("feedcurrentpreset", function(data){
     $("#title-text-frame").html(data.title);
 });
 
+
+socket.on("feedcurrentpresetstart", function(data){
+    console.log("Building audio tracks for current preset at launch");
+    $currentpreset = data.preset;
+    BuildTracksFirst(data.library);
+    $("#title-text-frame").html(data.title);
+
+});
+
 function SeedPresets(library){
     $.each(library, function(index, item)
         {
@@ -253,6 +262,31 @@ $.each(array, function(index, item){
 });
 
 }
+
+
+
+function BuildTracksFirst(array){
+
+    //console.log(array);
+
+$.each(array, function(index, item){
+    //console.log(item);
+    if ( Existing(item.file)) 
+        {
+        //console.log("already exits")    
+        }
+    else 
+        { 
+        //console.log("fresh!"); 
+
+        // GENERATE THE TRACK LOCALLY
+        GenerateDotFirst(item.id, item.file, item.gain, item.pan, item.icon, item.loop);
+        }
+});
+
+}
+
+
 
 function Existing(file){
 
@@ -315,6 +349,48 @@ function GenerateDot(name, file, gain, pan, icon, loop) {
 
 }
 
+
+
+// GENERATE THE TRACK LOCALLY
+
+function GenerateDotFirst(name, file, gain, pan, icon, loop) {
+    console.log("Adding "+name+" to the canvas");
+    //console.log(gain);
+    $new = {'id':name, 'file':file, "gain":gain, "pan":pan, "icon":icon, "loop":loop };
+    mytracks.push($new);
+    console.log(mytracks);
+
+    // update current preset
+    var $index = presets.findIndex(x => x.id === $currentpreset);
+    var library = presets[$index].library;
+    //console.log(library);
+    var $existing = library.findIndex(x => x.id === name);
+    //console.log($existing);
+     if ( $existing === -1 ) 
+        { 
+        //console.log("Adding song to the preset library"); library.push($new); 
+        $fulldata = {"room":$room, "preset":$currentpreset, "track":$new };
+        socket.emit("updatepreset", $fulldata);
+        }
+    //console.log(library);
+
+    var x = GetX(pan);
+    var y = GetY(gain);
+
+    // generate html element
+    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading noselect'><box-icon class='lefty' color='whitesmoke' name='"+icon+"'></box-icon><div class='trackname'>"+name+"</div></div>";
+    $("#arena").append($element);
+
+    // toggle the sound item in drawer
+    $(".sound-item[name="+name+"]").addClass("selected");
+
+    // generate pixi-sound object
+    AddSoundFirst(name, file, gain, pan, loop);
+
+}
+
+
+
 function AddSound(name, file, gain, pan, loop){
 
     //console.log("making sound: "+name+" using file: "+file+" with gain "+gain);
@@ -339,6 +415,33 @@ function AddSound(name, file, gain, pan, loop){
     });
 
 }
+
+
+function AddSoundFirst(name, file, gain, pan, loop){
+
+    //console.log("making sound: "+name+" using file: "+file+" with gain "+gain);
+
+    //SeedSound(name, file, gain, pan, loop);
+
+    // do the pixi.js thing
+    PIXI.sound.add(name, {
+    url: 'audio/'+file,
+    preload: true,
+    loaded: function() {
+        // duration can only be used once the sound is loaded
+        //console.log('Duration: ', PIXI.sound.duration(sound), 'seconds');
+        //console.log(name+' is loaded');
+        StartVolume(name, gain);
+        StartPan(name, pan);
+        StartLoop(name, loop);
+        PIXI.sound.play(name);
+        MakeDraggable();
+        $(".dot[target="+name+"]").removeClass("loading");
+        }
+    });
+
+}
+
 
 function StartVolume(target, gain){
     var it = PIXI.sound._sounds[target];
