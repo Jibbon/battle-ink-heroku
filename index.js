@@ -8,15 +8,34 @@ const server = express()
     .use(express.static("public"))
     .post('/', function (req, res){
       var form = new formidable.IncomingForm();
-    
+      
+      var $newname;
+      var r;
+
       form.parse(req);
     
-      form.on('fileBegin', function (name, file){
-          file.path = __dirname + '/uploads/' + file.name;
+      form.on('fileBegin', function (name, file)
+        {
+        r = new Date().getTime();
+        var extension = file.name.split('.').pop();
+        $newname = r+"."+extension;
+        file.path = __dirname + '/public/backgrounds/' + $newname;
       });
     
+      
+
       form.on('file', function (name, file){
-          console.log('Uploaded ' + file.name);
+          console.log('Uploaded ' + $newname);
+          
+          var $new = { "id": r, "filename": $newname };
+
+          //var $index = rooms.findIndex(x => x.id === data.room);
+          rooms[1].backgrounds.push($new);
+          UpdateRooms(rooms);
+
+          io.emit('feedbackgrounds', rooms[1].backgrounds); 
+
+
       });
     
       //res.sendFile(__dirname + '/public/index.html');
@@ -207,6 +226,15 @@ io.on('connection', (socket) => {
     io.in(room).emit('sendlibrary', library); 
     });
   
+    // GET BACKGROUND IMAGES
+
+    socket.on('getbackgrounds', (room) => 
+    { 
+    var $index = rooms.findIndex(x => x.id === room);
+    var $backgrounds = rooms[$index].backgrounds;
+    io.in(room).emit('feedbackgrounds', $backgrounds); 
+    });
+
     // GET PRESETS
   
     socket.on('getpresets', (room) => 

@@ -117,11 +117,9 @@ function Start(){
 console.log("Starting up for room "+$room);
 socket.emit('getlibrary', $room);
 socket.emit('getpresets', $room);
+socket.emit('getbackgrounds', $room);
 socket.emit("getbackground", $room);
 socket.emit("getcurrentpreset", $room);
-
-
-GenerateBackgrounds();
 
 GenerateLink();
 
@@ -143,14 +141,19 @@ $(document).on("click", "#link-handle", function(){
 
 // BACKGROUND FUNCTIONS
 
-function GenerateBackgrounds()
-    {
-    $(".art-option").each(function()
-        {
-        var url = $(this).attr("url");
-        $(this).css("background-image", "url("+url+")");
-        });
-    }
+socket.on("feedbackgrounds", function(array){
+
+    $("#theartlist").html("");
+
+    $.each(array, function(index, item){
+
+        var element = '<div class="art-option" url="backgrounds/'+item.filename+'" style="background-image:url(backgrounds/'+item.filename+');"></div>';
+        $("#theartlist").append(element);
+
+    });
+    
+});
+
 
 $(document).on("click",'#custom-art-option', function(){
     $("#art-url-frame").toggleClass('open');

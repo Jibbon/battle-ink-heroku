@@ -2,6 +2,12 @@
     {
         "id": "135467",
         "name": "realm",
+        "backgrounds": [
+            {
+                "id": "1618055737094",
+                "filename": "1618055737094.png"
+            }
+        ],
         "players": [],
         "tracks": [],
         "presets": [
@@ -49,9 +55,27 @@
     {
         "id": "123456",
         "name": "iceland",
+        "backgrounds": [
+            {
+                "id": 1618057775365,
+                "filename": "1618057775365.jpg"
+            },
+            {
+                "id": 1618057802856,
+                "filename": "1618057802856.jpg"
+            },
+            {
+                "id": 1618057815276,
+                "filename": "1618057815276.jpg"
+            },
+            {
+                "id": 1618057936150,
+                "filename": "1618057936150.jpg"
+            }
+        ],
         "players": [
             {
-                "id": "B0bu88oVJW1_xY6sAAAB",
+                "id": "bsAvXLwEIneNzsBaAAAB",
                 "name": "name"
             }
         ],
@@ -60,7 +84,7 @@
             {
                 "id": "1617783647612",
                 "title": "Mountain Pass",
-                "background": "backgrounds/coldmountains.jpg",
+                "background": "backgrounds/1618057815276.jpg",
                 "library": [
                     {
                         "id": "dragonsreach",
@@ -83,10 +107,19 @@
             {
                 "id": "1617877012791",
                 "title": "Random",
-                "background": "backgrounds/autumnwood.jpg",
-                "library": []
+                "background": "backgrounds/1618057936150.jpg",
+                "library": [
+                    {
+                        "id": "drums",
+                        "file": "kododrums.mp3",
+                        "gain": 0.048,
+                        "pan": 0.01,
+                        "icon": "shield",
+                        "loop": false
+                    }
+                ]
             }
         ],
-        "currentpreset": "1617783647612"
+        "currentpreset": "1617877012791"
     }
 ]
