@@ -1,32 +1,15 @@
 const PORT = process.env.PORT || 3000;
-var formidable = require('formidable');
 const fs = require('fs');
 
 const express = require("express");
 
 const server = express()
     .use(express.static("public"))
-    .post('/', function (req, res){
-      var form = new formidable.IncomingForm();
-    
-      form.parse(req);
-    
-      form.on('fileBegin', function (name, file){
-          file.path = __dirname + '/uploads/' + file.name;
-      });
-    
-      form.on('file', function (name, file){
-          console.log('Uploaded ' + file.name);
-      });
-    
-      res.sendFile(__dirname + '/public/index.html');
-    })
     .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
   const io = require('socket.io')(server);
 
   setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
-
 
 
 

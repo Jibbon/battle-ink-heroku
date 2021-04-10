@@ -5,7 +5,8 @@
   "dependencies": {
     "boxicons": "^2.0.7",
     "express": "^4.17.1",
-    "socket.io": "^3.0.3"  
+    "formidable": "^1.2.2",
+    "socket.io": "^3.0.3"
   },
   "scripts": {
     "start": "node index.js"
