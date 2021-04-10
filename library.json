@@ -112,14 +112,6 @@
       "loop": false
     },
     {
-      "id": "library",
-      "file": "library.mp3",
-      "gain": 0.05,
-      "pan": 0,
-      "icon": "water",
-      "loop": false
-    },
-    {
       "id": "storm",
       "file": "rainandthunder.mp3",
       "gain": 0.05,
@@ -162,14 +154,6 @@
     {
       "id": "kynespeace",
       "file": "kynespeace.mp3",
-      "gain": 0.05,
-      "pan": 0,
-      "icon": "music",
-      "loop": false
-    },
-    {
-      "id": "aurora",
-      "file": "aurora.mp3",
       "gain": 0.05,
       "pan": 0,
       "icon": "music",
