@@ -17,7 +17,7 @@
   
   .frame { position:absolute; z-index:99; left:5%; top:30%; width:90%; height:60%; z-index:999; transition: opacity 1s ease; }
   .frame.faded { opacity:0; }
-  .dot { position:absolute; padding-right:1px; padding-left:1px; z-index:99; height:40px; line-height:40px; background-color: rgba(2,2,2,0.66); border-radius:20px; cursor: pointer; top:100%; left:50%; opacity:1; transition:opacity 1s ease; }
+  .dot { position:absolute; padding-right:1px; padding-left:1px; z-index:99; height:40px; line-height:40px; background-color: rgba(2,2,2,0.66); border-radius:20px; cursor: pointer; top:100%; left:50%; opacity:1; transition:filter 1s ease; }
   .dot.faded { opacity:0.3; }
   .dot.hidden { opacity:0; }
   .dot.loop {  }
