@@ -126,7 +126,10 @@
   #link-handle { float:right; }
   
   #player-list { float:right; height:50px; line-height:50px; }
-  .avatar { height:10px; width:10px; margin-top:20px; border-radius: 100%; background:whitesmoke; float:right; margin-right:10px; }
+  .player-box { float:right; margin-right:10px; width:10px; height:10px; cursor: pointer; }
+  .avatar { position:absolute; height:10px; width:10px; margin-top:20px; border-radius: 100%; background:whitesmoke; }
+  .player-name { position:absolute; bottom:-35px; font-size: 10px; opacity: 0; visibility: hidden; }
+  .player-name.visible { opacity: 1; visibility: visible; }
 
 
   .hidden { opacity:0; visibility: hidden; }

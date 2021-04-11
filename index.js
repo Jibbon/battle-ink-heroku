@@ -55,13 +55,13 @@ function UpdateBackgrounds() {
 
 }
 
-function MovePlayerIntoRoom(id, room) {
+function MovePlayerIntoRoom(id, name, room) {
 
   console.log("Moving player "+id+" to room "+room);
 
   var $array = [];
 
-  $player = {"id":id, "name":"name"};
+  $player = {"id":id, "name":name};
 
   rooms.forEach(function(value, index){
     if ( value.id === room ) 
@@ -174,7 +174,7 @@ io.on('connection', (socket) => {
         if ( item.id === socket.id ) 
           { 
           item.room = room; 
-          MovePlayerIntoRoom(item.id, item.room);  
+          MovePlayerIntoRoom(item.id, "GM", item.room);  
           }
       });
 
@@ -189,6 +189,35 @@ io.on('connection', (socket) => {
 
 
       });
+
+
+       // PLAYER REGISTER WITH ROOM
+       socket.on('playerregister', (data) => 
+       {
+       console.log("Registering "+socket.id);
+       socket.join(data.room);
+ 
+       allClients.forEach(function(item, index){
+         if ( item.id === socket.id ) 
+           { 
+           item.room = data.room; 
+           item.name = data.name;
+           MovePlayerIntoRoom(item.id, item.name, item.room);  
+           }
+       });
+ 
+       io.to(socket.id).emit('welcome');
+       var $roomindex = rooms.findIndex(x => x.id === data.room);
+ 
+       setTimeout(function(){
+         io.in(data.room).emit('updateplayers',rooms[$roomindex].players); 
+       }, 3000);
+ 
+       
+ 
+ 
+       });
+
 
 
 
