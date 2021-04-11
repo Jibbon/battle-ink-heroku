@@ -13,7 +13,7 @@
   body { margin:0px; padding:0px; overflow: hidden; background:black; color:whitesmoke; font-family: 'Cormorant Unicase', serif; }
   
   
-  .loading { opacity:0.3; filter:blur(1px); }
+  .loading { opacity:0.3; filter:blur(3px); }
   
   .frame { position:absolute; z-index:99; left:5%; top:30%; width:90%; height:60%; z-index:999; transition: opacity 1s ease; }
   .frame.faded { opacity:0; }
