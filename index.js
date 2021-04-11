@@ -327,7 +327,7 @@ io.on('connection', (socket) => {
     var $currentpreset = rooms[$index].currentpreset;
     var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
 
-    $presets[$indexofcurrentpreset].background = r;
+    $presets[$indexofcurrentpreset].background = data.url;
   
     UpdateRooms(rooms);
 

@@ -54,58 +54,58 @@
         "presets": [
             {
                 "id": "1617783647612",
-                "title": "Mountain Pass",
-                "background": "https://cdnb.artstation.com/p/assets/images/images/005/620/115/large/raphael-lacoste-mountain-rider-v02-net.jpg?1492521048",
+                "title": "Docklands",
+                "background": "https://cdna.artstation.com/p/assets/images/images/024/772/710/large/mike-marra-docks-relight-02.jpg?1583484134",
                 "library": [
                     {
-                        "id": "blizzard",
-                        "file": "blizzardoutside.mp3",
-                        "gain": 0.033,
-                        "pan": -0.24,
+                        "id": "ocean",
+                        "file": "ocean.mp3",
+                        "gain": 0.01,
+                        "pan": -0.05,
                         "icon": "water",
-                        "loop": false
-                    },
-                    {
-                        "id": "theglory",
-                        "file": "theglory.mp3",
-                        "gain": 0.056,
-                        "pan": 0,
-                        "icon": "music",
-                        "loop": false
+                        "loop": true
                     }
                 ]
             },
             {
                 "id": "1617877012791",
-                "title": "Ship",
-                "background": "https://cdna.artstation.com/p/assets/images/images/001/928/000/large/sebastien-kaczorowski-marais6art.jpg?1454701768",
+                "title": "On Board",
+                "background": "https://cdna.artstation.com/p/assets/images/images/011/922/194/large/olly-lawson-ship-post.jpg?1532100141",
                 "library": [
                     {
-                        "id": "stream",
-                        "file": "stream.mp3",
-                        "gain": 0.031,
-                        "pan": -0.04,
+                        "id": "onboard",
+                        "file": "onboard.mp3",
+                        "gain": 0.044,
+                        "pan": -0.01,
                         "icon": "water",
-                        "loop": false
+                        "loop": true
                     }
                 ]
             },
             {
                 "id": "1618086053062",
-                "title": "Swamp",
-                "background": "https://cdnb.artstation.com/p/assets/images/images/027/763/537/large/connor-sheehan-forest-scene-01-final-02.jpg?1592481413",
+                "title": "Tavern",
+                "background": "https://cdna.artstation.com/p/assets/images/images/002/400/954/large/devin-platts-tavern4.jpg?1461289751",
                 "library": [
                     {
-                        "id": "swamp",
-                        "file": "swamp.mp3",
-                        "gain": 0.018,
-                        "pan": 0.02,
-                        "icon": "water",
+                        "id": "winterstale",
+                        "file": "winterstale.mp3",
+                        "gain": 0.024,
+                        "pan": 0.67,
+                        "icon": "music",
                         "loop": false
+                    },
+                    {
+                        "id": "tavern",
+                        "file": "tavern.mp3",
+                        "gain": 0.008,
+                        "pan": -0.04,
+                        "icon": "water",
+                        "loop": true
                     }
                 ]
             }
         ],
-        "currentpreset": "1617877012791"
+        "currentpreset": "1618086053062"
     }
 ]
