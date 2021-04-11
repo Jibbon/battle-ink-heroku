@@ -422,6 +422,16 @@ socket.on("newsound", function(data){
 });
 
 
+
+socket.on("feedunpause", function(data){
+    PIXI.sound.resume(data.sound);
+});
+
+socket.on("feedpause", function(data){
+    PIXI.sound.pause(data.sound);
+});
+
+
 </script>
 
 </html>

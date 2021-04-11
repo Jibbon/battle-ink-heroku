@@ -60,8 +60,8 @@
                     {
                         "id": "ocean",
                         "file": "ocean.mp3",
-                        "gain": 0.01,
-                        "pan": -0.05,
+                        "gain": 0.066,
+                        "pan": -0.07,
                         "icon": "water",
                         "loop": true
                     }
@@ -75,8 +75,8 @@
                     {
                         "id": "onboard",
                         "file": "onboard.mp3",
-                        "gain": 0.044,
-                        "pan": -0.01,
+                        "gain": 0.094,
+                        "pan": 0.33,
                         "icon": "water",
                         "loop": true
                     }
@@ -90,16 +90,16 @@
                     {
                         "id": "winterstale",
                         "file": "winterstale.mp3",
-                        "gain": 0.024,
-                        "pan": 0.67,
+                        "gain": 0.126,
+                        "pan": 0.12,
                         "icon": "music",
-                        "loop": false
+                        "loop": true
                     },
                     {
                         "id": "tavern",
                         "file": "tavern.mp3",
-                        "gain": 0.008,
-                        "pan": -0.04,
+                        "gain": 0.081,
+                        "pan": -0.24,
                         "icon": "water",
                         "loop": true
                     }

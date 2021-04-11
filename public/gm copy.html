@@ -1,7 +1,345 @@
+<html>
+
+<head>
+
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Unicase:wght@300&display=swap" rel="stylesheet">
+
+<style>
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+.noselect {
+    -webkit-touch-callout:none;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
+
+body { margin:0px; padding:0px; overflow: hidden; background:black; color:whitesmoke; font-family: 'Cormorant Unicase', serif; }
+
+
+.loading { opacity:0.3; filter:blur(1px); }
+
+.frame { position:relative; left:5%; top:30%; width:90%; height:60%; z-index:999; transition: opacity 1s ease; }
+.frame.faded { opacity:0; }
+.dot { position:absolute; z-index:99; height:35px; background-color: rgba(2,2,2,0.66); border-radius:15px; padding-left:15px; padding-right:15px; cursor: pointer; top:100%; left:50%; opacity:1; transition:opacity 1s ease; }
+.dot.faded { opacity:0.3; }
+.dot.hidden { opacity:0; }
+.dot.loop {  }
+.dot.loop:after {
+    content:"\221E";
+    position:absolute;
+    width:25px;
+    height:25px;
+    border-radius: 100%;
+    display:inline-block;
+    color:black;
+    margin-left:10px;
+    top:-5px;
+    background:white;
+    line-height: 20px;
+    text-align: center;
+}
+
+
+box-icon { height:50px; }
+
+.lefty { float:left; height:35px; }
+
+.trackname { float:left; margin-left:10px; line-height:35px; }
+
+.tape { position: fixed; top:25px; right:25px; width:25px; height:25px; z-index:999; border:0px; }
+#line { position:absolute; opacity:0.33; left:50%; width:2px; height:100%; margin-left:-1px; z-index:0; background:none;}
+#line.on { background:purple; }
+
+#poster { position:absolute; z-index:-1; width:100%; height:100%; background-size:cover; opacity:0.66; background-image:url(); background-position:50% 50%; transition: filter 1s ease; will-change: filter; }
+#poster.clouded{ filter: blur(3px);}
+
+#veil { position:absolute; z-index:0; width:100%; height:100%; background-size:cover; opacity:0.3; filter: invert(100%); background-image:url(img/veil.jpg); background-position:50% 50%;}
+
+#drawer 
+    { 
+    position:fixed; 
+    left:0px; 
+    top:0px; 
+    width:200px; 
+    height:100%; 
+    background:rgba(0, 0, 0,0.8); 
+    z-index:999; 
+    transition:all 0.3s ease-in-out; 
+    transform: translateX(-100%); 
+    padding-top:50px;
+    overflow: hidden;
+    }
+#drawer.open { transform: translateX(0%); }
+
+#soundlist { width:110%; height:100%; overflow-y: scroll; padding-top:25px; padding-bottom:50px; }
+
+
+
+
+
+
+
+
+#presetlist
+    { 
+    position:fixed; 
+    left:0px; 
+    top:0px; 
+    width:200px; 
+    height:100%; 
+    background:rgba(0, 0, 0,0.8); 
+    z-index:999; 
+    transition:all 0.3s ease-in-out; 
+    transform: translateX(-100%); 
+    padding-top:50px;
+    overflow: hidden;
+    }
+#presetlist.open { transform: translateX(0%); }
+
+#thepresetlist { width:110%; height:100%; overflow-y: scroll; padding-top:25px; padding-bottom:25px; }
+.preset { cursor: pointer; font-size:14px; margin-left:20px; padding-left:5px; height:30px; line-height: 30px; }
+
+
+#new-preset-button { position:absolute; bottom:0px; left:5%; margin-left:20px; margin-bottom:25px; cursor: pointer; }
+
+#art-drawer 
+    { 
+    position:fixed; 
+    left:0px; 
+    top:0px; 
+    width:200px; 
+    height:100%; 
+    background:rgba(0, 0, 0,0.8); 
+    z-index:999; 
+    transition:all 0.3s ease-in-out; 
+    transform: translateX(-100%); 
+    padding-top:50px;
+    overflow: hidden;
+    }
+#art-drawer.open { transform: translateX(0%); }
+#artlist { width:110%; height:100%; overflow-y: scroll; padding-bottom:10px; }
+.art-option { width:180px; height:100px; margin-left:10px; margin-top:10px; background-size:cover; background-position: 50% 50%; cursor:pointer; }
+#custom-art-option { width:180px; margin-left:10px; height:50px; margin-top:10px; background-position: 50% 50%; text-align: right; }
+
+
+#title-drawer { position:fixed; left:0px; top:0px; width:200px; height:100%; background:rgba(34, 83, 113,0.3); z-index:999; transition:all 0.3s ease-in-out; transform: translateX(-100%); }
+#title-drawer.open { transform: translateX(0%); }
+#title-drawer-handle { position:absolute; z-index:999999; height:50px; width:50px; bottom:60px; right:-75px; cursor: pointer; transition:all 0.3s ease; }
+
+
+.hidden { opacity:0; visibility: hidden; }
+
+#soundlist-container { overflow:hidden; }
+.sound-item 
+    { 
+    position:relative; 
+    margin-left:20px; 
+    cursor:pointer; 
+    list-style:none; 
+    color:whitesmoke; 
+    border-radius:10px; 
+    height:30px; 
+    line-height:30px; 
+    padding-left:5px; 
+    font-size:14px; 
+    }
+.sound-item:hover { color:white; }
+.sound-item.selected {  }
+.sound-item.selected:before {
+    content:"\A";
+    position:absolute;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background: whitesmoke;
+    display:inline-block;
+    left:-15px;
+    top:10px;
+}
+
+#poster-layer { position:fixed; display:none; width:100%; height:100%; z-index:9999; opacity:0; }
+#poster-layer.active { display: block; }
+
+.handle 
+    { 
+    position:absolute; 
+    z-index:0; 
+    text-align:center; 
+    padding:0px; 
+    top:100%; 
+    margin-top:35px; 
+    left:50%; 
+    width:50px; 
+    height:50px; 
+    background:black; 
+    transform: translateX(-50%) translateY(-50%); 
+    border-radius:100%; 
+    }
+.bannerstring { display:none; position:absolute; z-index:-1; top:100%; left:50%; width:2px; height:50px; background:black; transform: translateX(-50%); border-radius:100%; }
+
+
+#tool-drawer { position:fixed; z-index:9999999; top:-5px; left:25px; height:350px; width:50px; background:rgba(0, 0, 0,0.8); border-radius:10px; transform:translateY(-300px); transition: all 0.6s ease-in-out; }
+#tool-drawer.open { transform: translateY(0px);}
+
+.tool-handle { float:left; cursor: pointer; width:50px; text-align: center; height:50px; line-height:50px; }
+.tool-handle.on { background:rgba(55, 55, 55, 0.8); }
+
+
+
+#art-url-frame 
+    { 
+    position:absolute; 
+    z-index:999999; 
+    font-size:14px; 
+    height:50px; 
+    width:auto; 
+    line-height:50px; 
+    padding-left:10px; 
+    padding-right:10px; 
+    color:whitesmoke; 
+    top:70px; 
+    left:0px; 
+    background:#222; 
+    border-radius:10px; 
+    transform: translateX(-100%); 
+    transition: all 0.3s ease-in-out; 
+    opacity: 0;
+    }
+#art-url-frame.open { transform: translateX(220px); opacity: 1; }
+
+#title-text-frame { position:absolute; font-size:16px; height:50px; width:auto; line-height:50px; padding-left:10px; padding-right:10px; color:whitesmoke; left:50%; border-radius:10px; transform: translateX(-50%);  }
+
+#delete-frame { position:absolute; z-index:999999; font-size:14px; height:50px; width:auto; line-height:50px; padding-left:10px; padding-right:10px; color:whitesmoke; top:75px; left:150px; background:#d11a2a; border-radius:10px; transform: translateY(-200px); transition: all 0.3s ease-in-out;  }
+#delete-frame.open { transform: translateY(0px); }
+#delete-button { color:white; font-weight: bold; cursor: pointer; }
+
+#header { position:fixed; z-index:9999999999; background-color: rgba(0,0,0,.32); height:50px; width:100%; }
+
+[contenteditable] {
+  outline: 0px solid transparent;
+}
+
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+<div id="poster"></div>   
+
+<div id="header">
+    
+    <div id="preset-handle" class="tool-handle">
+        <box-icon name='library' color="whitesmoke"></box-icon>
+    </div>
+
+    <div id="sound-drawer-handle" class="tool-handle">
+        <box-icon name='music' type="solid" color="whitesmoke"></box-icon>
+    </div>
+
+    <div id="art-drawer-handle" class="tool-handle">
+        <box-icon type='solid' name='color-fill' color="whitesmoke"></box-icon>
+    </div>
+    <div id="delete-handle" class="tool-handle">
+        <box-icon name='trash' color="whitesmoke"></box-icon>
+    </div>
+
+    <div id="title-text-frame" class="drawer" contenteditable="true"></div>
+
+</div>
+
+<div id="line"></div>
+
+<div id="poster-layer"></div>
+
+<div class='frame' id="arena"></div>
+
+
+
+<div id="art-url-frame" class="drawer" contenteditable="true"></div>
+
+<div id="delete-frame" class="drawer">
+    <div id="delete-button">DELETE</div>
+</div>
+
+
+<div id="presetlist" class="drawer"> 
+    <div id="new-preset-button">
+        <box-icon type='solid' name='bookmark-plus' color="whitesmoke"></box-icon>
+    </div>
+    <div id="thepresetlist"></div>
+</div>
+
+
+<div id="drawer" class="drawer">
+        <div id="soundlist">
+            <div id="thesoundlist"></div>
+        </div>
+</div>
+
+
+<div id="art-drawer" class="drawer">
+        <div id="artlist">
+            <div id="theartlist">
+                <div id='custom-art-option'>
+                    <box-icon name='image-add' style='width:35px; height:35px; margin-top:15px; cursor: pointer;' color='#777'></box-icon>
+                </div>
+                <div class="art-option" file="forest.jpg"></div>
+                <div class="art-option" file="mosswood.jpg"></div>
+                <div class="art-option" file="autumnwood.jpg"></div>
+                <div class="art-option" file="springstream.jpg"></div>
+                <div class="art-option" file="waterfall.jpg"></div>
+                <div class="art-option" file="mountains.jpg"></div>
+                <div class="art-option" file="coldmountains.jpg"></div>
+                <div class="art-option" file="mountaintrail.jpg"></div>
+                <div class="art-option" file="desertravine.jpg"></div>
+                <div class="art-option" file="winterbeach.jpg"></div>
+
+            </div>
+        </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/jquery-3.4.1.min.js"></script>
+
+    <script src="js/jquery.dragon.js"></script>
+    <script src="js/jquery.dragon-slider.js"></script>
+
+    <script src="js/boxicons.js"></script>
+
+
+<script src="js/pixi.min.js"></script>
+<script src="js/pixi-sound.js"></script>
+
+
+
+
+
+<script>
 
 var socket = io();
-
-var $room;
 
 var mytracks = [];
 var mylibrary = [];   
@@ -18,6 +356,14 @@ var $currentpreset = "1345768";
 var $tick = false;  
 
 
+$(document).ready(function(){
+    
+    Start();
+    Clock();
+    
+});
+
+
 socket.on('time', function(timeString) {
     $servertime = timeString;
     });
@@ -27,7 +373,7 @@ function Clock(){
     
     $tick = true;
     socket.emit("tick");
-    console.log("tick");
+    //console.log("tick");
 
     setTimeout(CheckClock, 5000);
     setTimeout(Clock, 10000);
@@ -36,7 +382,7 @@ function Clock(){
 //TOCK
 
 socket.on("tock", function(data){
-    console.log("tock");
+    //console.log("tock");
     $tick = false;
 });
 
@@ -48,8 +394,8 @@ function CheckClock(){
 
 // CREATE NEW PRESET
 
-$(document).on("click", "#new-preset-button", function(){
-    socket.emit("addpreset", $room);
+$("#new-preset-button").click(function(){
+    socket.emit("addpreset");
     $(".drawer").removeClass("open");
     $("#preset-handle").removeClass("on");
 });
@@ -97,7 +443,9 @@ function OpenDrawer(){
 //});
 
 socket.on("sounduploaded", function(data){
-    socket.emit("getlibrary", data);
+    socket.emit("getlibrary");
+
+
 });
 
 
@@ -107,48 +455,23 @@ socket.on("sounduploaded", function(data){
 
 function Start(){
 
-console.log("Starting up for room "+$room);
-socket.emit('getlibrary', $room);
-socket.emit('getpresets', $room);
-socket.emit('getbackgrounds', $room);
-socket.emit("getbackground", $room);
-socket.emit("getcurrentpresetstart", $room);
+socket.emit('getpresets');
+socket.emit("getbackground");
+socket.emit("getlibrary");
+socket.emit("getcurrentpreset");
 
-GenerateLink();
-
+GenerateBackgrounds();
 
 }
-
-
-// GENERATE PLAYER LINK
-
-function GenerateLink(){
-    $("#link-handle").attr("url","http://www.battle.ink/player.html#"+$room);
-}
-
-$(document).on("click", "#link-handle", function(){
-    $link = $(this).attr("url");
-    copyToClipboard($link);
-    alert("Link copied");
-});
 
 // BACKGROUND FUNCTIONS
 
-socket.on("feedbackgrounds", function(array){
-
-    $("#theartlist").html("");
-
-    $.each(array, function(index, item){
-
-        var element = '<div class="art-option" url="'+item.filename+'" style="background-image:url('+item.filename+');"></div>';
-        $("#theartlist").append(element);
-
-    });
-    
+$(".art-option").each(function(){
+    var file = $(this).attr("file");
+    $(this).css("background-image", "url(backgrounds/"+file+")");
 });
 
-
-$(document).on("click",'#custom-art-option', function(){
+$('#custom-art-option').click(function(){
     $("#art-url-frame").toggleClass('open');
 });
 
@@ -156,7 +479,6 @@ $(document).on("click",'#custom-art-option', function(){
 
 socket.on('sendpresets', function(data)
     {
-    console.log(data);
     $('#thepresetlist').html("");
     presets = data;
     $.each(data, function(index, item){
@@ -170,9 +492,8 @@ socket.on('sendpresets', function(data)
 $(document).on('click', '.preset', function(e){
     $target = $(this).attr('target');
     $name = $(this).html();
-    console.log("Updating the central preset to: "+$target);
-    $data = {"room":$room, "preset":$target };
-    socket.emit("changepreset", $data);
+    //console.log("Updating the central preset to: "+$target);
+    socket.emit("changepreset", $target);
     $("#title-text-frame").html($name);
     e.stopPropagation();
 
@@ -183,9 +504,9 @@ socket.on("feedpreset", function(){
     console.log("A new preset has been requested...");
     $(".drawer").removeClass("open");
     $("#preset-handle").removeClass("on");
-    socket.emit('getpresets', $room);
-    socket.emit("getbackground", $room);
-    socket.emit("wipetracklist", $room);
+    socket.emit('getpresets');
+    socket.emit("getbackground");
+    socket.emit("wipetracklist");
 });
 
 
@@ -209,23 +530,14 @@ socket.on("wipetracks", function(){
 
 function GatherPreset(){
     console.log("Requesting track list for the current preset");
-    socket.emit("getcurrentpreset", $room);
+    socket.emit("getcurrentpreset");
 }
 
 socket.on("feedcurrentpreset", function(data){
-    console.log("Building audio tracks for current preset");
+    //console.log("Building audio tracks for current preset");
     $currentpreset = data.preset;
     BuildTracks(data.library);
     $("#title-text-frame").html(data.title);
-});
-
-
-socket.on("feedcurrentpresetstart", function(data){
-    console.log("Building audio tracks for current preset at launch");
-    $currentpreset = data.preset;
-    BuildTracksFirst(data.library);
-    $("#title-text-frame").html(data.title);
-
 });
 
 function SeedPresets(library){
@@ -237,8 +549,6 @@ function SeedPresets(library){
 
 // GATHER TRACKS TO LIBRARY
 socket.on("sendtracks", function(data){
-    console.log("Receiving the tracks...");
-    console.log(data);
     BuildTracks(data);
 });
 
@@ -262,31 +572,6 @@ $.each(array, function(index, item){
 });
 
 }
-
-
-
-function BuildTracksFirst(array){
-
-    //console.log(array);
-
-$.each(array, function(index, item){
-    //console.log(item);
-    if ( Existing(item.file)) 
-        {
-        //console.log("already exits")    
-        }
-    else 
-        { 
-        //console.log("fresh!"); 
-
-        // GENERATE THE TRACK LOCALLY
-        GenerateDotFirst(item.id, item.file, item.gain, item.pan, item.icon, item.loop);
-        }
-});
-
-}
-
-
 
 function Existing(file){
 
@@ -314,11 +599,10 @@ if(mylibrary.some(track => track.file === file))
 // GENERATE THE TRACK LOCALLY
 
 function GenerateDot(name, file, gain, pan, icon, loop) {
-    console.log("Adding "+name+" to the canvas");
+    //console.log("Adding "+name+" to the canvas");
     //console.log(gain);
     $new = {'id':name, 'file':file, "gain":gain, "pan":pan, "icon":icon, "loop":loop };
     mytracks.push($new);
-    console.log(mytracks);
 
     // update current preset
     var $index = presets.findIndex(x => x.id === $currentpreset);
@@ -329,7 +613,7 @@ function GenerateDot(name, file, gain, pan, icon, loop) {
      if ( $existing === -1 ) 
         { 
         //console.log("Adding song to the preset library"); library.push($new); 
-        $fulldata = {"room":$room, "preset":$currentpreset, "track":$new };
+        $fulldata = {"preset":$currentpreset, "track":$new };
         socket.emit("updatepreset", $fulldata);
         }
     //console.log(library);
@@ -338,7 +622,7 @@ function GenerateDot(name, file, gain, pan, icon, loop) {
     var y = GetY(gain);
 
     // generate html element
-    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading noselect'><div class='sound-button play-button on'></div><div class='trackname'>"+name+"</div><div class='sound-button loop-button'></div></div>";
+    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading noselect'><box-icon class='lefty' color='whitesmoke' name='"+icon+"'></box-icon><div class='trackname'>"+name+"</div></div>";
     $("#arena").append($element);
 
     // toggle the sound item in drawer
@@ -349,54 +633,10 @@ function GenerateDot(name, file, gain, pan, icon, loop) {
 
 }
 
-
-
-// GENERATE THE TRACK LOCALLY
-
-function GenerateDotFirst(name, file, gain, pan, icon, loop) {
-    console.log("Adding "+name+" to the canvas");
-    //console.log(gain);
-    $new = {'id':name, 'file':file, "gain":gain, "pan":pan, "icon":icon, "loop":loop };
-    mytracks.push($new);
-    console.log(mytracks);
-
-    // update current preset
-    var $index = presets.findIndex(x => x.id === $currentpreset);
-    var library = presets[$index].library;
-    //console.log(library);
-    var $existing = library.findIndex(x => x.id === name);
-    //console.log($existing);
-     if ( $existing === -1 ) 
-        { 
-        //console.log("Adding song to the preset library"); library.push($new); 
-        $fulldata = {"room":$room, "preset":$currentpreset, "track":$new };
-        socket.emit("updatepreset", $fulldata);
-        }
-    //console.log(library);
-
-    var x = GetX(pan);
-    var y = GetY(gain);
-
-     // generate html element
-     var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading noselect'><div class='sound-button play-button on'></div><div class='trackname'>"+name+"</div><div class='sound-button loop-button'></div></div>";
-     $("#arena").append($element);
-
-    // toggle the sound item in drawer
-    $(".sound-item[name="+name+"]").addClass("selected");
-
-    // generate pixi-sound object
-    AddSoundFirst(name, file, gain, pan, loop);
-
-}
-
-
-
 function AddSound(name, file, gain, pan, loop){
 
     //console.log("making sound: "+name+" using file: "+file+" with gain "+gain);
 
-    SeedSound(name, file, gain, pan, loop);
-
     // do the pixi.js thing
     PIXI.sound.add(name, {
     url: 'audio/'+file,
@@ -415,33 +655,6 @@ function AddSound(name, file, gain, pan, loop){
     });
 
 }
-
-
-function AddSoundFirst(name, file, gain, pan, loop){
-
-    //console.log("making sound: "+name+" using file: "+file+" with gain "+gain);
-
-    //SeedSound(name, file, gain, pan, loop);
-
-    // do the pixi.js thing
-    PIXI.sound.add(name, {
-    url: 'audio/'+file,
-    preload: true,
-    loaded: function() {
-        // duration can only be used once the sound is loaded
-        //console.log('Duration: ', PIXI.sound.duration(sound), 'seconds');
-        //console.log(name+' is loaded');
-        StartVolume(name, gain);
-        StartPan(name, pan);
-        StartLoop(name, loop);
-        PIXI.sound.play(name);
-        MakeDraggable();
-        $(".dot[target="+name+"]").removeClass("loading");
-        }
-    });
-
-}
-
 
 function StartVolume(target, gain){
     var it = PIXI.sound._sounds[target];
@@ -461,7 +674,7 @@ function StartLoop(target, loop){
     
     if ( loop ) 
         { 
-        $(".dot[target="+target+"]").find(".loop-button").addClass("on");
+        $(".dot[target="+target+"]").addClass("loop");
         }
 
 }
@@ -470,8 +683,7 @@ function StartLoop(target, loop){
 
 function KillSound(name){
     //console.log("Killing track: "+name);
-    $data = {"room":$room, "name":name };
-    socket.emit("removesound", $data);
+    socket.emit("removesound", name);
 }
 
 socket.on("soundscrubbed", function(name){
@@ -480,7 +692,7 @@ socket.on("soundscrubbed", function(name){
     $(".dot[target="+name+"]").remove();
     var $index = mytracks.findIndex(x => x.id === name);
     mytracks.splice($index, 1);
-    console.log(mytracks);
+    //console.log(mytracks);
     // remove from local preset library
     // update current preset
     var $presetindex = presets.findIndex(x => x.id === $currentpreset);
@@ -585,8 +797,6 @@ function GetY(gain){
 
 socket.on("sendlibrary", function(data){
     
-    console.log("Receiving the library...");
-
     $("#thesoundlist").html("");
 
     $.each(data, function(index, item){
@@ -626,7 +836,7 @@ function Sort(a, b) {
 
 function ChangeGain(target, gain){
     
-    var $data = {"room":$room, "name": target, "gain":gain, "preset":$currentpreset };
+    var $data = {"name": target, "gain":gain, "preset":$currentpreset };
     socket.emit("volume", $data);
 
 }
@@ -651,47 +861,22 @@ socket.on("changevolume", function(data){
 
 
 
-// LOOP BUTTON
+// GET CONTEXT MENU
 
-$(document).on("click", ".loop-button", function(e){
+$(document).on("contextmenu", ".dot", function(e){
     e.preventDefault;
-    $(this).toggleClass("on");
-    var sound = $(this).parent().attr("target");
-    console.log(sound);
-    if ( $(this).hasClass("on") )
-        {
-        Loop(sound, true) 
-        }
-    else 
-        {
-        Loop(sound, false)
-        }
-        return false;
+    var sound = $(this).attr("target");
+    $(this).toggleClass("loop");
+    if ( $(this).hasClass("loop") ) { Loop(sound, true) }
+    else { Loop(sound, false) };
+    return false;
 });
-
-$(document).on("touchstart", ".loop-button", function(e){
-    e.preventDefault;
-    $(this).toggleClass("on");
-    var sound = $(this).parent().attr("target");
-    console.log(sound);
-    if ( $(this).hasClass("on") )
-        {
-        Loop(sound, true) 
-        }
-    else 
-        {
-        Loop(sound, false)
-        }
-        return false;
-});
-
-
 
 
 // SET LOOP
 
 function Loop(name, toggle){
-    var $data = {"room":$room, "name": name, "loop":toggle };
+    var $data = {"name": name, "loop":toggle };
     socket.emit("seedloop", $data);
 }
 
@@ -702,58 +887,10 @@ socket.on("feedloop", function(data){
 
 
 
-
-
-
-// PLAY BUTTON
-
-$(document).on("click", ".play-button", function(e){
-    e.preventDefault;
-    $(this).toggleClass("on");
-    var thesound = $(this).parent().attr("target");
-    if ( $(this).hasClass("on") )
-        {
-            $data = {"room":$room, "sound":thesound };
-            socket.emit("unpausesound", $data);
-                }
-    else 
-        {
-            $data = {"room":$room, "sound":thesound };
-            socket.emit("pausesound", $data);
-                }
-        return false;
-});
-
-$(document).on("touchstart", ".play-button", function(e){
-    e.preventDefault;
-    $(this).toggleClass("on");
-    var thesound = $(this).parent().attr("target");
-    if ( $(this).hasClass("on") )
-        {
-        $data = {"room":$room, "sound":thesound };
-        socket.emit("unpausesound", $data);
-        }
-    else 
-        {
-        $data = {"room":$room, "sound":thesound };
-        socket.emit("pausesound", $data);
-        }
-        return false;
-});
-
-
-socket.on("feedunpause", function(data){
-    PIXI.sound.resume(data.sound);
-});
-
-socket.on("feedpause", function(data){
-    PIXI.sound.pause(data.sound);
-});
-
 // PAN FUNCTION
 
 function ChangePan(target, pan){
-    var $data = {"room":$room, "name": target, "pan":pan, "preset":$currentpreset };
+    var $data = {"name": target, "pan":pan, "preset":$currentpreset };
     //console.log($data);
     socket.emit("pan", $data);
     
@@ -783,7 +920,7 @@ $(document).on("dblclick", ".dot", function(){
 function Sync(target){
     var it = PIXI.sound._sounds[target];
     var currenttime = it.media.context.audioContext.currentTime;
-    var $data = {"room":$room, "target": target, "current":currenttime };
+    var $data = {"target": target, "current":currenttime };
     socket.emit("syncit", $data);
 }
 
@@ -791,7 +928,6 @@ socket.on("sync", function(data){
     var it = PIXI.sound._sounds[data.target];
     PIXI.sound.stop(data.target);
     PIXI.sound.play(data.target);
-    $(".dot[target="+data.target+"]").find(".play-button").addClass("on");
     });
 
 
@@ -812,13 +948,11 @@ $(document).on("click", "#name-drawer-handle", function(){
         }
 });
 
-$(document).on("keypress", "#title-text-frame", function(e) {
+$("#title-text-frame").keypress(function(e) {
   if(e.which == 13) {
     e.preventDefault;
     $value = $(this).html();
-    $data = {"room":$room, "title":$value};
-    socket.emit("changetitle", $data);
-    console.log($data);
+    socket.emit("changetitle", $value);
     window.getSelection().removeAllRanges();
     return false;
   }
@@ -844,13 +978,12 @@ $(document).on("click", "#art-drawer-handle", function(){
         }
 });
 
-$(document).on("keypress","#art-url-frame", function(e) {
+$("#art-url-frame").keypress(function(e) {
   if(e.which == 13) {
     e.preventDefault;
     $value = $(this).html();
-    $data = {"room":$room, "url":$value};
-    socket.emit("downloadbackground", $data);
-    $(this).removeClass("open");
+    socket.emit("seedbackground", $value);
+    $("#art-drawer").toggleClass("open");
     return false;
   }
 });
@@ -863,9 +996,9 @@ socket.on("feedbackground",function(url){
 
 
 $(document).on("click", ".art-option", function(){
-    $url = $(this).attr('url');
-    $data = {"room":$room, "url":$url};
-    socket.emit("seedbackground", $data);
+    $filename = $(this).attr('file');
+    $value = 'backgrounds/'+$filename;
+    socket.emit("seedbackground", $value);
 });
 
 
@@ -880,23 +1013,21 @@ $(document).on("click", "#delete-handle", function(){
         }
     else 
         {
-        //$("#delete-frame").addClass("open");
+        $("#delete-frame").addClass("open");
         $(this).addClass("on");
-        if (window.confirm("Are you sure you want to delete this scene?")) 
-            {
-                console.log("deleting current preset");
-                $(".drawer").removeClass("open");
-                $("#delete-handle").removeClass("on");
-                socket.emit("deletepreset", $room);
-            } 
- 
         }
 });
 
 
+$(document).on("click", "#delete-button", function(){
+    //console.log("deleting current preset");
+    $(".drawer").removeClass("open");
+    $("#delete-handle").removeClass("on");
+    socket.emit("deletepreset");
+});
 
 socket.on("lastpreset", function(){
-    alert("You can't delete the last scene.");
+    alert("You can't delete the last preset");
 });
 
 
@@ -950,35 +1081,32 @@ $(document).on("click", "#preset-handle", function(){
 
 
 
-//SEED NEW SOUND TO SERVER         
-function SeedSound(name, file, gain, pan, loop) {
-    console.log("Sending sound out to players");
-    $data = {"room":$room, "name":name, "file":file, 'gain':gain, 'pan':pan, 'loop':loop};
-    console.log($data);
-    socket.emit("seedsound", $data);
-}
+// SEED NEW SOUND TO SERVER         
+//function SeedSound(name, file, gain, pan, icon, loop) {
+//    $data = {"name":name, "file":file, 'gain':gain, 'pan':pan, "icon":icon, 'loop':loop};
+//    console.log($data);
+//    socket.emit("seedsound", $data);
+//}
 
+//socket.on("newsound", function(){
+//    socket.emit("gettracks");
+//});
 
 
 
 // SUMMON PRESET
 
 function SeedPresetSound(name, file, gain, pan, icon, loop){
-    $data = {"room":$room, "name":name, "file":file, "icon":icon, 'gain':gain, 'pan':pan, 'loop':loop};
+    $data = {"name":name, "file":file, "icon":icon, 'gain':gain, 'pan':pan, 'loop':loop};
     socket.emit('seedpreset', $data);
 }
 
 
-// COPY TO CLIPBOARD FUNCTION
-
-function copyToClipboard(text) {
-    var $temp = $("<input>");
-    $("body").append($temp);
-    $temp.val(text).select();
-    document.execCommand("copy");
-    $temp.remove();
-}
 
 
 
+</script>
 
+</body>
+
+</html>

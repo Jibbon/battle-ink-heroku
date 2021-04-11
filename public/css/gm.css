@@ -17,7 +17,7 @@
   
   .frame { position:absolute; z-index:99; left:5%; top:30%; width:90%; height:60%; z-index:999; transition: opacity 1s ease; }
   .frame.faded { opacity:0; }
-  .dot { position:absolute; z-index:99; height:35px; background-color: rgba(2,2,2,0.66); border-radius:15px; padding-left:15px; padding-right:15px; cursor: pointer; top:100%; left:50%; opacity:1; transition:opacity 1s ease; }
+  .dot { position:absolute; padding-right:1px; padding-left:1px; z-index:99; height:40px; line-height:40px; background-color: rgba(2,2,2,0.66); border-radius:20px; cursor: pointer; top:100%; left:50%; opacity:1; transition:opacity 1s ease; }
   .dot.faded { opacity:0.3; }
   .dot.hidden { opacity:0; }
   .dot.loop {  }
@@ -36,12 +36,17 @@
       text-align: center;
   }
   
-  
+  .sound-button { height:20px; width:20px; margin-top:10px; background-size:80% 80%; background-repeat:no-repeat; background-position:50% 50%; cursor:pointer !important; }
+  .play-button { float:left; background-color:none;  background-size:160% 160%; background-image:url(../img/bx-play.svg); margin-right:10px; margin-left:10px; filter: invert(90%); }
+  .play-button.on { background-image:url(../img/bx-pause.svg); }
+  .loop-button { float: right; margin-left:10px; background-color:#222; margin-right:10px; border-radius: 100%; background-image:url(../img/bx-infinite.svg); }
+  .loop-button.on { background-color:#777; }
+
   box-icon { height:50px; }
   
   .lefty { float:left; height:35px; }
   
-  .trackname { float:left; margin-left:10px; line-height:35px; }
+  .trackname { float:left; margin-left:10px; margin-right:20px; line-height:40px; }
   
   .tape { position: fixed; top:25px; right:25px; width:25px; height:25px; z-index:999; border:0px; }
   #line { position:absolute; opacity:0.33; left:50%; width:2px; height:100%; margin-left:-1px; z-index:0; background:none;}

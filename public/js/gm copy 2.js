@@ -338,7 +338,7 @@ function GenerateDot(name, file, gain, pan, icon, loop) {
     var y = GetY(gain);
 
     // generate html element
-    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading noselect'><div class='sound-button play-button on'></div><div class='trackname'>"+name+"</div><div class='sound-button loop-button'></div></div>";
+    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading noselect'><box-icon class='lefty' color='whitesmoke' name='"+icon+"'></box-icon><div class='trackname'>"+name+"</div></div>";
     $("#arena").append($element);
 
     // toggle the sound item in drawer
@@ -377,9 +377,9 @@ function GenerateDotFirst(name, file, gain, pan, icon, loop) {
     var x = GetX(pan);
     var y = GetY(gain);
 
-     // generate html element
-     var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading noselect'><div class='sound-button play-button on'></div><div class='trackname'>"+name+"</div><div class='sound-button loop-button'></div></div>";
-     $("#arena").append($element);
+    // generate html element
+    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading noselect'><box-icon class='lefty' color='whitesmoke' name='"+icon+"'></box-icon><div class='trackname'>"+name+"</div></div>";
+    $("#arena").append($element);
 
     // toggle the sound item in drawer
     $(".sound-item[name="+name+"]").addClass("selected");
@@ -461,7 +461,7 @@ function StartLoop(target, loop){
     
     if ( loop ) 
         { 
-        $(".dot[target="+target+"]").find(".loop-button").addClass("on");
+        $(".dot[target="+target+"]").addClass("loop");
         }
 
 }
@@ -651,41 +651,16 @@ socket.on("changevolume", function(data){
 
 
 
-// LOOP BUTTON
+// GET CONTEXT MENU
 
-$(document).on("click", ".loop-button", function(e){
+$(document).on("contextmenu", ".dot", function(e){
     e.preventDefault;
-    $(this).toggleClass("on");
-    var sound = $(this).parent().attr("target");
-    console.log(sound);
-    if ( $(this).hasClass("on") )
-        {
-        Loop(sound, true) 
-        }
-    else 
-        {
-        Loop(sound, false)
-        }
-        return false;
+    var sound = $(this).attr("target");
+    $(this).toggleClass("loop");
+    if ( $(this).hasClass("loop") ) { Loop(sound, true) }
+    else { Loop(sound, false) };
+    return false;
 });
-
-$(document).on("touchstart", ".loop-button", function(e){
-    e.preventDefault;
-    $(this).toggleClass("on");
-    var sound = $(this).parent().attr("target");
-    console.log(sound);
-    if ( $(this).hasClass("on") )
-        {
-        Loop(sound, true) 
-        }
-    else 
-        {
-        Loop(sound, false)
-        }
-        return false;
-});
-
-
 
 
 // SET LOOP
@@ -701,54 +676,6 @@ socket.on("feedloop", function(data){
 });
 
 
-
-
-
-
-// PLAY BUTTON
-
-$(document).on("click", ".play-button", function(e){
-    e.preventDefault;
-    $(this).toggleClass("on");
-    var thesound = $(this).parent().attr("target");
-    if ( $(this).hasClass("on") )
-        {
-            $data = {"room":$room, "sound":thesound };
-            socket.emit("unpausesound", $data);
-                }
-    else 
-        {
-            $data = {"room":$room, "sound":thesound };
-            socket.emit("pausesound", $data);
-                }
-        return false;
-});
-
-$(document).on("touchstart", ".play-button", function(e){
-    e.preventDefault;
-    $(this).toggleClass("on");
-    var thesound = $(this).parent().attr("target");
-    if ( $(this).hasClass("on") )
-        {
-        $data = {"room":$room, "sound":thesound };
-        socket.emit("unpausesound", $data);
-        }
-    else 
-        {
-        $data = {"room":$room, "sound":thesound };
-        socket.emit("pausesound", $data);
-        }
-        return false;
-});
-
-
-socket.on("feedunpause", function(data){
-    PIXI.sound.resume(data.sound);
-});
-
-socket.on("feedpause", function(data){
-    PIXI.sound.pause(data.sound);
-});
 
 // PAN FUNCTION
 
@@ -791,7 +718,6 @@ socket.on("sync", function(data){
     var it = PIXI.sound._sounds[data.target];
     PIXI.sound.stop(data.target);
     PIXI.sound.play(data.target);
-    $(".dot[target="+data.target+"]").find(".play-button").addClass("on");
     });
 
 
@@ -982,3 +908,4 @@ function copyToClipboard(text) {
 
 
 
+ 

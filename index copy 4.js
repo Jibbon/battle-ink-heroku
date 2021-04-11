@@ -469,11 +469,6 @@ io.on('connection', (socket) => {
     tracks.push($new);
     
     });
-    //unpause function
-    socket.on("unpausesound", (data) => { io.in(data.room).emit("feedunpause", data); });
-    //pause function
-    socket.on("pausesound", (data) => { io.in(data.room).emit("feedpause", data); });
-
     // wipe track list
     socket.on("wipetracklist", (room) => 
       { 
