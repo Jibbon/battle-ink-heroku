@@ -17,7 +17,7 @@ const server = express()
 
 var rooms = [];
 var allClients = [];
-var library;
+var library = [];
 var tracks = [];
 var backgrounds = [];
 
@@ -345,14 +345,12 @@ io.on('connection', (socket) => {
     var background = $presets[$indexofcurrentpreset].background;
     io.in(room).emit('feedbackground', background); 
     });
-  // clock function
-  socket.on("tick", (data) => { io.emit("tock"); });
   socket.on("volume", (data) => 
     { 
     var $index = rooms.findIndex(x => x.id === data.room);
     var $presets = rooms[$index].presets;
     var $indexofpreset = $presets.findIndex(x => x.id === data.preset);
-    var $indexofitem = $presets[$indexofpreset].library.findIndex(x => x.id === data.name);
+    var $indexofitem = $presets[$indexofpreset].library.findIndex(x => x.id === data.id);
 
     $presets[$indexofpreset].library[$indexofitem].gain = data.gain;
 
@@ -433,7 +431,7 @@ io.on('connection', (socket) => {
 
     var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
 
-    var $indexofitem = $presets[$indexofcurrentpreset].library.findIndex(x => x.id === data.name);
+    var $indexofitem = $presets[$indexofcurrentpreset].library.findIndex(x => x.id === data.id);
     
     $presets[$indexofcurrentpreset].library[$indexofitem].pan = data.pan;
 
@@ -447,7 +445,7 @@ io.on('connection', (socket) => {
     var $presets = rooms[$index].presets;
     var $currentpreset = rooms[$index].currentpreset;
     var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
-    var $indexofitem = $presets[$indexofcurrentpreset].library.findIndex(x => x.id === data.name);
+    var $indexofitem = $presets[$indexofcurrentpreset].library.findIndex(x => x.id === data.id);
     
     $presets[$indexofcurrentpreset].library[$indexofitem].loop = data.loop;
 
@@ -459,13 +457,13 @@ io.on('connection', (socket) => {
   // add sound
   socket.on("seedsound", (data) => 
     { 
-    $new = {'id':data.name, 'file':data.file, "gain":data.gain, 'pan':data.pan, 'loop':data.loop };
+    $new = {'id':data.id, 'name':data.name, 'file':data.file, "gain":data.gain, 'pan':data.pan, 'loop':data.loop };
     io.in(data.room).emit("newsound", data); 
     });
     // add preset sound
     socket.on("seedpreset", (data) => 
     { 
-    $new = {'id':data.name, 'file':data.file, "gain":data.gain, 'pan':data.pan, 'loop':data.loop, "icon":data.icon };
+    $new = {'id':data.id, 'name':data.name, 'file':data.file, "gain":data.gain, 'pan':data.pan, 'loop':data.loop, "icon":data.icon };
     tracks.push($new);
     
     });
@@ -490,12 +488,12 @@ io.on('connection', (socket) => {
     var $presets = rooms[$index].presets;
     var $currentpreset = rooms[$index].currentpreset;
     var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
-    var $indexofitem = $presets[$indexofcurrentpreset].library.findIndex(x => x.id === data.name);
+    var $indexofitem = $presets[$indexofcurrentpreset].library.findIndex(x => x.id === data.id);
 
     $presets[$indexofcurrentpreset].library.splice($indexofitem, 1);
 
     UpdateRooms(rooms);
-    io.in(data.room).emit("soundscrubbed", data.name); 
+    io.in(data.room).emit("soundscrubbed", data.id); 
     });
     
 

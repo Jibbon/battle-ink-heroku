@@ -15,35 +15,9 @@ var $draweropen = false;
 
 var $currentpreset = "1345768";
 
-var $tick = false;  
-
-
 socket.on('time', function(timeString) {
     $servertime = timeString;
     });
-
-    // SEND TICK TO THE SERVER
-function Clock(){
-    
-    $tick = true;
-    socket.emit("tick");
-    console.log("tick");
-
-    setTimeout(CheckClock, 5000);
-    setTimeout(Clock, 10000);
-}
-
-//TOCK
-
-socket.on("tock", function(data){
-    console.log("tock");
-    $tick = false;
-});
-
-function CheckClock(){
-    if ( $tick ) { $("#line").removeClass("on"); }
-    else {  }
-}
 
 
 // CREATE NEW PRESET
@@ -231,7 +205,7 @@ socket.on("feedcurrentpresetstart", function(data){
 function SeedPresets(library){
     $.each(library, function(index, item)
         {
-        SeedPresetSound(item.id, item.file, item.gain, item.pan, item.icon, item.loop);
+        SeedPresetSound(item.id, item.name, item.file, item.gain, item.pan, item.icon, item.loop);
         });
 }
 
@@ -244,7 +218,7 @@ socket.on("sendtracks", function(data){
 
 function BuildTracks(array){
 
-    //console.log(array);
+console.log(array);
 
 $.each(array, function(index, item){
     //console.log(item);
@@ -257,7 +231,7 @@ $.each(array, function(index, item){
         //console.log("fresh!"); 
 
         // GENERATE THE TRACK LOCALLY
-        GenerateDot(item.id, item.file, item.gain, item.pan, item.icon, item.loop);
+        GenerateDot(item.id, item.name, item.file, item.gain, item.pan, item.icon, item.loop);
         }
 });
 
@@ -267,7 +241,7 @@ $.each(array, function(index, item){
 
 function BuildTracksFirst(array){
 
-    //console.log(array);
+console.log(array);
 
 $.each(array, function(index, item){
     //console.log(item);
@@ -280,7 +254,7 @@ $.each(array, function(index, item){
         //console.log("fresh!"); 
 
         // GENERATE THE TRACK LOCALLY
-        GenerateDotFirst(item.id, item.file, item.gain, item.pan, item.icon, item.loop);
+        GenerateDotFirst(item.id, item.name, item.file, item.gain, item.pan, item.icon, item.loop);
         }
 });
 
@@ -313,10 +287,11 @@ if(mylibrary.some(track => track.file === file))
 
 // GENERATE THE TRACK LOCALLY
 
-function GenerateDot(name, file, gain, pan, icon, loop) {
-    console.log("Adding "+name+" to the canvas");
+function GenerateDot(id, name, file, gain, pan, icon, loop) {
+    console.log("Adding "+id+" to the canvas with name "+name);
     //console.log(gain);
-    $new = {'id':name, 'file':file, "gain":gain, "pan":pan, "icon":icon, "loop":loop };
+    $new = {'id':id, 'name':name, 'file':file, "gain":gain, "pan":pan, "icon":icon, "loop":loop };
+    console.log($new);
     mytracks.push($new);
     console.log(mytracks);
 
@@ -324,7 +299,7 @@ function GenerateDot(name, file, gain, pan, icon, loop) {
     var $index = presets.findIndex(x => x.id === $currentpreset);
     var library = presets[$index].library;
     //console.log(library);
-    var $existing = library.findIndex(x => x.id === name);
+    var $existing = library.findIndex(x => x.id === id);
     //console.log($existing);
      if ( $existing === -1 ) 
         { 
@@ -338,14 +313,14 @@ function GenerateDot(name, file, gain, pan, icon, loop) {
     var y = GetY(gain);
 
     // generate html element
-    var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading noselect'><div class='sound-button play-button on'></div><div class='trackname'>"+name+"</div><div class='sound-button loop-button'></div></div>";
+    var $element = "<div target='"+id+"' name='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading noselect'><div class='sound-button play-button on'></div><div class='trackname'>"+name+"</div><div class='sound-button loop-button'></div></div>";
     $("#arena").append($element);
 
     // toggle the sound item in drawer
-    $(".sound-item[name="+name+"]").addClass("selected");
+    $(".sound-item[target="+id+"]").addClass("selected");
 
     // generate pixi-sound object
-    AddSound(name, file, gain, pan, loop);
+    AddSound(id, name, file, gain, pan, loop);
 
 }
 
@@ -353,10 +328,10 @@ function GenerateDot(name, file, gain, pan, icon, loop) {
 
 // GENERATE THE TRACK LOCALLY
 
-function GenerateDotFirst(name, file, gain, pan, icon, loop) {
-    console.log("Adding "+name+" to the canvas");
+function GenerateDotFirst(id, name, file, gain, pan, icon, loop) {
+    console.log("Adding "+id+" to the canvas");
     //console.log(gain);
-    $new = {'id':name, 'file':file, "gain":gain, "pan":pan, "icon":icon, "loop":loop };
+    $new = {'id':id, 'name':name, 'file':file, "gain":gain, "pan":pan, "icon":icon, "loop":loop };
     mytracks.push($new);
     console.log(mytracks);
 
@@ -364,7 +339,7 @@ function GenerateDotFirst(name, file, gain, pan, icon, loop) {
     var $index = presets.findIndex(x => x.id === $currentpreset);
     var library = presets[$index].library;
     //console.log(library);
-    var $existing = library.findIndex(x => x.id === name);
+    var $existing = library.findIndex(x => x.id === id);
     //console.log($existing);
      if ( $existing === -1 ) 
         { 
@@ -378,65 +353,65 @@ function GenerateDotFirst(name, file, gain, pan, icon, loop) {
     var y = GetY(gain);
 
      // generate html element
-     var $element = "<div target='"+name+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading noselect'><div class='sound-button play-button on'></div><div class='trackname'>"+name+"</div><div class='sound-button loop-button'></div></div>";
+     var $element = "<div target='"+id+"' file='"+file+"' gain='"+gain+"' loop='"+loop+"' style='left:"+x+"px; top:"+y+"px' class='draggable dot loading noselect'><div class='sound-button play-button on'></div><div class='trackname'>"+name+"</div><div class='sound-button loop-button'></div></div>";
      $("#arena").append($element);
 
     // toggle the sound item in drawer
-    $(".sound-item[name="+name+"]").addClass("selected");
+    $(".sound-item[target="+id+"]").addClass("selected");
 
     // generate pixi-sound object
-    AddSoundFirst(name, file, gain, pan, loop);
+    AddSoundFirst(id, name, file, gain, pan, loop);
 
 }
 
 
 
-function AddSound(name, file, gain, pan, loop){
+function AddSound(id, name, file, gain, pan, loop){
 
     //console.log("making sound: "+name+" using file: "+file+" with gain "+gain);
 
-    SeedSound(name, file, gain, pan, loop);
+    SeedSound(id, name, file, gain, pan, loop);
 
     // do the pixi.js thing
-    PIXI.sound.add(name, {
+    PIXI.sound.add(id, {
     url: 'audio/'+file,
     preload: true,
     loaded: function() {
         // duration can only be used once the sound is loaded
         //console.log('Duration: ', PIXI.sound.duration(sound), 'seconds');
         //console.log(name+' is loaded');
-        StartVolume(name, gain);
-        StartPan(name, pan);
-        StartLoop(name, loop);
-        PIXI.sound.play(name);
+        StartVolume(id, gain);
+        StartPan(id, pan);
+        StartLoop(id, loop);
+        PIXI.sound.play(id);
         MakeDraggable();
-        $(".dot[target="+name+"]").removeClass("loading");
+        $(".dot[target="+id+"]").removeClass("loading");
         }
     });
 
 }
 
 
-function AddSoundFirst(name, file, gain, pan, loop){
+function AddSoundFirst(id, name, file, gain, pan, loop){
 
     //console.log("making sound: "+name+" using file: "+file+" with gain "+gain);
 
     //SeedSound(name, file, gain, pan, loop);
 
     // do the pixi.js thing
-    PIXI.sound.add(name, {
+    PIXI.sound.add(id, {
     url: 'audio/'+file,
     preload: true,
     loaded: function() {
         // duration can only be used once the sound is loaded
         //console.log('Duration: ', PIXI.sound.duration(sound), 'seconds');
         //console.log(name+' is loaded');
-        StartVolume(name, gain);
-        StartPan(name, pan);
-        StartLoop(name, loop);
-        PIXI.sound.play(name);
+        StartVolume(id, gain);
+        StartPan(id, pan);
+        StartLoop(id, loop);
+        PIXI.sound.play(id);
         MakeDraggable();
-        $(".dot[target="+name+"]").removeClass("loading");
+        $(".dot[target="+id+"]").removeClass("loading");
         }
     });
 
@@ -468,23 +443,23 @@ function StartLoop(target, loop){
 
 // KILL SOUND FUNCTION
 
-function KillSound(name){
+function KillSound(id){
     //console.log("Killing track: "+name);
-    $data = {"room":$room, "name":name };
+    $data = {"room":$room, "id":id };
     socket.emit("removesound", $data);
 }
 
-socket.on("soundscrubbed", function(name){
+socket.on("soundscrubbed", function(id){
     //console.log("Scrubbing sound "+name);
-    PIXI.sound.stop(name);
-    $(".dot[target="+name+"]").remove();
-    var $index = mytracks.findIndex(x => x.id === name);
+    PIXI.sound.stop(id);
+    $(".dot[target="+id+"]").remove();
+    var $index = mytracks.findIndex(x => x.id === id);
     mytracks.splice($index, 1);
     console.log(mytracks);
     // remove from local preset library
     // update current preset
     var $presetindex = presets.findIndex(x => x.id === $currentpreset);
-    var $presetitem = presets[$presetindex].library.findIndex(x => x.id === name);
+    var $presetitem = presets[$presetindex].library.findIndex(x => x.id === id);
     //console.log($presetitem);
     presets[$presetindex].library.splice($presetitem, 1);
     //console.log(presets);
@@ -587,6 +562,8 @@ socket.on("sendlibrary", function(data){
     
     console.log("Receiving the library...");
 
+    console.log(data);
+
     $("#thesoundlist").html("");
 
     $.each(data, function(index, item){
@@ -600,7 +577,7 @@ socket.on("sendlibrary", function(data){
         //console.log("fresh!"); 
 
         // ADD THE ITEM TO THE LOCAL LIBRARY
-        $element = '<li class="sound-item noselect" name="'+item.id+'" file="'+item.file+'" icon="'+item.icon+'">'+item.id+'</li>'; 
+        $element = '<li class="sound-item noselect" id="'+item.id+'" target="'+item.id+'" name="'+item.name+'" file="'+item.file+'" icon="'+item.icon+'">'+item.name+'</li>'; 
         $("#thesoundlist").append($element);
         }
 });
@@ -626,21 +603,21 @@ function Sort(a, b) {
 
 function ChangeGain(target, gain){
     
-    var $data = {"room":$room, "name": target, "gain":gain, "preset":$currentpreset };
+    var $data = {"room":$room, "id": target, "gain":gain, "preset":$currentpreset };
     socket.emit("volume", $data);
 
 }
 
 socket.on("changevolume", function(data){ 
 
-    var it = PIXI.sound._sounds[data.name];
+    var it = PIXI.sound._sounds[data.id];
     if ( data.gain == 0 ) 
         { 
-        $(".dot[target="+data.name+"]").addClass("faded");
+        $(".dot[target="+data.id+"]").addClass("faded");
         }
     else
         { 
-        $(".dot[target="+data.name+"]").removeClass("faded");
+        $(".dot[target="+data.id+"]").removeClass("faded");
         };
 
     //console.log(data.gain);
@@ -690,13 +667,13 @@ $(document).on("touchstart", ".loop-button", function(e){
 
 // SET LOOP
 
-function Loop(name, toggle){
-    var $data = {"room":$room, "name": name, "loop":toggle };
+function Loop(id, toggle){
+    var $data = {"room":$room, "id": id, "loop":toggle };
     socket.emit("seedloop", $data);
 }
 
 socket.on("feedloop", function(data){
-    var it = PIXI.sound._sounds[data.name];
+    var it = PIXI.sound._sounds[data.id];
     it.loop = data.loop;
 });
 
@@ -753,14 +730,14 @@ socket.on("feedpause", function(data){
 // PAN FUNCTION
 
 function ChangePan(target, pan){
-    var $data = {"room":$room, "name": target, "pan":pan, "preset":$currentpreset };
+    var $data = {"room":$room, "id": target, "pan":pan, "preset":$currentpreset };
     //console.log($data);
     socket.emit("pan", $data);
     
 }
 
 socket.on("changepan", function(data){
-    var it = PIXI.sound._sounds[data.name];
+    var it = PIXI.sound._sounds[data.id];
     it.filters = [ new PIXI.sound.filters.StereoFilter(data.pan) ];
     //console.log(it);
 });
@@ -918,6 +895,7 @@ $(document).on("click", "#sound-drawer-handle", function(){
 
 $(document).on("click", ".sound-item", function(){
     $(this).toggleClass("selected");
+    var id = $(this).attr("target");
     var name = $(this).attr("name");
     var file = $(this).attr("file");
     var icon = $(this).attr("icon");
@@ -925,8 +903,8 @@ $(document).on("click", ".sound-item", function(){
     var pan = 0;
     var loop = false;
 
-    if ( $(this).hasClass("selected") ) { GenerateDot(name, file, gain, pan, icon, loop); }
-    else { KillSound(name); }
+    if ( $(this).hasClass("selected") ) { GenerateDot(id, name, file, gain, pan, icon, loop); }
+    else { KillSound(id); }
     
 });
 
@@ -951,9 +929,9 @@ $(document).on("click", "#preset-handle", function(){
 
 
 //SEED NEW SOUND TO SERVER         
-function SeedSound(name, file, gain, pan, loop) {
+function SeedSound(id, name, file, gain, pan, loop) {
     console.log("Sending sound out to players");
-    $data = {"room":$room, "name":name, "file":file, 'gain':gain, 'pan':pan, 'loop':loop};
+    $data = {"room":$room, "id":id, "name":name, "file":file, 'gain':gain, 'pan':pan, 'loop':loop};
     console.log($data);
     socket.emit("seedsound", $data);
 }
@@ -963,8 +941,8 @@ function SeedSound(name, file, gain, pan, loop) {
 
 // SUMMON PRESET
 
-function SeedPresetSound(name, file, gain, pan, icon, loop){
-    $data = {"room":$room, "name":name, "file":file, "icon":icon, 'gain':gain, 'pan':pan, 'loop':loop};
+function SeedPresetSound(id, name, file, gain, pan, icon, loop){
+    $data = {"room":$room, "id":id, "name":name, "file":file, "icon":icon, 'gain':gain, 'pan':pan, 'loop':loop};
     socket.emit('seedpreset', $data);
 }
 

@@ -9,39 +9,13 @@
                 "id": "1617697836363",
                 "title": "Waterfall",
                 "background": "https://cdna.artstation.com/p/assets/images/images/006/163/652/large/ivan-laliashvili-waterfalls-by-ivanlaliashvili-dbbbpit.jpg?1496481923",
-                "library": [
-                    {
-                        "id": "forest",
-                        "file": "forest.mp3",
-                        "gain": 0.057,
-                        "pan": -0.71,
-                        "icon": "water",
-                        "loop": true
-                    },
-                    {
-                        "id": "stream",
-                        "file": "stream.mp3",
-                        "gain": 0.05,
-                        "pan": -0.03,
-                        "icon": "water",
-                        "loop": true
-                    }
-                ]
+                "library": []
             },
             {
                 "id": "1617874952915",
                 "title": "Cavern",
                 "background": "https://cdnb.artstation.com/p/assets/images/images/000/031/375/large/G6vbgZb.jpg?1400201492",
-                "library": [
-                    {
-                        "id": "dawn",
-                        "file": "dawn.mp3",
-                        "gain": 0.005,
-                        "pan": -0.05,
-                        "icon": "music",
-                        "loop": false
-                    }
-                ]
+                "library": []
             }
         ],
         "currentpreset": "1617697836363"
@@ -49,7 +23,8 @@
     {
         "id": "123456",
         "name": "iceland",
-        "players": [],
+        "players": [
+        ],
         "tracks": [],
         "presets": [
             {
@@ -58,10 +33,20 @@
                 "background": "https://cdna.artstation.com/p/assets/images/images/024/772/710/large/mike-marra-docks-relight-02.jpg?1583484134",
                 "library": [
                     {
+                        "id": "cello",
+                        "name": "Dark Cello",
+                        "file": "cellofear01.mp3",
+                        "gain": 0.025,
+                        "pan": -0.01,
+                        "icon": "music",
+                        "loop": false
+                    },
+                    {
                         "id": "ocean",
+                        "name": "ocean (ambience)",
                         "file": "ocean.mp3",
-                        "gain": 0.066,
-                        "pan": -0.07,
+                        "gain": 0.01,
+                        "pan": 0.48,
                         "icon": "water",
                         "loop": true
                     }
@@ -73,12 +58,22 @@
                 "background": "https://cdna.artstation.com/p/assets/images/images/011/922/194/large/olly-lawson-ship-post.jpg?1532100141",
                 "library": [
                     {
+                        "id": "bloodmyst",
+                        "name": "Blood Myst",
+                        "file": "bloodmyst.mp3",
+                        "gain": 0.039,
+                        "pan": -0.01,
+                        "icon": "music",
+                        "loop": false
+                    },
+                    {
                         "id": "onboard",
+                        "name": "on board a ship (ambience)",
                         "file": "onboard.mp3",
-                        "gain": 0.094,
-                        "pan": 0.33,
+                        "gain": 0.025,
+                        "pan": -0.01,
                         "icon": "water",
-                        "loop": true
+                        "loop": false
                     }
                 ]
             },
@@ -88,24 +83,48 @@
                 "background": "https://cdna.artstation.com/p/assets/images/images/002/400/954/large/devin-platts-tavern4.jpg?1461289751",
                 "library": [
                     {
-                        "id": "winterstale",
-                        "file": "winterstale.mp3",
-                        "gain": 0.052,
-                        "pan": 0.58,
-                        "icon": "music",
+                        "id": "tavern",
+                        "name": "tavern (ambience)",
+                        "file": "tavern.mp3",
+                        "gain": 0.013,
+                        "pan": 0.01,
+                        "icon": "water",
                         "loop": true
                     },
                     {
-                        "id": "tavern",
-                        "file": "tavern.mp3",
-                        "gain": 0.021,
-                        "pan": -0.07,
-                        "icon": "water",
-                        "loop": true
+                        "id": "winterstale",
+                        "name": "Winters Tale",
+                        "file": "winterstale.mp3",
+                        "gain": 0.032,
+                        "pan": 0.46,
+                        "icon": "music",
+                        "loop": false
                     }
                 ]
+            },
+            {
+                "id": "1618218102103",
+                "title": "Seaside Town",
+                "background": "https://cdna.artstation.com/p/assets/images/images/035/669/202/large/florian-bossonney-medieval-village-concept-01-web.jpg?1615565964",
+                "library": [
+                    {
+                        "id": "seasidemarket",
+                        "name": "seaside market (ambience)",
+                        "file": "seasidemarket.mp3",
+                        "gain": 0.02,
+                        "pan": 0.01,
+                        "icon": "water",
+                        "loop": false
+                    }
+                ]
+            },
+            {
+                "id": "1618307775555",
+                "title": "Silence",
+                "background": "https://jooinn.com/images/blank-canvas-texture-2.jpg",
+                "library": []
             }
         ],
-        "currentpreset": "1618086053062"
+        "currentpreset": "1617877012791"
     }
 ]

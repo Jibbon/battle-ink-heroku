@@ -39,8 +39,8 @@
   .sound-button { height:20px; width:20px; margin-top:10px; background-size:80% 80%; background-repeat:no-repeat; background-position:50% 50%; cursor:pointer !important; }
   .play-button { float:left; background-color:none;  background-size:160% 160%; background-image:url(../img/bx-play.svg); margin-right:10px; margin-left:10px; filter: invert(90%); }
   .play-button.on { background-image:url(../img/bx-pause.svg); }
-  .loop-button { float: right; margin-left:10px; background-color:#222; margin-right:10px; border-radius: 100%; background-image:url(../img/bx-infinite.svg); }
-  .loop-button.on { background-color:#777; }
+  .loop-button { float: right; margin-left:10px; background-color:#333; margin-right:10px; border-radius: 100%; background-image:url(../img/bx-infinite.svg); }
+  .loop-button.on { background-color:#999; }
 
   box-icon { height:50px; }
   

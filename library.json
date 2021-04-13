@@ -1,6 +1,7 @@
 [
     {
       "id": "farewell",
+      "name":"Farewell to a Friend",
       "file": "farewelltoafriend.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -9,6 +10,7 @@
     },
     {
       "id": "swamp",
+      "name":"swamp (ambience)",
       "file": "swamp.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -17,6 +19,7 @@
     },
     {
       "id": "firebolt",
+      "name":"firebolt (spell)",
       "file": "firebolt.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -26,6 +29,7 @@
     {
       "id": "beach",
       "file": "beach.mp3",
+      "name":"beach (ambience)",
       "gain": 0.05,
       "pan": 0,
       "icon": "water",
@@ -33,6 +37,7 @@
     },
     {
       "id": "seasidemarket",
+      "name":"seaside market (ambience)",
       "file": "seasidemarket.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -41,6 +46,7 @@
     },
     {
       "id": "onboard",
+      "name":"on board a ship (ambience)",
       "file": "onboard.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -49,6 +55,7 @@
     },
     {
       "id": "sailing",
+      "name":"sailing (ambience)",
       "file": "sailing.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -57,6 +64,7 @@
     },
     {
       "id": "rainforest",
+      "name":"rainforest (ambience)",
       "file": "rainforest.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -65,6 +73,7 @@
     },
     {
       "id": "ocean",
+      "name":"ocean (ambience)",
       "file": "ocean.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -73,6 +82,7 @@
     },
     {
       "id": "drums",
+      "name":"Kodo Drums",
       "file": "kododrums.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -81,6 +91,7 @@
     },
     {
       "id": "prophecy",
+      "name":"A Prophecy Fulfilled",
       "file": "aprophecyfulfilled.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -89,6 +100,7 @@
     },
     {
       "id": "blizzard",
+      "name":"Blizzard (ambience)",
       "file": "blizzardoutside.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -97,6 +109,7 @@
     },
     {
       "id": "hearth",
+      "name":"hearth fire (ambience)",
       "file": "hearth01.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -105,6 +118,7 @@
     },
     {
       "id": "horror",
+      "name":"deep horror (ambience)",
       "file": "horror01.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -113,6 +127,7 @@
     },
     {
       "id": "storm",
+      "name":"storm (ambience)",
       "file": "rainandthunder.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -121,6 +136,7 @@
     },
     {
       "id": "tavern",
+      "name":"tavern (ambience)",
       "file": "tavern.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -129,6 +145,7 @@
     },
     {
       "id": "theglory",
+      "name":"To All the Glory",
       "file": "theglory.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -137,6 +154,7 @@
     },
     {
       "id": "stream",
+      "name":"small stream (ambience)",
       "file": "stream.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -145,6 +163,7 @@
     },
     {
       "id": "cello",
+      "name":"Dark Cello",
       "file": "cellofear01.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -153,6 +172,7 @@
     },
     {
       "id": "kynespeace",
+      "name":"Kynes Peace",
       "file": "kynespeace.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -161,6 +181,7 @@
     },
     {
       "id": "deadmarshes",
+      "name":"The Dead Marshes",
       "file": "deadmarshesedit.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -169,6 +190,7 @@
     },
     {
       "id": "deathinthedarkness",
+      "name":"Death in the Darkness",
       "file": "deathinthedarkness.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -177,6 +199,7 @@
     },
     {
       "id": "drakardrums",
+      "name":"Drakar Drums",
       "file": "drakardrums.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -185,6 +208,7 @@
     },
     {
       "id": "forest",
+      "name":"forest (ambience)",
       "file": "forest.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -193,6 +217,7 @@
     },
     {
       "id": "imperiallegions",
+      "name":"Imperial Legions",
       "file": "imperiallegiontheme.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -201,6 +226,7 @@
     },
     {
       "id": "journeyend",
+      "name":"Journeys End",
       "file": "journeyend.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -209,6 +235,7 @@
     },
     {
       "id": "dawn",
+      "name":"Dawn",
       "file": "dawn.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -217,6 +244,7 @@
     },
     {
       "id": "caveambience",
+      "name":"cavern (ambience)",
       "file": "caveambience.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -225,6 +253,7 @@
     },
     {
       "id": "secunda",
+      "name":"Secunda",
       "file": "secunda.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -233,6 +262,7 @@
     },
     {
       "id": "dragonsreach",
+      "name":"Dragons Reach",
       "file": "dragonsreach.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -241,6 +271,7 @@
     },
     {
       "id": "shatteredshields",
+      "name":"Shattered Shields",
       "file": "shatteredshields.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -249,6 +280,7 @@
     },
     {
       "id": "silentfootsteps",
+      "name":"Silent Footsteps",
       "file": "silentfootsteps.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -257,6 +289,7 @@
     },
     {
       "id": "standingstones",
+      "name":"Standing Stones",
       "file": "standingstones.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -265,6 +298,7 @@
     },
     {
       "id": "thecastle",
+      "name":"The Castle",
       "file": "thecastle.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -273,6 +307,7 @@
     },
     {
       "id": "toothandclaw",
+      "name":"Tooth and Claw",
       "file": "toothandclaw.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -281,6 +316,7 @@
     },
     {
       "id": "towersandshadows",
+      "name":"Towers and Shadows",
       "file": "towersandshadows.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -289,6 +325,7 @@
     },
     {
       "id": "tundra",
+      "name":"Tundra",
       "file": "tundra.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -297,6 +334,7 @@
     },
     {
       "id": "watchtheskies",
+      "name":"Watch the Skies",
       "file": "watchtheskies.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -305,6 +343,7 @@
     },
     {
       "id": "weaponsdrawndrum",
+      "name":"Weapons Drawn (drum)",
       "file": "weaponsdrawndrum.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -313,6 +352,7 @@
     },
     {
       "id": "weaponsdrawn",
+      "name":"Weapons Drawn",
       "file": "weaponsdrawn.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -321,6 +361,7 @@
     },
     {
       "id": "windguideyou",
+      "name":"Wind Guide You",
       "file": "windguideyou.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -329,6 +370,7 @@
     },
     {
       "id": "winterstale",
+      "name":"Winters Tale",
       "file": "winterstale.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -337,6 +379,7 @@
     },
     {
       "id": "thegaels",
+      "name":"The Gaels",
       "file": "thegaels.mp3",
       "gain": 0.05,
       "pan": 0,
@@ -345,7 +388,35 @@
     },
     {
       "id": "elves",
+      "name":"name",
       "file": "elves.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "bloodmyst",
+      "name":"Blood Myst",
+      "file": "bloodmyst.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "unbrokenroad",
+      "name":"Unbroken Road",
+      "file": "unbrokenroad.mp3",
+      "gain": 0.05,
+      "pan": 0,
+      "icon": "music",
+      "loop": false
+    },
+    {
+      "id": "thesreetsofwhiterun",
+      "name":"The Streets of Whiterun",
+      "file": "thesreetsofwhiteruns.mp3",
       "gain": 0.05,
       "pan": 0,
       "icon": "music",

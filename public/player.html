@@ -271,28 +271,28 @@ if(mytracks.some(track => track.file === file))
 
 // GENERATE THE TRACK LOCALLY
 
-function GenerateDot(name, file, gain, pan, loop) {
+function GenerateDot(id, file, gain, pan, loop) {
     console.log("Adding "+name+" to the canvas");
     //console.log(gain);
-    $new = {'id':name, 'file':file, "gain":gain, "pan":pan, "loop":loop };
+    $new = {'id':id, 'file':file, "gain":gain, "pan":pan, "loop":loop };
     mytracks.push($new);
     console.log(mytracks);
-    AddSound(name, file, gain, pan, loop);
+    AddSound(id, file, gain, pan, loop);
 
 }
 
-function AddSound(name, file, gain, pan, loop){
+function AddSound(id, file, gain, pan, loop){
 
     // do the pixi.js thing
-    PIXI.sound.add(name, {
+    PIXI.sound.add(id, {
     url: 'audio/'+file,
     preload: true,
     loaded: function() {
         // duration can only be used once the sound is loaded
-        StartVolume(name, gain);
-        StartPan(name, pan);
-        StartLoop(name, loop);
-        PIXI.sound.play(name);
+        StartVolume(id, gain);
+        StartPan(id, pan);
+        StartLoop(id, loop);
+        PIXI.sound.play(id);
         }
     });
 
@@ -323,11 +323,11 @@ function StartLoop(target, loop){
 
 // KILL SOUND FUNCTION
 
-socket.on("soundscrubbed", function(name){
-    console.log("Scrubbing sound "+name);
-    PIXI.sound.stop(name);
+socket.on("soundscrubbed", function(id){
+    console.log("Scrubbing sound "+id);
+    PIXI.sound.stop(id);
     //$(".dot[target="+name+"]").remove();
-    var $index = mytracks.findIndex(x => x.id === name);
+    var $index = mytracks.findIndex(x => x.id === id);
     mytracks.splice($index, 1);
     console.log(mytracks);
 
@@ -360,7 +360,7 @@ socket.on("soundscrubbed", function(name){
 
 socket.on("changevolume", function(data){ 
 
-    var it = PIXI.sound._sounds[data.name];
+    var it = PIXI.sound._sounds[data.id];
     it.volume = data.gain;
 
 });
@@ -368,17 +368,8 @@ socket.on("changevolume", function(data){
 
 
 
-
-
-// SET LOOP
-
-function Loop(name, toggle){
-    var $data = {"room":$room, "name": name, "loop":toggle };
-    socket.emit("seedloop", $data);
-}
-
 socket.on("feedloop", function(data){
-    var it = PIXI.sound._sounds[data.name];
+    var it = PIXI.sound._sounds[data.id];
     it.loop = data.loop;
 });
 
@@ -387,7 +378,7 @@ socket.on("feedloop", function(data){
 // PAN FUNCTION
 
 socket.on("changepan", function(data){
-    var it = PIXI.sound._sounds[data.name];
+    var it = PIXI.sound._sounds[data.id];
     it.filters = [ new PIXI.sound.filters.StereoFilter(data.pan) ];
     //console.log(it);
 });
@@ -418,7 +409,7 @@ socket.on("feedbackground",function(url){
 
 socket.on("newsound", function(data){
     console.log("New sound feed...");
-    GenerateDot(data.name, data.file, data.gain, data.pan, data.loop);
+    GenerateDot(data.id, data.file, data.gain, data.pan, data.loop);
 });
 
 
