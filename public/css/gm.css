@@ -15,7 +15,7 @@
   
   .loading { opacity:0.3; filter:blur(3px); }
   
-  .frame { position:absolute; z-index:99; left:5%; top:30%; width:90%; height:60%; z-index:999; transition: opacity 1s ease; }
+  .frame { position:absolute; z-index:99; left:5%; top:10%; width:90%; height:80%; z-index:999; transition: opacity 1s ease; }
   .frame.faded { opacity:0; }
   .dot { position:absolute; padding-right:1px; padding-left:1px; z-index:99; height:40px; line-height:40px; background-color: rgba(2,2,2,0.66); border-radius:20px; cursor: pointer; top:100%; left:50%; opacity:1; transition:filter 1s ease; }
   .dot.faded { opacity:0.3; }
@@ -40,7 +40,7 @@
   .play-button { float:left; background-color:none;  background-size:160% 160%; background-image:url(../img/bx-play.svg); margin-right:10px; margin-left:10px; filter: invert(90%); }
   .play-button.on { background-image:url(../img/bx-pause.svg); }
   .loop-button { float: right; margin-left:10px; background-color:#333; margin-right:10px; border-radius: 100%; background-image:url(../img/bx-infinite.svg); }
-  .loop-button.on { background-color:#999; }
+  .loop-button.true { background-color:#999; }
 
   box-icon { height:50px; }
   

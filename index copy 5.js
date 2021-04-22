@@ -127,7 +127,6 @@ function RemovePlayerFromLobby(socketid)
 
 
 
-
 io.on('connection', (socket) => {
   
   console.log(socket.id+ " is now connected.");
@@ -455,54 +454,11 @@ io.on('connection', (socket) => {
     });  
   // sync function
   socket.on("syncit", (data) => { io.in(data.room).emit("sync", data); });
-
-  // player initial entrance sound build
-
-  socket.on("getcurrenttracks", (room) => {
-
-    var $index = rooms.findIndex(x => x.id === room );
-    var tracks = rooms[$index].tracks;
-    
-    tracks.forEach(function(value, index){
-      io.to(socket.id).emit("feedsound", value);
-    });
-    
-    
-
-  });
-
   // add sound
   socket.on("seedsound", (data) => 
     { 
-    var $index = rooms.findIndex(x => x.id === data.room);
-    // push track to current track list
-    rooms[$index].tracks.push(data);
-    // if new to preset - add it
-    var $presets = rooms[$index].presets;
-    var $currentpreset = rooms[$index].currentpreset;
-    var $indexofcurrentpreset = $presets.findIndex(x => x.id === $currentpreset);
-    var existingarray = rooms[$index].presets[$indexofcurrentpreset].library;
-    var $indexofitem = existingarray.findIndex(x => x.file === data.file );
-    // search each item
-
-    if ( $indexofitem == -1 ) 
-      { 
-      console.log("new"); 
-      rooms[$index].presets[$indexofcurrentpreset].library.push(data);
-      UpdateRooms(rooms);
-      }
-
-
-
-    io.in(data.room).emit("feedsound", data); 
-    //console.log(rooms[$index].tracks);
-    });
-  // wipe sounds
-  socket.on("cleartracks", (room) => 
-    { 
-    var $index = rooms.findIndex(x => x.id === room);
-    rooms[$index].tracks = [];
-    io.in(room).emit("clearexisting"); 
+    $new = {'id':data.id, 'name':data.name, 'file':data.file, "gain":data.gain, 'pan':data.pan, 'loop':data.loop };
+    io.in(data.room).emit("newsound", data); 
     });
     // add preset sound
     socket.on("seedpreset", (data) => 
@@ -525,8 +481,6 @@ io.on('connection', (socket) => {
     // remove sound
     socket.on("removesound", (data) => 
     { 
-    console.log("Removing sound:");
-    console.log(data);
     //var $index = tracks.findIndex(x => x.id === name);
     //tracks.splice($index, 1);
 
@@ -537,14 +491,9 @@ io.on('connection', (socket) => {
     var $indexofitem = $presets[$indexofcurrentpreset].library.findIndex(x => x.id === data.id);
 
     $presets[$indexofcurrentpreset].library.splice($indexofitem, 1);
-    console.log($presets[$indexofcurrentpreset].library);
-
-    var $trackindex = rooms[$index].tracks.findIndex(x => x.code === data.code);
-    rooms[$index].tracks.splice($trackindex, 1);
-    console.log(rooms[$index].tracks);
 
     UpdateRooms(rooms);
-    io.in(data.room).emit("soundscrubbed", data.code); 
+    io.in(data.room).emit("soundscrubbed", data.id); 
     });
     
 

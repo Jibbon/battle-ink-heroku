@@ -73,6 +73,9 @@ textarea, input, button { outline: none; font-family: inherit; }
 <script src="js/pixi.min.js"></script>
 <script src="js/pixi-sound.js"></script>
 
+<script src="js/howler.core.js"></script>
+<script src="js/howler.spatial.js"></script>
+
 <script src="js/gm.js?v=1.5"></script>
 
 
@@ -146,7 +149,7 @@ socket.on("updateplayers", function(data){
 
     $.each(data, function(index, item)
         {
-        console.log(item.id);
+        //console.log(item.id);
         $element = '<div class="player-box"><div class="avatar" socket="'+item.id+'" name="'+item.name+'"></div><div class="player-name">'+item.name+'</div></div>';
         $("#player-list").append($element);
         });

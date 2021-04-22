@@ -71,9 +71,6 @@ textarea, input, button { outline: none; font-family: inherit; }
 
 <script src="js/boxicons.js"></script>
 
-<script src="js/howler.core.js"></script>
-<script src="js/howler.spatial.js"></script>
-
 <script src="js/pixi.min.js"></script>
 <script src="js/pixi-sound.js"></script>
 
@@ -176,12 +173,12 @@ socket.on('time', function(timeString) {
 
 
 
-function StartPlayer()
-    {
+function StartPlayer(){
+
     console.log("Starting up for room "+$room);
     socket.emit("getbackground", $room);
-    socket.emit("getcurrenttracks", $room);
-    }
+    GatherPreset();
+}
 
 
 
@@ -192,14 +189,8 @@ socket.on("feedpreset", function(){
     //$("#preset-handle").removeClass("on");
     //socket.emit('getpresets', $room);
     socket.emit("getbackground", $room);
-    //socket.emit("wipetracklist", $room);
-    socket.emit('getcurrentpreset', $room);
+    socket.emit("wipetracklist", $room);
 });
-
-
-
-
-
 
 
 socket.on("wipetracks", function(){
@@ -212,103 +203,224 @@ socket.on("wipetracks", function(){
 
 
 
-//SEED NEW SOUND TO SERVER         
-socket.on("feedsound", function(data) {
 
-console.log("Receiving a new sound from the server...");
-console.log(data);
+//GATHER A PRESET
 
-var sound = new Howl({
-    src: ['audio/'+data.file],
-    volume: 0,
-    stereo: data.pan,
-    loop:data.loop
-  });
+function GatherPreset(){
+    console.log("Requesting track list for the current preset");
+    socket.emit("getcurrentpresetstart", $room);
+}
 
-$new = {'code':data.code, 'id':data.id, 'name':data.name, 'file':data.file, "gain":data.gain, "pan":data.pan, "icon":data.icon, "loop":data.loop, "audio":sound };
-mytracks.push($new);
-console.log(mytracks);
+socket.on("feedcurrentpresetstart", function(data){
+    console.log("Building audio tracks for current preset");
+    //BuildTracks(data.library);
 
-
-
-$index = mytracks.findIndex(x => x.code === data.code);
-var thecode = mytracks[$index].code;
-
-mytracks[$index].audio.once('load', function()
-    {
-    $(".dot[target="+thecode+"]").removeClass("loading");
-    FadeInAudioNew(thecode);
+    $.each(data.library, function(index, item){
+        GenerateDot(item.id, item.file, item.gain, item.pan, item.loop);
     });
 
 
 });
 
 
+// GATHER TRACKS TO LIBRARY
+//socket.on("sendtracks", function(data){
+//    console.log("Receiving the tracks...");
+//    console.log(data);
+//    BuildTracks(data);
+//});
 
+function BuildTracks(array){
 
+    //console.log(array);
 
-
-
-
-
-
-
-
-
-
-socket.on("clearexisting", function(){
-        console.log("Wiping the slate");
-        $.each(mytracks, function(index, item)
+$.each(array, function(index, item){
+    //console.log(item);
+    if ( Existing(item.file)) 
         {
-        FadeOutAudioNew(item.code);
-        });
+        console.log("already exits")    
+        }
+    else 
+        { 
+        console.log("fresh!"); 
+
+        // GENERATE THE TRACK LOCALLY
+        GenerateDot(item.id, item.file, item.gain, item.pan, item.loop);
+        }
+});
+
+}
+
+function Existing(file){
+
+// Find if the array contains an object by comparing the property value
+if(mytracks.some(track => track.file === file))
+    {
+    return true;
+    } 
+    else { return false; }
+}
+
+
+
+
+
+// GENERATE THE TRACK LOCALLY
+
+function GenerateDot(id, file, gain, pan, loop) {
+    console.log("Adding "+name+" to the canvas");
+    //console.log(gain);
+    $new = {'id':id, 'file':file, "gain":gain, "pan":pan, "loop":loop };
+    mytracks.push($new);
+    console.log(mytracks);
+    AddSound(id, file, gain, pan, loop);
+
+}
+
+function AddSound(id, file, gain, pan, loop){
+
+    // do the pixi.js thing
+    PIXI.sound.add(id, {
+    url: 'audio/'+file,
+    preload: true,
+    loaded: function() {
+        // duration can only be used once the sound is loaded
+        StartVolume(id, gain);
+        StartPan(id, pan);
+        StartLoop(id, loop);
+        FadeInAudio(id, gain);
+        }
     });
 
+}
 
-    function FadeOutAudioNew (target) 
-        {
-        console.log("Fading out track "+target);
+function StartVolume(target, gain){
+    var it = PIXI.sound._sounds[target];
+    it.volume = gain;
+}
 
-        var $index = mytracks.findIndex(x => x.code === target );
-        var sound = mytracks[$index].audio;
-        var volume = sound.volume();
 
-        sound.fade(volume, 0, 5000);    
+function StartPan(target, pan){
+    var it = PIXI.sound._sounds[target];
+    it.filters = [ new PIXI.sound.filters.StereoFilter(pan) ];
+}
 
-        setTimeout(function(){ sound.unload(); DeleteTrack(target); }, 5000);
-
+function StartLoop(target, loop){
+    //console.log("Setting loop status to: "+loop);
+    var it = PIXI.sound._sounds[target];
+    it.loop = loop;
+    
+    if ( loop ) 
+        { 
+        //$(".dot[target="+target+"]").addClass("loop");
         }
 
+}
+
+// KILL SOUND FUNCTION
+
+socket.on("soundscrubbed", function(id){
+    console.log("Scrubbing sound "+id);
+
+    FadeOutAudio(id);
+
+    setTimeout(function(){
+        console.log("faded!");
+        PIXI.sound.stop(id);
+        var $index = mytracks.findIndex(x => x.id === id);
+        mytracks.splice($index, 1);
+        console.log(mytracks);
+    }, 10000);
+
+});
 
 
 
 
-    function FadeInAudioNew (code) 
-        {
-        console.log("fading in audio track: "+code);
-
-        var $index = mytracks.findIndex(x => x.code === code );
-        var gain = mytracks[$index].gain;
-        var sound = mytracks[$index].audio;
-
-        sound.play();
-        sound.fade(0, gain, 10000);
-
-        }
-
-
-
-
-function DeleteTrack(target)
+function FadeOutAudio (target) 
     {
-    console.log("Deleting track with code: "+target);
-    var $index = mytracks.findIndex(x => x.code === target);
-    mytracks.splice($index, 1);
-    console.log(mytracks);
+    var sound = PIXI.sound._sounds[target];
+    var currenttime = sound.media.context.audioContext.currentTime;
+    var ninth = sound.volume.toFixed(2) / 45;
+
+    var fadeAudio = setInterval(function () 
+        {
+        if (sound.volume != 0.0 )  { sound.volume -= ninth; }
+        if (sound.volume < 0.0) { clearInterval(fadeAudio); sound.volume = 0; }
+        }, 200);
+    }
+
+
+function FadeInAudio (target, gain) 
+    {
+    var sound = PIXI.sound._sounds[target];
+    var currenttime = sound.media.context.audioContext.currentTime;
+
+    sound.volume = 0;
+    PIXI.sound.play(target);
+
+    var fadeAudio = setInterval(function () 
+        {
+        if (sound.volume != gain )  { sound.volume += 0.01; }
+        if (sound.volume > gain) { clearInterval(fadeAudio); sound.volume = gain; }
+        }, 200);
     }
 
 
 
+function WipeOutAudio (target) 
+    {
+    var sound = PIXI.sound._sounds[target];
+    var ninth = sound.volume.toFixed(2) / 45;
+    var fadeAudio = setInterval(function () 
+        {
+        if (sound.volume != 0.0 )  { sound.volume -= ninth; }
+        if (sound.volume < 0.0) 
+            { 
+            clearInterval(fadeAudio); 
+            PIXI.sound.remove(target);
+            console.log(PIXI.sound._sounds);
+            var $index = mytracks.findIndex(x => x.id === target);
+            mytracks.splice($index, 1);
+            console.log(mytracks);
+            }
+        }, 200);
+    }
+
+
+
+
+
+
+
+
+    // GAIN FUNCTION
+
+
+socket.on("changevolume", function(data){ 
+
+    var it = PIXI.sound._sounds[data.id];
+    it.volume = data.gain;
+
+});
+
+
+
+
+socket.on("feedloop", function(data){
+    var it = PIXI.sound._sounds[data.id];
+    it.loop = data.loop;
+});
+
+
+
+// PAN FUNCTION
+
+socket.on("changepan", function(data){
+    var it = PIXI.sound._sounds[data.id];
+    it.filters = [ new PIXI.sound.filters.StereoFilter(data.pan) ];
+    //console.log(it);
+});
 
 
 
@@ -342,75 +454,12 @@ socket.on("newsound", function(data){
 
 
 socket.on("feedunpause", function(data){
-    var index = parseInt(data.code);
-    var $index = mytracks.findIndex(x => x.code === index);
-    var sound = mytracks[$index].audio;
-    sound.play();
+    PIXI.sound.resume(data.sound);
 });
 
 socket.on("feedpause", function(data){
-    var index = parseInt(data.code);
-    var $index = mytracks.findIndex(x => x.code === index);
-    var sound = mytracks[$index].audio;
-    sound.pause();
+    PIXI.sound.pause(data.sound);
 });
-
-
-
-socket.on("changevolume", function(data){ 
-
-var index = parseInt(data.code);
-var $index = mytracks.findIndex(x => x.code === index);
-var sound = mytracks[$index].audio;
-console.log(sound);
-
-if ( data.gain == 0 ) 
-    { 
-    $(".dot[target="+data.id+"]").addClass("faded");
-    }
-else
-    { 
-    $(".dot[target="+data.id+"]").removeClass("faded");
-    };
-
-//console.log(data.gain);
-
-sound.volume(data.gain);
-
-});
-
-
-socket.on("changepan", function(data){
-    var index = parseInt(data.code);
-    var $index = mytracks.findIndex(x => x.code === index);
-    sound = mytracks[$index].audio;
-    sound.stereo(data.pan);
-    console.log(sound);
-
-});
-
-
-socket.on("feedloop", function(data){
-    
-    var index = parseInt(data.code);
-    var $index = mytracks.findIndex(x => x.code === index);
-    sound = mytracks[$index].audio;
-    sound.loop(data.loop);
-    console.log(sound);
-
-
-});
-
-
-
-socket.on("soundscrubbed", function(code){
-    console.log(code);
-    FadeOutAudioNew(code);
-
- 
-});
-
-
 
 
 </script>

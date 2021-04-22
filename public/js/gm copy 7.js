@@ -26,7 +26,6 @@ $(document).on("click", "#new-preset-button", function(){
     socket.emit("addpreset", $room);
     $(".drawer").removeClass("open");
     $("#preset-handle").removeClass("on");
-    $(".sound-item").removeClass("selected");
 });
 
 
@@ -87,7 +86,7 @@ socket.emit('getlibrary', $room);
 socket.emit('getpresets', $room);
 socket.emit('getbackgrounds', $room);
 socket.emit("getbackground", $room);
-socket.emit("getcurrentpreset", $room);
+socket.emit("getcurrentpresetstart", $room);
 
 GenerateLink();
 
@@ -147,7 +146,6 @@ $(document).on('click', '.preset', function(e){
     $name = $(this).html();
     console.log("Updating the central preset to: "+$target);
     $data = {"room":$room, "preset":$target };
-    $(".sound-item").removeClass("selected");
     socket.emit("changepreset", $data);
     $("#title-text-frame").html($name);
     e.stopPropagation();
@@ -170,7 +168,7 @@ socket.on("wipetracks", function(){
     //console.log("wiping the track list clean...");
     //mytracks = [];
     $(".sound-item").removeClass('selected');
-    $(".dot").fadeOut(1000, function() { $(this).remove(); });
+    $(".dot").fadeOut(3000, function() { $(this).remove(); });
 
     $.each(mytracks, function(index, item){
         FadeOutAudioNew(item.id);
@@ -266,14 +264,11 @@ function MakeTracks(library){
 function MakeTrack(item){
     console.log("Adding "+item.id+" to the canvas");
         
-    r = new Date().getTime();
+        r = new Date().getTime();
 
-    var $data = {"room":$room, "code":r, "id":item.id, "name":item.name, "file":item.file, "gain":item.gain, "pan":item.pan, "loop":item.loop, "icon":item.icon};
+        var $data = {"room":$room, "code":r, "id":item.id, "name":item.name, "file":item.file, "gain":item.gain, "pan":item.pan, "loop":item.loop, "icon":item.icon};
         
-    socket.emit("seedsound", $data);
-
-    $(".sound-item[id="+item.id+"]").addClass("selected");
-
+        socket.emit("seedsound", $data);
 }
 
 
@@ -318,7 +313,7 @@ if(mylibrary.some(track => track.file === file))
         {
         console.log("Fading out track "+target);
 
-        $(".dot[target="+target+"]").fadeOut(3000, function() { $(this).remove(); });
+        $(".dot[target="+target+"]").fadeOut(5000, function() { $(this).remove(); });
 
         var $index = mytracks.findIndex(x => x.code === target );
         var sound = mytracks[$index].audio;
@@ -326,7 +321,7 @@ if(mylibrary.some(track => track.file === file))
 
         sound.fade(volume, 0, 5000);    
 
-        setTimeout(function(){ sound.unload(); DeleteTrack(target); }, 6000);
+        setTimeout(function(){ sound.unload(); DeleteTrack(target); }, 5000);
 
         }
 
@@ -352,7 +347,7 @@ function DeleteTrack(target)
         var sound = mytracks[$index].audio;
 
         sound.play();
-        sound.fade(0, gain, 5000);
+        sound.fade(0, gain, 10000);
 
         }
 
@@ -370,19 +365,14 @@ function DeleteTrack(target)
 // KILL SOUND FUNCTION
 
 function KillSound(id){
-
-    // find the code
-
-    $index = mytracks.findIndex(x => x.id === id);
-    code = mytracks[$index].code;
-
-    $data = {"room":$room, "code":code, "id":id };
-    console.log($data);
+    //console.log("Killing track: "+name);
+    var code = $("#"+id).attr("code");
+    $data = {"room":$room, "code":code };
     socket.emit("removesound", $data);
 }
 
 socket.on("soundscrubbed", function(code){
-    console.log(code);
+
     FadeOutAudioNew(code);
 
  
