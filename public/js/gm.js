@@ -350,9 +350,16 @@ function DeleteTrack(target)
         var $index = mytracks.findIndex(x => x.code === code );
         var gain = mytracks[$index].gain;
         var sound = mytracks[$index].audio;
+        var loaded = mytracks[$index].loaded;
 
-        sound.play();
-        sound.fade(0, gain, 5000);
+        if ( !loaded ) 
+            { 
+            sound.play();
+            sound.fade(0, gain, 5000); 
+            mytracks[$index].loaded = true;
+            }
+
+        
 
         }
 
@@ -899,7 +906,7 @@ socket.on("feedsound", function(data) {
         loop:data.loop
       });
 
-    $new = {'code':data.code, 'id':data.id, 'name':data.name, 'file':data.file, "gain":data.gain, "pan":data.pan, "icon":data.icon, "loop":data.loop, "audio":sound };
+    $new = {'code':data.code, 'id':data.id, 'name':data.name, 'file':data.file, "gain":data.gain, "pan":data.pan, "icon":data.icon, "loop":data.loop, "audio":sound, "loaded":false };
     mytracks.push($new);
     console.log(mytracks);
 
