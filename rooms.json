@@ -27,23 +27,23 @@
         "tracks": [
             {
                 "room": "123456",
-                "code": 1619125842116,
+                "code": 1619127659201,
                 "id": "tavern",
                 "name": "tavern (ambience)",
                 "file": "tavern.mp3",
-                "gain": 0.024,
-                "pan": 0.01,
+                "gain": 0.016,
+                "pan": 0.04,
                 "loop": false,
                 "icon": "water"
             },
             {
                 "room": "123456",
-                "code": 1619125842117,
+                "code": 1619127659201,
                 "id": "winterstale",
                 "name": "Winters Tale",
                 "file": "winterstale.mp3",
-                "gain": 0.048,
-                "pan": 0.57,
+                "gain": 0.063,
+                "pan": 0.02,
                 "loop": false,
                 "icon": "music"
             }
@@ -105,8 +105,8 @@
                         "id": "tavern",
                         "name": "tavern (ambience)",
                         "file": "tavern.mp3",
-                        "gain": 0.024,
-                        "pan": 0.01,
+                        "gain": 0.018,
+                        "pan": -0.36,
                         "loop": false,
                         "icon": "water"
                     },
@@ -116,8 +116,8 @@
                         "id": "winterstale",
                         "name": "Winters Tale",
                         "file": "winterstale.mp3",
-                        "gain": 0.048,
-                        "pan": 0.57,
+                        "gain": 0.05,
+                        "pan": 0.48,
                         "loop": false,
                         "icon": "music"
                     }
