@@ -75,8 +75,7 @@
   
   #soundlist { width:110%; height:100%; overflow-y: scroll; padding-top:25px; padding-bottom:50px; }
   
-  
-  
+
   
   
   
@@ -191,9 +190,9 @@
   #tool-drawer { position:fixed; z-index:9999999; top:-5px; left:25px; height:350px; width:50px; background:rgba(0, 0, 0,0.8); border-radius:10px; transform:translateY(-300px); transition: all 0.6s ease-in-out; }
   #tool-drawer.open { transform: translateY(0px);}
   
-  .tool-handle { float:left; cursor: pointer; width:50px; text-align: center; height:50px; line-height:50px; }
+  .tool-handle { float:left; cursor: pointer; width:50px; text-align: center; height:50px; padding-top:15px; }
   .tool-handle.on { background:rgba(55, 55, 55, 0.8); }
-  
+  .tool-icon { filter: invert(1); height:20px; }
   
   
   #art-url-frame 

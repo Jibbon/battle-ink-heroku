@@ -23,27 +23,32 @@
     {
         "id": "123456",
         "name": "iceland",
-        "players": [],
+        "players": [
+            {
+                "id": "dIJZQ97JxKYmhxi_AAAZ",
+                "name": "GM"
+            }
+        ],
         "tracks": [
             {
                 "room": "123456",
-                "code": 1619127659201,
+                "code": 1619909992992,
                 "id": "tavern",
                 "name": "tavern (ambience)",
                 "file": "tavern.mp3",
-                "gain": 0.016,
-                "pan": 0.04,
+                "gain": 0.018,
+                "pan": -0.36,
                 "loop": false,
                 "icon": "water"
             },
             {
                 "room": "123456",
-                "code": 1619127659201,
+                "code": 1619909992992,
                 "id": "winterstale",
                 "name": "Winters Tale",
                 "file": "winterstale.mp3",
-                "gain": 0.063,
-                "pan": 0.02,
+                "gain": 0.05,
+                "pan": 0.48,
                 "loop": false,
                 "icon": "music"
             }
